@@ -1,4 +1,4 @@
-<header>
+<header th:fragment="headerFragment">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
             <a class="navbar-brand" href="#">My Website</a>
@@ -7,17 +7,15 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
+                <!-- Use the navbar fragment -->
                 <ul class="navbar-nav">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="/index">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/about">About</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/help">Help</a>
-                    </li>
+                    <li th:replace="navItem :: navbarItem('/', 'Home', ${home})"></li>
+                    <li th:replace="navItem :: navbarItem('/about', 'About', ${about})"></li>
+                    <li th:replace="navItem :: navbarItem('/help', 'Help', ${help})"></li>
+                    <li th:replace="navItem :: navbarItem('/terms', 'Terms', ${terms})"></li>
+                    <li th:replace="navItem :: navbarItem('/services', 'Services', ${services})"></li>
                 </ul>
+
             </div>
         </div>
     </nav>

@@ -1,0 +1,18 @@
+<div th:fragment="footerFragment" class="footer-basic">
+    <footer>
+        <ul class="list-inline">
+            <li class="list-inline-item"><a href="/static">Home</a></li>
+            <li class="list-inline-item"><a href="/services">Services</a></li>
+            <li class="list-inline-item"><a href="/about">About</a></li>
+            <li class="list-inline-item"><a href="/terms">Terms</a></li>
+            <li class="list-inline-item"><a href="#">Privacy Policy</a></li>
+
+
+        </ul>
+        <p class="copyright">Company Name © <span id="year"></span></p>
+
+        <script>
+            document.getElementById('year').innerHTML = new Date().getFullYear();
+        </script>
+    </footer>
+</div>

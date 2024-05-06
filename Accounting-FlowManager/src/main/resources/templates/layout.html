@@ -1,59 +1,15 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
-<head>
-    <meta charset="UTF-8">
-    <title>Default Title</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/footer.css">
-    <link rel="stylesheet" href="/css/header.css">
-</head>
+<head th:replace="fragments/common-head :: commonHeadFragment"></head>
 <body>
-<header>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container">
-            <a class="navbar-brand" href="#">My Website</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <!-- Use the navbar fragment -->
-                <ul class="navbar-nav">
-                    <li th:replace="navItem :: navbarItem('/', 'Home', ${home})"></li>
-                    <li th:replace="navItem :: navbarItem('/about', 'About', ${about})"></li>
-                    <li th:replace="navItem :: navbarItem('/help', 'Help', ${help})"></li>
-                    <li th:replace="navItem :: navbarItem('/terms', 'Terms', ${terms})"></li>
-                    <li th:replace="navItem :: navbarItem('/services', 'Services', ${services})"></li>
-                </ul>
-
-            </div>
-        </div>
-    </nav>
-</header>
+<div th:replace="fragments/header :: headerFragment"></div>
 <div>
     <div layout:fragment="content"> <!-- This is where the content will be inserted -->
         <p>This is the default content</p>
     </div>
 </div>
-<div  class="footer-basic">
-    <footer>
-        <ul class="list-inline">
-            <li class="list-inline-item"><a href="/">Home</a></li>
-            <li class="list-inline-item"><a href="/services">Services</a></li>
-            <li class="list-inline-item"><a href="/about">About</a></li>
-            <li class="list-inline-item"><a href="/terms">Terms</a></li>
-            <li class="list-inline-item"><a href="#">Privacy Policy</a></li>
-
-
-               </ul>
-        <p class="copyright">Company Name © <span id="year"></span></p>
-
-        <script>
-            document.getElementById('year').innerHTML = new Date().getFullYear();
-        </script>
-    </footer>
-</div>
+<div th:replace="fragments/footer :: footerFragment"></div>
 <!-- Include Bootstrap JS and other scripts -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <!-- Include Other Scripts -->
