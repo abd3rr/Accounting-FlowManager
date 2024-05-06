@@ -2,6 +2,7 @@ package fr.uha.AccountingFlowManager.enums;
 
 public enum Currency {
     USD("United States Dollar"),
+    RWF("Rwandan Francs"),
     EUR("Euro"),
     CAD("Canadian Dollar"),
     MAD("Moroccan Dirham");

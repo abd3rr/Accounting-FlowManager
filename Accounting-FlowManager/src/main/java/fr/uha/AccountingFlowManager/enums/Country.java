@@ -2,6 +2,7 @@ package fr.uha.AccountingFlowManager.enums;
 
 public enum Country {
     USA("United States"),
+    RWANDA("Rwanda"),
     CANADA("Canada"),
     UK("United Kingdom"),
     GERMANY("Germany"),
