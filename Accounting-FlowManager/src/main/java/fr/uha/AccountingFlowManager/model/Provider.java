@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import java.util.*;
 
 import java.time.LocalDateTime;
 
@@ -47,6 +48,9 @@ public class Provider {
     private LocalDateTime registrationDate;
 
     private LocalDateTime lastUpdated;
+
+    @ManyToMany(mappedBy = "providers")
+    private List<User> clients;
 
     @PrePersist
     public void setDateAdded() {

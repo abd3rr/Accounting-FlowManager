@@ -1,5 +1,8 @@
 package fr.uha.AccountingFlowManager.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum Country {
     USA("United States"),
     RWANDA("Rwanda"),
@@ -30,8 +33,5 @@ public enum Country {
         this.displayName = displayName;
     }
 
-    public String getDisplayName() {
-        return displayName;
-    }
 }
 

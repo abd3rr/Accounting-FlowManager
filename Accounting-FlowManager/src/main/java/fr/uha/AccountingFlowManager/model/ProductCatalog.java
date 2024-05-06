@@ -39,6 +39,9 @@ public class ProductCatalog {
 
     private LocalDateTime lastUpdated;
 
+    private boolean isService;
+
+
     @PrePersist
     public void setDateAdded() {
         this.dateAdded = LocalDateTime.now();

@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -21,8 +23,10 @@ public class User {
     private long id;
 
     //@Column(nullable = false)
-    @NotBlank
+
     private String fullName;
+
+    private String businessName; // In case the User is a Business not a Person
 
     //@Column(nullable = false)
     @Email
@@ -39,6 +43,17 @@ public class User {
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
+
+    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
+    private List<Invoice> invoices;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "user_providers",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "provider_id")
+    )
+    private List<Provider> providers;
 
 
 }

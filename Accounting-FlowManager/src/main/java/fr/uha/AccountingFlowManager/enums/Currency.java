@@ -1,5 +1,8 @@
 package fr.uha.AccountingFlowManager.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum Currency {
     USD("United States Dollar"),
     RWF("Rwandan Francs"),
@@ -13,8 +16,5 @@ public enum Currency {
         this.displayName = displayName;
     }
 
-    public String getDisplayName() {
-        return displayName;
-    }
 }
 
