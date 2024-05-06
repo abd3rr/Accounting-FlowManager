@@ -1,6 +1,4 @@
 <!-- navItem.html -->
-<ul th:fragment="navbarItem(href, label, isActive)">
-    <li th:classappend="${isActive} ? 'nav-item active' : 'nav-item'">
-        <a th:href="${href}" class="nav-link" th:text="${label}">Link</a>
-    </li>
-</ul>
+<li th:fragment="navbarItem(href, label, isActive)" th:classappend="${isActive} ? 'nav-item active' : 'nav-item'">
+    <a th:href="${href}" class="nav-link" th:text="${label}">Link</a>
+</li>

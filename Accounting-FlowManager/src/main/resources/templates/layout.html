@@ -20,9 +20,11 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <!-- Use the navbar fragment -->
                 <ul class="navbar-nav">
-                    <li th:classappend="${#httpServletRequest.requestURI == '/index' ? 'active' : ''}" th:replace="navItem::navbarItem('/index', 'Home', true)">
-                    <li th:classappend="${#httpServletRequest.requestURI == '/about' ? 'active' : ''}" th:replace="navItem::navbarItem('/about', 'About', true)">
-                    <li th:classappend="${#httpServletRequest.requestURI == '/help' ? 'active' : ''}" th:replace="navItem::navbarItem('/help', 'Help', true)">
+                    <li th:replace="navItem :: navbarItem('/', 'Home', ${home})"></li>
+                    <li th:replace="navItem :: navbarItem('/about', 'About', ${about})"></li>
+                    <li th:replace="navItem :: navbarItem('/help', 'Help', ${help})"></li>
+                    <li th:replace="navItem :: navbarItem('/terms', 'Terms', ${terms})"></li>
+                    <li th:replace="navItem :: navbarItem('/services', 'Services', ${services})"></li>
                 </ul>
 
             </div>
@@ -42,8 +44,14 @@
             <li class="list-inline-item"><a href="/about">About</a></li>
             <li class="list-inline-item"><a href="/terms">Terms</a></li>
             <li class="list-inline-item"><a href="#">Privacy Policy</a></li>
-        </ul>
-        <p class="copyright">Company Name © 2018</p>
+
+
+               </ul>
+        <p class="copyright">Company Name © <span id="year"></span></p>
+
+        <script>
+            document.getElementById('year').innerHTML = new Date().getFullYear();
+        </script>
     </footer>
 </div>
 <!-- Include Bootstrap JS and other scripts -->
