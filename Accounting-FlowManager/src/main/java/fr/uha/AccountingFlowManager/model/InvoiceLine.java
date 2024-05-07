@@ -1,6 +1,8 @@
 package fr.uha.AccountingFlowManager.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.EqualsAndHashCode;
@@ -25,8 +27,14 @@ public class InvoiceLine {
     @JoinColumn(name = "product_id")
     private ProductCatalog product;
 
+
+    @Size(min = 0)
     private double quantity;
+
+    @Size(min = 0)
     private double price;
+
+    @Size(min = 0)
     private double total;  // price * quantity
 
     @PostLoad

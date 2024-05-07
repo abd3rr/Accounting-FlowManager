@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "file.storage.location",
+      "type": "java.lang.String",
+      "description": "Description for file.storage.location."
+  }
+] }

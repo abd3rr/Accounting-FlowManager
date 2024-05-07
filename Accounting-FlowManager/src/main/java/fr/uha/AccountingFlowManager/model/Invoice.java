@@ -1,6 +1,8 @@
 package fr.uha.AccountingFlowManager.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.EqualsAndHashCode;
@@ -32,9 +34,14 @@ public class Invoice {
     @Enumerated(EnumType.STRING)
     private fr.uha.AccountingFlowManager.enums.Currency currency;
 
+
+    @Size(min = 0)
     private double subtotal;  // Total before discounts and taxes
+    @Size(min = 0)
     private double discount;  // Total discounts
+    @Size(min = 0)
     private double advancePayment;  // Amount paid in advance (acomptes)
+    @Size(min = 0)
     private double total;  // Total after all adjustments
 
     @PrePersist

@@ -22,17 +22,14 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    //@Column(nullable = false)
 
     private String fullName;
 
     private String businessName; // In case the User is a Business not a Person
 
-    //@Column(nullable = false)
     @Email
     private String email;
 
-    //@Column(nullable = false)
     private String passwordHash;
 
     @Pattern(regexp = "^[+]?[(]?[0-9]{3}[)]?[-\\s.]?[0-9]{3}[-\\s.]?[0-9]{4,6}$")

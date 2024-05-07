@@ -63,6 +63,14 @@
 			<version>8.0.1.Final</version>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-configuration-processor -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+			<version>3.2.5</version>
+		</dependency>
+
+
 	</dependencies>
 
 	<build>
