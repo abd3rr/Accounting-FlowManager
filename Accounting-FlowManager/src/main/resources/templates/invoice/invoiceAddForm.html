@@ -5,52 +5,69 @@
     <title>Invoice Form</title>
 </head>
 <body>
-
 <div layout:fragment="content">
     <main>
-        <div>
-            <h1 class="display-1 text-center ">Add Invoice Form</h1>
+        <div class="text-center mb-5">
+            <h1 class="display-1">Add Invoice Form</h1>
         </div>
 
         <form action="" method="POST">
-            <div class="container-md pt-5">
+            <div class="container-md" id="productsContainer">
                 <div class="row mb-3">
                     <label class="col-sm-2 col-form-label">Client</label>
                     <div class="col-sm-10">
-                        <select class="form-select" aria-label="Default select example">
+                        <select class="form-select">
                             <option selected>Choose your client</option>
                             <option value="1">One</option>
                         </select>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col">
-                        <label class="col-sm-2 col-form-label">Produits</label>
-                        <select class="selectpicker" data-live-search="true">
+                <!-- Template for cloning -->
+                <div class="row mb-3 product-row-template" style="display: none;">
+                    <div class="col-sm-4">
+                        <label class="form-label">Produits</label>
+                        <select class="form-select product-select">
                             <option selected>Choose a product</option>
                             <option value="1">1</option>
                         </select>
                     </div>
-                    <div class="col">
-                        <label class="col-sm-2 col-form-label">Prix</label>
-                        <input type="text" class="form-control" value="updated on produits selected"  readonly>
-
+                    <div class="col-sm-4">
+                        <label class="form-label">Prix</label>
+                        <input type="text" class="form-control price-input" readonly>
                     </div>
-                    <div class="col">
-                        <label class="col-sm-2 col-form-label" for="inputQuantity">Quantité</label>
-                        <input type="number" id="inputQuantity" name="inputQuantity" min="1" class="form-control" />
+                    <div class="col-sm-3">
+                        <label class="form-label">Quantité</label>
+                        <input type="number" class="form-control quantity-input" min="1">
                     </div>
-
+                    <div class="col-sm-1 d-flex align-items-end">
+                        <button type="button" class="btn btn-danger removeProductRow">Remove</button>
+                    </div>
                 </div>
+                <button id="addProductRow" type="button" class="btn btn-success">Add Product Row</button>
             </div>
-
-
         </form>
-
-
-
     </main>
-</div>
 
+    <script type="text/javascript">
+        $(document).ready(function() {
+            let uniqueId = 1; // Start with an initial ID
+
+            $('#addProductRow').click(function() {
+                let newRow = $('.product-row-template').first().clone().show();
+                newRow.find('.product-select').attr('name', 'product' + uniqueId);
+                newRow.find('.price-input').attr('name', 'price' + uniqueId);
+                newRow.find('.quantity-input').attr('name', 'quantity' + uniqueId);
+                newRow.attr('id', 'productRow' + uniqueId);
+                $('#productsContainer').append(newRow);
+                uniqueId++; // Increment the ID for the next row
+            });
+
+            // Event delegation to handle dynamically added elements
+            $('#productsContainer').on('click', '.removeProductRow', function() {
+                $(this).closest('.row').remove();
+            });
+        });
+    </script>
+</div>
 </body>
 </html>

@@ -4,14 +4,17 @@
 <head th:replace="fragments/common-head :: commonHeadFragment"></head>
 <body>
 <div th:replace="fragments/header :: headerFragment"></div>
-<div>
-    <div layout:fragment="content"> <!-- This is where the content will be inserted -->
+<div class="flex-grow-1">
+    <div layout:fragment="content">
         <p>This is the default content</p>
     </div>
 </div>
 <div th:replace="fragments/footer :: footerFragment"></div>
+
 <!-- Include Bootstrap JS and other scripts -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 <!-- Include Other Scripts -->
+<div layout:fragment="additional-scripts"></div>
+
 </body>
 </html>
