@@ -12,7 +12,7 @@ public class PageController {
         model.addAttribute(page, true);
     }
 
-    @GetMapping({"/","/index"})
+    @GetMapping({"/home"})
     public String index(Model model) {
         setActivePage(model, "home");
         return "home";

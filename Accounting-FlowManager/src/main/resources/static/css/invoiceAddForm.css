@@ -1,0 +1,45 @@
+
+    /* General padding and margin tweaks for the container */
+.container-md {
+    padding: 20px;
+    background: #fff; /* Light background for the form area */
+    box-shadow: 0 0 15px rgba(0,0,0,0.1); /* Soft shadow around form */
+    border-radius: 8px; /* Rounded corners for the form container */
+    margin-top: 20px; /* Space above the form container */
+    margin-bottom: 20px; /* Space below the form container */
+}
+
+/* Enhancing the visibility and interactivity of form controls */
+.form-select, .form-control {
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); /* Subtle inset shadow for inputs */
+    transition: box-shadow 0.3s ease-in-out; /* Smooth transition for focus */
+}
+
+.form-select:focus, .form-control:focus {
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.2), 0 0 8px rgba(0,0,0,0.2); /* Stronger focus shadow */
+}
+
+/* Button enhancements for better user interaction */
+.btn-primary {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Drop shadow for primary button */
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-primary:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3); /* Larger shadow on hover */
+    transform: translateY(-2px); /* Slight lift effect */
+}
+
+.btn-danger {
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-danger:hover {
+    transform: translateY(-1px); /* Slight lift effect for delete button */
+}
+
+/* Subtle improvements for headings and labels */
+h1.display-3, label {
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1); /* Text shadow for better readability */
+}
+

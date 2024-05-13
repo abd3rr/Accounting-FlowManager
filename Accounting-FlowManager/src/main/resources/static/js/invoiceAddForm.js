@@ -1,43 +1,24 @@
 $(document).ready(function() {
-    // Counter to maintain unique IDs
-    let rowCounter = 1;
+    let uniqueId = 1; // Start with an initial ID
 
-    $('.add-btn').on('click', function() {
-        addProductRow();
+    $('#addProductRow').click(function() {
+        let newRow = $('.product-row-template').first().clone().show();
+        newRow.find('.product-select').attr('name', 'product' + uniqueId);
+        newRow.find('.price-input').attr('name', 'price' + uniqueId);
+        newRow.find('.quantity-input').attr('name', 'quantity' + uniqueId);
+        newRow.attr('id', 'productRow' + uniqueId);
+
+        // Append new row with fadeIn effect
+        newRow.hide().appendTo('#productsContainer').fadeIn(400);
+
+        uniqueId++; // Increment the ID for the next row
     });
 
-    function addProductRow() {
-        rowCounter++;  // Increment the counter for a new unique ID
-        const row = `
-        <div class="row mb-3" id="row${rowCounter}">
-            <div class="col-sm-4">
-                <label class="form-label">Produits</label>
-                <select class="form-select" id="product${rowCounter}">
-                    <option selected>Choose a product</option>
-                    <option value="1">1</option>
-                </select>
-            </div>
-            <div class="col-sm-4">
-                <label class="form-label">Prix</label>
-                <input type="text" class="form-control" id="price${rowCounter}" value="updated on produits selected" readonly>
-            </div>
-            <div class="col-sm-3">
-                <label class="form-label" for="quantity${rowCounter}">Quantité</label>
-                <input type="number" id="quantity${rowCounter}" name="quantity${rowCounter}" min="1" class="form-control">
-            </div>
-            <div class="col-sm-1 d-flex align-items-end">
-                <button type="button" class="btn btn-danger delete-btn" onclick="deleteProductRow(${rowCounter})">
-                    Delete
-                </button>
-            </div>
-        </div>
-        `;
-
-        $('#invoiceForm').append(row);
-    }
-
-    // Function to delete the row
-    window.deleteProductRow = function(rowId) {
-        $(`#row${rowId}`).remove();
-    };
+    // Event delegation to handle dynamically added elements
+    $('#productsContainer').on('click', '.removeProductRow', function() {
+        // Fade out the row and remove it from DOM after animation completes
+        $(this).closest('.row').fadeOut(400, function() {
+            $(this).remove();
+        });
+    });
 });

@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<html lang="en" layout:decorate="~{layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
     <meta charset="UTF-8">
     <title>Invoice Form</title>
 </head>
+
 <body>
 <div layout:fragment="content">
     <main>
@@ -32,42 +33,24 @@
                         </select>
                     </div>
                     <div class="col-sm-4">
-                        <label class="form-label">Prix</label>
-                        <input type="text" class="form-control price-input" readonly>
-                    </div>
-                    <div class="col-sm-3">
                         <label class="form-label">Quantité</label>
-                        <input type="number" class="form-control quantity-input" min="1">
+                        <input class="form-control quantity-input" min="1" type="number">
+                    </div>
+
+                    <div class="col-sm-3">
+                        <label class="form-label">Prix</label>
+                        <input class="form-control price-input" readonly type="text">
                     </div>
                     <div class="col-sm-1 d-flex align-items-end">
-                        <button type="button" class="btn btn-danger removeProductRow">Remove</button>
+                        <button class="btn btn-danger removeProductRow" type="button">Remove</button>
                     </div>
                 </div>
-                <button id="addProductRow" type="button" class="btn btn-success">Add Product Row</button>
+                <button class="btn btn-success" id="addProductRow" type="button">Add Product Row</button>
             </div>
         </form>
     </main>
 
-    <script type="text/javascript">
-        $(document).ready(function() {
-            let uniqueId = 1; // Start with an initial ID
-
-            $('#addProductRow').click(function() {
-                let newRow = $('.product-row-template').first().clone().show();
-                newRow.find('.product-select').attr('name', 'product' + uniqueId);
-                newRow.find('.price-input').attr('name', 'price' + uniqueId);
-                newRow.find('.quantity-input').attr('name', 'quantity' + uniqueId);
-                newRow.attr('id', 'productRow' + uniqueId);
-                $('#productsContainer').append(newRow);
-                uniqueId++; // Increment the ID for the next row
-            });
-
-            // Event delegation to handle dynamically added elements
-            $('#productsContainer').on('click', '.removeProductRow', function() {
-                $(this).closest('.row').remove();
-            });
-        });
-    </script>
 </div>
+
 </body>
 </html>

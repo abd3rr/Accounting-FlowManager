@@ -7,4 +7,15 @@
     <link rel="stylesheet" href="/css/core.css">
     <link rel="stylesheet" href="/css/header.css">
     <!-- <script defer type="text/javascript" th:src="@{/js/invoiceAddForm.js}"></script> -->
+    <!-- ----------------------------------------------------------------------------- -->
+    <!-- style and css for invoiceAddForm.html -->
+    <link rel="stylesheet" th:if="${invoiceAddForm}" href="/css/invoiceAddForm.css">
+    <script  th:if="${invoiceAddForm}" defer src="/js/invoiceAddForm.js"></script>
+    <!-- ----------------------------------------------------------------------------- -->
+    <!-- style and css for loginForm.html -->
+    <link rel="stylesheet" th:if="${loginForm}" href="/css/loginForm.css">
+    <script  th:if="${loginForm}" defer src="/js/loginForm.js"></script>
+
+
+
 </head>
