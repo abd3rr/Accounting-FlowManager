@@ -10,6 +10,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.util.List;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -22,17 +23,18 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-
+    @NotBlank(message = "Full name must not be blank")
     private String fullName;
 
-    private String businessName; // In case the User is a Business not a Person
+    // Optional: Used when the user is a business entity
+    private String businessName;
 
-    @Email
+    @Email(message = "Email should be valid")
     private String email;
 
     private String passwordHash;
 
-    @Pattern(regexp = "^[+]?[(]?[0-9]{3}[)]?[-\\s.]?[0-9]{3}[-\\s.]?[0-9]{4,6}$")
+    @Pattern(regexp = "^[+]?[(]?[0-9]{3}[)]?[-\\s.]?[0-9]{3}[-\\s.]?[0-9]{4,6}$", message = "Invalid phone number format")
     private String phoneNumber;
 
     private String address;
@@ -42,15 +44,40 @@ public class User {
     private Role role;
 
     @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
-    private List<Invoice> invoices;
+    private List<Invoice> invoices; // Invoices can be associated with both users and providers
+
+    private String companyName;  // Nullable, used if the user is a business or a provider
+    private String websiteUrl;  // Nullable, used if the user is a provider
+
+    @Enumerated(EnumType.STRING)
+    private fr.uha.AccountingFlowManager.enums.Country country;  // Common for all users
+
+    private LocalDateTime registrationDate;  // Common for all users
+    private LocalDateTime lastUpdated;  // Common for all users
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "user_clients",
+            joinColumns = @JoinColumn(name = "provider_id"),
+            inverseJoinColumns = @JoinColumn(name = "client_id")
+    )
+    private List<User> clients;  // Only populated for users in a provider role
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "user_providers",
-            joinColumns = @JoinColumn(name = "user_id"),
+            joinColumns = @JoinColumn(name = "client_id"),
             inverseJoinColumns = @JoinColumn(name = "provider_id")
     )
-    private List<Provider> providers;
+    private List<User> providers;  // Only populated for users in a client role
 
+    @PrePersist
+    public void prePersist() {
+        registrationDate = LocalDateTime.now();
+    }
 
+    @PreUpdate
+    public void preUpdate() {
+        lastUpdated = LocalDateTime.now();
+    }
 }

@@ -35,7 +35,7 @@ public class Transaction {
     private Account account; // link to one account that's affected by the transaction
 
     @ManyToOne
-    private Provider provider;
+    private User provider;
 
     @ManyToOne
     @JoinColumn(name = "invoice_id")

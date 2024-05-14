@@ -26,7 +26,7 @@ public class Account {
     private Double balance = 0.0;
 
     @ManyToOne
-    private Provider provider;
+    private User provider;
 
 
 }
