@@ -1,4 +1,4 @@
-package fr.uha.AccountingFlowManager.service;
+package fr.uha.AccountingFlowManager.security;
 
 import fr.uha.AccountingFlowManager.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,8 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .orElseThrow(() ->
                         new UsernameNotFoundException("User not found with email: " + email));
 
-        return new org.springframework.security.core.userdetails.User(
+        return new CustomUserDetails(
+                user.getId(),
                 user.getEmail(),
                 user.getPasswordHash(),
                 Collections.singletonList(new SimpleGrantedAuthority(user.getRole().getName().name()))

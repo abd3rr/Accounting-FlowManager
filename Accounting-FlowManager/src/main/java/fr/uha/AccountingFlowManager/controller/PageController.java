@@ -1,9 +1,10 @@
 package fr.uha.AccountingFlowManager.controller;
 
-import fr.uha.AccountingFlowManager.service.SessionService;
+import fr.uha.AccountingFlowManager.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,13 +14,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class PageController {
 
-   /* private SessionService sessionService;
+   private UserService userService;
 
     @Autowired
-    public PageController(SessionService sessionService){
-        this.sessionService = sessionService;
+    public PageController(UserService userService){
+        this.userService = userService;
     }
-*/
+
     private void setActivePage(Model model, String page) {
         model.addAttribute(page, true);
     }
@@ -27,12 +28,9 @@ public class PageController {
     @GetMapping({"/","/home"})
     public String index(Model model) {
         setActivePage(model, "home");
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-
-        // Extract role information
-        String userRole = userDetails.getAuthorities().iterator().next().getAuthority();
-        model.addAttribute("userRole", userRole);
+        model.addAttribute("userRole", userService.getCurrentUserRole());
+        model.addAttribute("userId",userService.getCurrentUserId());
+        model.addAttribute("userEmail",userService.getCurrentUserEmail());
 
         return "home";
     }
