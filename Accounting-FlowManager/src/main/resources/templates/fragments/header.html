@@ -1,22 +1,116 @@
-<header th:if="!${loginForm}" th:fragment="headerFragment">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container">
-            <a class="navbar-brand" href="#">My Website</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <!-- Use the navbar fragment -->
-                <ul class="navbar-nav">
-                    <li th:replace="navItem :: navbarItem('/', 'Home', ${home})"></li>
-                    <li th:replace="navItem :: navbarItem('/about', 'About', ${about})"></li>
-                    <li th:replace="navItem :: navbarItem('/help', 'Help', ${help})"></li>
-                    <li th:replace="navItem :: navbarItem('/terms', 'Terms', ${terms})"></li>
-                    <li th:replace="navItem :: navbarItem('/services', 'Services', ${services})"></li>
-                </ul>
+<header th:if="!${loginForm}" th:fragment="headerFragment" class="header">
+    <nav class="nav container">
+        <div class="nav__data">
+            <a href="#" class="nav__logo">
+                <i class="ri-code-s-slash-line"></i> FlowManagerSoft
+            </a>
+        </div>
+        <div class="nav__toggle" id="nav-toggle">
+            <i class="ri-menu-line nav__toggle-menu"></i>
+            <i class="ri-close-line nav__toggle-close"></i>
+        </div>
+        <div class="nav__menu" id="nav-menu">
+            <ul class="nav__list">
+                <li>
+                    <a href="/" class="nav__link">Accueil</a>
+                </li>
+                <li class="dropdown__item">
+                    <div class="nav__link dropdown__button">
+                        Factures <i class="ri-arrow-down-s-line dropdown__arrow"></i>
+                    </div>
+                    <div class="dropdown__container">
+                        <div class="dropdown__content">
+                            <div class="dropdown__group">
+                                <div class="dropdown__icon">
+                                    <i class="ri-add-fill"></i>
+                                </div>
+                                <a href="/facture/add" class="dropdown__link"><span class="dropdown__title">Ajouter</span></a>
+                                <!--<p class="dropdown__text">
+                                    This is a brief text explanation.
+                                </p>-->
+                            </div>
 
-            </div>
+                            <div class="dropdown__group">
+                                <div class="dropdown__icon">
+                                    <i class="ri-list-check"></i>
+                                </div>
+                                <a href="/factures" class="dropdown__link">
+                                    <span class="dropdown__title">Liste des factures</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="dropdown__item">
+                    <div class="nav__link dropdown__button">
+                        Produits <i class="ri-arrow-down-s-line dropdown__arrow"></i>
+                    </div>
+                    <div class="dropdown__container">
+                        <div class="dropdown__content">
+                            <div class="dropdown__group">
+                                <div class="dropdown__icon">
+                                    <i class="ri-add-fill"></i>
+                                </div>
+                                <a href="/product/add" class="nav__link"><span class="dropdown__title">Ajouter produits</span></a>
+                            </div>
+                            <div class="dropdown__group">
+                                <div class="dropdown__icon">
+                                    <i class="ri-folder-3-line"></i>
+                                </div>
+                                <a href="/product/management" class="dropdown__link">
+                                    <span class="dropdown__title">Gestion</span>
+                                </a>
+                            </div>
+                            <div class="dropdown__group">
+                                <div class="dropdown__icon">
+                                    <i class="ri-list-check"></i>
+                                </div>
+                                <a href="/products" class="dropdown__link">
+                                    <span class="dropdown__title">Liste des produits</span>
+                                </a>
+                            </div>
+                            <!--<div class="dropdown__group">
+                                <div class="dropdown__icon">
+                                    <i class="ri-stack-line"></i>
+                                </div>
+                                <span class="dropdown__title">Catégories</span>
+                            </div>-->
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <a href="/services" class="nav__link">Services</a>
+                </li>
+                <li class="dropdown__item">
+                    <div class="nav__link dropdown__button">
+                        <i class="ri-user-line"></i> <i class="ri-arrow-down-s-line dropdown__arrow"></i>
+                    </div>
+                    <div class="dropdown__container">
+                        <div class="dropdown__content">
+                            <div class="dropdown__group">
+                                <div class="dropdown__icon">
+                                    <i class="ri-add-fill"></i>
+                                </div>
+
+                                <a href="/help" class="dropdown__link">Suivi et Maintenance</a>
+                                <a href="/profile" class="dropdown__link">Profil</a>
+                                <a href="/logout" class="dropdown__link">Déconnexion</a>
+                            </div>
+                            <div class="dropdown__group">
+                                <div class="dropdown__icon">
+                                    <i class="ri-user-fill"></i>
+                                </div>
+                                <span class="dropdown__title">Information</span>
+                                <span th:text="${userRole}"></span>
+                                <span> ID :  #<span th:text="${userId}"></span></span>
+                                <span><span th:text="${userEmail}"></span> </span>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </li>
+            </ul>
         </div>
     </nav>
 </header>
