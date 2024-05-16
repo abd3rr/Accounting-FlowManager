@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
 <head>
@@ -6,41 +7,67 @@
 </head>
 <body>
 <div layout:fragment="content">
-    <h1>Welcome to Our Website</h1>
-    <h1> User with Role :  <span th:text="${userRole}"></span> is authenticated</h1>
-    <h1> User with id :  <span th:text="${userId}"></span> is authenticated</h1>
-    <h1> User with email :  <span th:text="${userEmail}"></span> is authenticated</h1>
 
-    <!-- Section 1: Introduction -->
-    <section class="home-section">
-        <h2>Who We Are</h2>
-        <p>Introduction to your company, what you do, what you offer...</p>
+<main class="container">
+    <section class="section">
+        <div class="container">
+            <h1>Home</h1>
+            <p>This is the home page</p>
+            <span th:text="${userRole}"></span>
+            <span> ID :  #<span th:text="${userId}"></span></span>
+            <span><span th:text="${userEmail}"></span> </span>
+        </div>
     </section>
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">First</th>
+            <th scope="col">Last</th>
+            <th scope="col">Handle</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th scope="row">1</th>
+            <td>Mark</td>
+            <td>Otto</td>
+            <td>@mdo</td>
+        </tr>
+        <tr>
+            <th scope="row">2</th>
+            <td>Jacob</td>
+            <td>Thornton</td>
+            <td>@fat</td>
+        </tr>
+        <tr>
+            <th scope="row">3</th>
+            <td>Larry</td>
+            <td>the Bird</td>
+            <td>@twitter</td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+<div  class="footer-basic">
+    <footer>
+        <ul class="list-inline">
+            <li class="list-inline-item"><a href="/static">Home</a></li>
+            <li class="list-inline-item"><a href="/services">Services</a></li>
+            <li class="list-inline-item"><a href="/about">About</a></li>
+            <li class="list-inline-item"><a href="/terms">Terms</a></li>
+            <li class="list-inline-item"><a href="#">Privacy Policy</a></li>
 
-    <!-- Section 2: Services -->
-    <section class="home-section">
-        <h2>Our Services</h2>
-        <p>Overview of your services...</p>
-        <button class="cta-button">Learn More</button>
-    </section>
 
-    <!-- Section 3: Blogs / Updates -->
-    <section class="home-section">
-        <h2>Latest Updates</h2>
-        <p>A brief about the latest updates/news/blogs - with links to detailed pages...</p>
-    </section>
+        </ul>
+        <p class="copyright">Company Name © <span id="year"></span></p>
 
-    <!-- Section 4: Testimonials -->
-    <section class="home-section">
-        <h2>What Our Clients Say</h2>
-        <p>Testimonials from clients...</p>
-    </section>
-
-    <!-- Section 5: Contact -->
-    <section class="home-section">
-        <h2>Contact Us</h2>
-        <p>Short contact information with a link to the contact page...</p>
-    </section>
+        <script>
+            document.getElementById('year').innerHTML = new Date().getFullYear();
+        </script>
+    </footer>
 </div>
+</div>
+
 </body>
 </html>
