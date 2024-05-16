@@ -63,13 +63,7 @@ public class User {
     )
     private List<User> clients;  // Only populated for users in a provider role
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "user_providers",
-            joinColumns = @JoinColumn(name = "client_id"),
-            inverseJoinColumns = @JoinColumn(name = "provider_id")
-    )
-    private List<User> providers;  // Only populated for users in a client role
+
 
     @PrePersist
     public void prePersist() {

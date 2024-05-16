@@ -23,7 +23,7 @@
                 <!-- Template for cloning -->
                 <div class="row mb-3 product-row-template" style="display: none;">
                     <div class="col-sm-4">
-                        <label class="form-label">Produits</label>
+                        <label class="form-label">Produit</label>
                         <select class="form-select product-select">
                             <option selected>Choose a product</option>
                             <option value="1">1</option>
@@ -44,17 +44,48 @@
                 <button class="btn btn-success" id="addProductRow" type="button">Add Product Row</button>
             </div>
 
-            <div class="container-md" id="ShippingContainter" >
-                 <div class="row mb-3">
-                <label class="col-sm-2 col-form-label">shippingCostType</label>
-                <div class="col-sm-10">
-                    <select class="form-select">
-                        <option selected>Choose your shipping Cost Type</option>
-                        <option value="1">One</option>
-                    </select>
+            <div class="container-md" id="ShippingContainter">
+                <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label">shippingCostType</label>
+                    <div class="col-sm-10">
+                        <select class="form-select">
+                            <option selected>Choose your shipping Cost Type</option>
+                            <option value="1">One</option>
+                        </select>
+                    </div>
                 </div>
+
+                <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label">Reduction</label>
+                    <div class="col-sm-10">
+                        <select class="form-select">
+                            <option selected>Choose your reduction</option>
+                            <option value="0">0%</option>
+                            <option value="10">10%</option>
+                            <option value="15">15%</option>
+                            <option value="20">20%</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label">additional reduction</label>
+                    <div class="col-sm-10">
+                        <select class="form-select">
+                            <option selected>Choose your reduction Type</option>
+                            <option value="none">none</option>
+                            <option value="financiere">financiere</option>
+                            <option value="commerciale ">commerciale</option>
+                        </select>
+                    </div>
+                </div>
+
             </div>
+
+            <div id="submit">
+                <input type="submit" value="Suivant" >
             </div>
+
         </form>
     </main>
 </div>

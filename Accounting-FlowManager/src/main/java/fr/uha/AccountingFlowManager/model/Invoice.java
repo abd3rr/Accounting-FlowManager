@@ -48,7 +48,7 @@ public class Invoice {
     private double shippingCost;
 
     @Enumerated(EnumType.STRING)
-    private ShippingCostType shippingCostType;  // Enum for shipping cost type
+    private fr.uha.AccountingFlowManager.enums.ShippingCostType shippingCostType;  // Enum for shipping cost type
 
     @Size(min = 0)
     private double vat;  // VAT amount
