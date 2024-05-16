@@ -1,5 +1,6 @@
 package fr.uha.AccountingFlowManager.model;
 
+import fr.uha.AccountingFlowManager.enums.ShippingCostType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -44,6 +45,14 @@ public class Invoice {
     @Size(min = 0)
     private double total;  // Total after all adjustments
 
+    private double shippingCost;
+
+    @Enumerated(EnumType.STRING)
+    private ShippingCostType shippingCostType;  // Enum for shipping cost type
+
+    @Size(min = 0)
+    private double vat;  // VAT amount
+
     @PrePersist
     public void setIssueDate() {
         this.issueDate = LocalDateTime.now();
@@ -52,6 +61,27 @@ public class Invoice {
     @PreUpdate
     public void updateSubtotalAndTotal() {
         this.subtotal = lines.stream().mapToDouble(InvoiceLine::getTotal).sum();
-        this.total = subtotal - discount - advancePayment;  // Calculate the final total
+        calculateShippingCost();
+        calculateVAT();
+        this.total = subtotal - discount - advancePayment + shippingCost + vat;  // Calculate the final total including VAT
+    }
+
+    private void calculateShippingCost() {
+        switch (shippingCostType) {
+            case PROVIDER_PAYS:
+                shippingCost = 0;  // Provider pays, so no cost to the customer
+                break;
+            case FLAT_RATE:
+                shippingCost = 5;  // Flat rate contribution, e.g., 5 euros
+                break;
+            case FULL_BILLING:
+                shippingCost = lines.stream().mapToDouble(line -> line.getQuantity() * 0.10).sum();  // Full billing to the customer, e.g., 10 cents per item
+                break;
+        }
+    }
+
+    private void calculateVAT() {
+        double taxableAmount = subtotal - discount - advancePayment + shippingCost;  // Taxable amount includes shipping cost
+        this.vat = taxableAmount * 0.15;  // VAT at 15%
     }
 }

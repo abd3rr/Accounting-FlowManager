@@ -9,7 +9,7 @@ $(document).ready(function() {
         newRow.attr('id', 'productRow' + uniqueId);
 
         // Append new row with fadeIn effect
-        newRow.hide().appendTo('#productsContainer').fadeIn(400);
+        newRow.hide().insertBefore('#addProductRow').fadeIn(400);
 
         uniqueId++; // Increment the ID for the next row
     });

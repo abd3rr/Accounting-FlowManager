@@ -4,15 +4,12 @@
     <meta charset="UTF-8">
     <title>Invoice Form</title>
 </head>
-
 <body>
 <div layout:fragment="content">
     <main>
-        <div class="text-center mb-5">
-            <h1 class="display-1">Add Invoice Form</h1>
-        </div>
 
         <form action="" method="POST">
+
             <div class="container-md" id="productsContainer">
                 <div class="row mb-3">
                     <label class="col-sm-2 col-form-label">Client</label>
@@ -36,7 +33,6 @@
                         <label class="form-label">Quantité</label>
                         <input class="form-control quantity-input" min="1" type="number">
                     </div>
-
                     <div class="col-sm-3">
                         <label class="form-label">Prix</label>
                         <input class="form-control price-input" readonly type="text">
@@ -47,10 +43,20 @@
                 </div>
                 <button class="btn btn-success" id="addProductRow" type="button">Add Product Row</button>
             </div>
+
+            <div class="container-md" id="ShippingContainter" >
+                 <div class="row mb-3">
+                <label class="col-sm-2 col-form-label">shippingCostType</label>
+                <div class="col-sm-10">
+                    <select class="form-select">
+                        <option selected>Choose your shipping Cost Type</option>
+                        <option value="1">One</option>
+                    </select>
+                </div>
+            </div>
+            </div>
         </form>
     </main>
-
 </div>
-
 </body>
 </html>
