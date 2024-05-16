@@ -1,32 +1,42 @@
 html, body {
-    height: 100%; /* important for flexbox parent to have defined height */
+    height: 100%;
+    margin: 0;
+    padding: 0;
 }
 
-body {
+.wrapper {
+    min-height: 100%;
     display: flex;
     flex-direction: column;
 }
 
+.content {
+    flex: 1;
+    padding-bottom: 50px; /* Reserve space for the footer */
+}
+
 .footer-basic {
-    flex-shrink: 0; /* prevents the footer from shrinking */
-    padding: 40px 0;
+    padding: 10px 0;
     background-color: #ffffff;
     color: #4b4c4d;
     text-align: center;
     width: 100%;
+    box-sizing: border-box;
+    margin-top: auto; /* Push footer to the bottom */
 }
 
 .footer-basic ul {
     padding: 0;
+    margin: 0;
     list-style: none;
     text-align: center;
-    font-size: 18px;
-    line-height: 1.6;
-    margin-bottom: 0;
+    font-size: 12px;
+    line-height: 1.4;
 }
 
 .footer-basic li {
-    padding: 0 10px;
+    display: inline-block;
+    margin: 0 5px;
 }
 
 .footer-basic ul a {
@@ -40,8 +50,8 @@ body {
 }
 
 .footer-basic .copyright {
-    margin-top: 15px;
-    font-size: 13px;
+    margin-top: 5px;
+    font-size: 11px;
     color: #aaa;
     margin-bottom: 0;
 }

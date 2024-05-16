@@ -1,4 +1,4 @@
-<div th:fragment="footerFragment" class="footer-basic">
+<div th:if="!${loginForm}" th:fragment="footerFragment" class="footer-basic">
     <footer>
         <ul class="list-inline">
             <li class="list-inline-item"><a href="/static">Home</a></li>
