@@ -3,10 +3,11 @@
       xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/common-head :: commonHeadFragment"></head>
 <body>
-<div th:replace="fragments/header :: headerFragment"></div>
-<div class="flex-grow-1">
-    <div layout:fragment="content">
-        <p>This is the default content</p>
+<div th:replace="fragments/header :: headerFragment"></div><div class="container">
+    <div class="flex-grow-1">
+        <div layout:fragment="content">
+            <p>This is the default content</p>
+        </div>
     </div>
 </div>
 <div th:replace="fragments/footer :: footerFragment"></div>
@@ -15,6 +16,8 @@
 
 <!-- Include Other Scripts -->
 <div layout:fragment="additional-scripts"></div>
-
+<!--=============== MAIN JS ===============-->
+<script src="js/nav.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </body>
 </html>
