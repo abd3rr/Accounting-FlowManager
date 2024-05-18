@@ -21,7 +21,6 @@ public class Role {
     private long id;
 
     @Enumerated(EnumType.STRING)
-    @NotBlank
     private RoleName name;
 
 }

@@ -1,6 +1,9 @@
 package fr.uha.AccountingFlowManager.dto;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import fr.uha.AccountingFlowManager.enums.Country;
+import fr.uha.AccountingFlowManager.enums.RoleName;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,17 +25,17 @@ public class ClientDTO {
 
     private String address;
 
-    private String companyName;
-
-    private String websiteUrl;
-
-    private String country;
+    private Country country;
 
     private LocalDateTime registrationDate;
 
     private LocalDateTime lastUpdated;
+    private RoleName roleName;
 
-    @JsonManagedReference
+    private String passwordHash;
+    @JsonBackReference
     private List<ProviderDTO> providers;
+
+
 
 }

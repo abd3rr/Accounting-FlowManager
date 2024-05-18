@@ -23,7 +23,6 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @NotBlank(message = "Full name must not be blank")
     private String fullName;
 
     // Optional: Used when the user is a business entity
@@ -55,13 +54,23 @@ public class User {
     private LocalDateTime registrationDate;  // Common for all users
     private LocalDateTime lastUpdated;  // Common for all users
 
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "user_clients",
+            name = "user_providers_clients",
             joinColumns = @JoinColumn(name = "provider_id"),
             inverseJoinColumns = @JoinColumn(name = "client_id")
     )
-    private List<User> clients;  // Only populated for users in a provider role
+    private List<User> clients;
+
+    // Providers for whom this user is a client
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "user_clients_providers",
+            joinColumns = @JoinColumn(name = "client_id"),
+            inverseJoinColumns = @JoinColumn(name = "provider_id")
+    )
+    private List<User> providers;
 
 
 
