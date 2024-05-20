@@ -12,5 +12,5 @@ import java.util.Optional;
 public interface InvoiceLineRepository extends JpaRepository<InvoiceLine, Long> {
     List<InvoiceLine> findAll();
     Optional<InvoiceLine> findById(long id);
-
+    long countByProductId(Long id);
 }

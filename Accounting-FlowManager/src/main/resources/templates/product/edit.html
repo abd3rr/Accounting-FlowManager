@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Product</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.6.0/css/bootstrap.min.css">
+</head>
+<body>
+<div layout:fragment="content">
+    <h1>Edit Product</h1>
+
+    <form th:action="@{/products/{id}/edit(id=${product.id})}" th:object="${productDTO}" method="post">
+        <!--Inputs -- WARNING: dateAdded and lastUpdated are generated automatically -->
+        <input readonly type="text" id="id" th:value="${product.id}">
+        <input  readonly type="text" id="dateAdded" th:value="${product.dateAdded}">
+        <input readonly type="text" id="lastUpdated" th:value="${product.lastUpdated}">
+
+        <div class="row">
+            <div class="col-md-6 form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" th:field="${productDTO.name}" class="form-control" placeholder="Enter product name">
+            </div>
+            <div class="col-md-6 form-group">
+                <label for="price">Price:</label>
+                <input type="number" id="price" th:field="${productDTO.price}" class="form-control" placeholder="Enter product price">
+            </div>
+            <div class="col-md-6 form-group">
+                <label for="currency">Currency:</label>
+                <select id="currency" th:field="${productDTO.currency}" class="form-control">
+                    <option th:each="currency : ${T(fr.uha.AccountingFlowManager.enums.Currency).values()}" th:value="${currency}" th:text="${currency}">Currency</option>
+                </select>
+            </div>
+            <div class="col-md-6 form-group">
+                <label for="duration">Duration in seconds (optional):</label>
+                <input type="text" id="duration" th:field="${productDTO.duration}" class="form-control" placeholder="Enter duration">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <textarea id="description" th:field="${productDTO.description}" class="form-control" placeholder="Enter product description"></textarea>
+        </div>
+
+        <div class="form-group form-check">
+            <label class="form-check-label" for="isService">
+                <input type="checkbox" id="isService" th:checked="${productDTO.service}">
+                Is this product a Service?
+            </label>
+        </div>
+
+        <!-- Add more input fields as needed -->
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+</div>
+
+
+</body>
+</html>

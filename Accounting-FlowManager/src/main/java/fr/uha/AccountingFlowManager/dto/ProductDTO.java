@@ -1,28 +1,21 @@
-package fr.uha.AccountingFlowManager.model;
+package fr.uha.AccountingFlowManager.dto;
 
 import fr.uha.AccountingFlowManager.enums.Currency;
-import jakarta.persistence.*;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
-import lombok.EqualsAndHashCode;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-@Entity
 @Getter
 @Setter
-@EqualsAndHashCode
-@ToString
-public class ProductCatalog {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-    @NotBlank
+public class ProductDTO {
+    @NotEmpty(message="Name should not be empty")
     private String name;
 
     private String description;
@@ -42,22 +35,10 @@ public class ProductCatalog {
 
     private boolean isService;
 
-
-    @PrePersist
-    public void setDateAdded() {
-        this.dateAdded = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    public void setLastUpdated() {
-        this.lastUpdated = LocalDateTime.now();
-    }
-
     @Override
     public String toString() {
-        return "\nProductCatalog{" +
-                "\nid=" + id +
-                "\n, name='" + name + '\'' +
+        return "ProductDTO{" +
+                "\nname='" + name + '\'' +
                 "\n, description='" + description + '\'' +
                 "\n, price=" + price +
                 "\n, currency=" + currency +

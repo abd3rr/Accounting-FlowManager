@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>List of Products</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.6.0/css/bootstrap.min.css">
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="d-flex justify-content-between align-items-center">
+        <h1>Product List <span th:text="${size}"></span></h1>
+        <a href="/products/add" class="btn btn-success">Ajouter un produit</a>
+    </div>
+
+
+    <div class="alert alert-success alert-dismissible" th:if="${deleteResult}">
+        <strong>Success!</strong> <span th:text="${deleteMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    <div class="alert alert-warning alert-dismissible"  th:if="${deleteMessage}" th:unless="${deleteResult}">
+        <strong>Warning!</strong> <span th:text="${deleteMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+
+    <table class="table table-striped">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Price</th>
+            <th scope="col">Description</th>
+            <th scope="col"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="product: ${products}">
+            <td  th:text="${product.id}"></td>
+            <td th:text="${product.name}"></td>
+
+            <td th:text="${product.price} + ' ' + ${product.currency.symbol}"></td>
+            <td th:text="${product.description}"></td>
+            <td>
+                <a th:href="@{/products/{id}/edit(id=${product.id})}" class="btn btn-primary">Edit</a>
+                <form th:action="@{/products/{id}/delete(id=${product.id})}" th:method="post">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+
+
+
+</body>
+</html>
