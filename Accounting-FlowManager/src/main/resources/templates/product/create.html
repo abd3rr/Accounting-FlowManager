@@ -9,7 +9,7 @@
 <div layout:fragment="content">
   <h1>Add a new Product</h1>
 
-  <form th:action="@{/products}" method="post" th:object="${product}">
+  <form th:action="@{/products}" method="post" th:object="${product}" th:csrf >
     <div class="row">
       <div class="col-md-6 form-group">
         <label for="name">Name:</label>
