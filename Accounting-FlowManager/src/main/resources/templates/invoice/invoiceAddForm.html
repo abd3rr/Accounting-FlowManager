@@ -7,16 +7,14 @@
 <body>
 <div layout:fragment="content">
     <main>
-
-        <form action="" method="POST">
+        <form id="invoiceForm" method="POST" th:action="@{/invoice/preview}">
             <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
 
             <div class="container-md" id="productsContainer">
-
                 <div class="row mb-3">
                     <label class="col-sm-2 col-form-label">Client</label>
                     <div class="col-sm-10">
-                        <select class="form-select">
+                        <select class="form-select" name="clientId">
                             <option value="helper">Choose your client</option>
                             <option th:each="client : ${clients}" th:text="${client.fullName}" th:value="${client.id}">
                                 Client Name
@@ -33,7 +31,7 @@
                 <div class="row mb-3 product-row-template" style="display: none;">
                     <div class="col-sm-4">
                         <label class="form-label">Produit</label>
-                        <select class="form-select product-select">
+                        <select class="form-select product-select" >
                             <option value="helper">Choose your product</option>
                             <option th:data-currency="${product.currency}" th:data-price="${product.price}"
                                     th:each="product : ${products}"
@@ -43,17 +41,17 @@
                     </div>
                     <div class="col-sm-1">
                         <label class="form-label">Quantité</label>
-                        <input class="form-control quantity-input" min="1" type="number">
+                        <input class="form-control quantity-input"  min="1" type="number">
                     </div>
 
                     <div class="col-sm-3">
                         <label class="form-label">Prix</label>
-                        <input class="form-control price-input readonly-input" readonly type="text">
+                        <input class="form-control price-input readonly-input"  readonly type="text">
                     </div>
 
                     <div class="col-sm-1">
                         <label class="form-label">Currency</label>
-                        <input class="form-control currency-input readonly-input" readonly type="text">
+                        <input class="form-control currency-input readonly-input"  readonly type="text">
                     </div>
                     <div class="col-sm-1 d-flex align-items-end">
                         <button class="btn btn-danger removeProductRow" type="button">Remove</button>
@@ -66,7 +64,7 @@
                 <div class="row mb-3">
                     <label class="col-sm-2 col-form-label">shippingCostType</label>
                     <div class="col-sm-10">
-                        <select class="form-select">
+                        <select class="form-select" name="shippingCostType">
                             <option selected value="helper">Choose your shipping Cost Type</option>
                             <option value="1">One</option>
                         </select>
@@ -76,7 +74,7 @@
                 <div class="row mb-3">
                     <label class="col-sm-2 col-form-label">Reduction</label>
                     <div class="col-sm-10">
-                        <select class="form-select">
+                        <select class="form-select" name="reduction">
                             <option selected value="helper">Choose your reduction</option>
                             <option value="10">10%</option>
                             <option value="15">15%</option>
@@ -88,23 +86,19 @@
                 <div class="row mb-3">
                     <label class="col-sm-2 col-form-label">additional reduction</label>
                     <div class="col-sm-10">
-                        <select class="form-select">
+                        <select class="form-select" name="additionalReduction">
                             <option selected value="helper">Choose your reduction Type</option>
                             <option value="none">none</option>
                             <option value="financiere">financiere</option>
-                            <option value="commerciale ">commerciale</option>
+                            <option value="commerciale">commerciale</option>
                         </select>
                     </div>
                 </div>
-
             </div>
-
 
             <div id="submit">
                 <input class="btn btn-primary" name="submit" type="submit" value="Suivant">
             </div>
-
-
         </form>
     </main>
 </div>

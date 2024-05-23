@@ -1,6 +1,8 @@
 $(document).ready(function () {
     let uniqueId = 1; // Start with an initial ID
 
+    loadFormDataFromSession(); // Load form data from session storage on page load
+
     validateForm(); // Initial validation on page load
 
     $('#addProductRow').click(function () {
@@ -10,11 +12,13 @@ $(document).ready(function () {
         uniqueId++; // Increment the ID for the next row
         validateForm(); // Re-validate the form after adding a new row
         checkProductRows(); // Check product rows after adding
+        saveFormDataToSession(); // Save form data to session storage
     });
 
     // Validate on every change in the form
     $('form').on('change', 'select, input', function () {
         validateForm();
+        saveFormDataToSession(); // Save form data to session storage
     });
 
     $('#productsContainer').on('click', '.removeProductRow', function () {
@@ -22,6 +26,7 @@ $(document).ready(function () {
             $(this).remove();
             validateForm(); // Re-validate after removal
             checkProductRows(); // Check product rows after removal
+            saveFormDataToSession(); // Save form data to session storage
         });
     });
 
@@ -29,11 +34,15 @@ $(document).ready(function () {
     $('#productsContainer').on('change', '.product-select', function () {
         updateProductInfo(this);
         validateForm(); // Re-validate when product info is updated
+        saveFormDataToSession(); // Save form data to session storage
     });
 
     $('form').submit(function (event) {
         if (!validateForm()) { // Prevent submission if validation fails
             event.preventDefault();
+        } else {
+            saveFormDataToSession(); // Save form data to session storage before submitting
+            removeTemplateNames(); // Remove names from template row before submission
         }
     });
 
@@ -41,10 +50,10 @@ $(document).ready(function () {
 });
 
 function resetNewRow(newRow, uniqueId) {
-    newRow.find('.product-select').attr('name', 'product' + uniqueId);
-    newRow.find('.price-input').attr('name', 'price' + uniqueId);
-    newRow.find('.quantity-input').attr('name', 'quantity' + uniqueId);
-    newRow.find('.currency-input').attr('name', 'currency' + uniqueId);
+    newRow.find('.product-select').attr('name', 'products[' + uniqueId + '].productId');
+    newRow.find('.price-input').attr('name', 'products[' + uniqueId + '].price');
+    newRow.find('.quantity-input').attr('name', 'products[' + uniqueId + '].quantity');
+    newRow.find('.currency-input').attr('name', 'products[' + uniqueId + '].currency');
     newRow.find('select').val('helper');
     newRow.find('.form-control').val('');
     newRow.attr('id', 'productRow' + uniqueId);
@@ -109,4 +118,57 @@ function checkProductRows() {
     } else {
         $('#productAlert').fadeOut(200); // Faster disappearance with fadeOut
     }
+}
+
+function saveFormDataToSession() {
+    let formData = {
+        clientId: $('select[name="clientId"]').val(),
+        shippingCostType: $('select[name="shippingCostType"]').val(),
+        reduction: $('select[name="reduction"]').val(),
+        additionalReduction: $('select[name="additionalReduction"]').val(),
+        products: []
+    };
+
+    $('#productsContainer .product-row-template:visible').each(function (index, row) {
+        let product = {
+            productId: $(row).find('.product-select').val(),
+            quantity: $(row).find('.quantity-input').val(),
+            price: $(row).find('.price-input').val(),
+            currency: $(row).find('.currency-input').val()
+        };
+        formData.products.push(product);
+    });
+
+    sessionStorage.setItem('invoiceFormData', JSON.stringify(formData));
+}
+
+function loadFormDataFromSession() {
+    let formData = sessionStorage.getItem('invoiceFormData');
+    if (formData) {
+        formData = JSON.parse(formData);
+
+        $('select[name="clientId"]').val(formData.clientId);
+        $('select[name="shippingCostType"]').val(formData.shippingCostType);
+        $('select[name="reduction"]').val(formData.reduction);
+        $('select[name="additionalReduction"]').val(formData.additionalReduction);
+
+        formData.products.forEach(function (product, index) {
+            if (index > 0) {
+                $('#addProductRow').click();
+            }
+            let row = $('#productsContainer .product-row-template:visible').eq(index);
+            row.find('.product-select').val(product.productId);
+            row.find('.quantity-input').val(product.quantity);
+            row.find('.price-input').val(product.price);
+            row.find('.currency-input').val(product.currency);
+            updateProductInfo(row.find('.product-select'));
+        });
+    }
+}
+
+function removeTemplateNames() {
+    // Specifically target the template row by its initial hidden state and remove its name attributes
+    $('.product-row-template:hidden').each(function () {
+        $(this).find('input, select').removeAttr('name');
+    });
 }
