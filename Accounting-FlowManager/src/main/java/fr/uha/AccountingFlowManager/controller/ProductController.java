@@ -49,7 +49,15 @@ public class ProductController {
         }
         return "product/index";  // The template name
     }
-
+    @GetMapping("/search")
+    public String searchProducts(@RequestParam(name="name", required = false) String name, Model model) {
+        if (name != null) {
+            List<ProductCatalog> products = productService.searchProducts(name);
+            model.addAttribute("products", products);
+            model.addAttribute("size", products.size());
+        }
+        return "product/index";  // The template name
+    }
     @GetMapping("/{id}")
     public String getProductById(@PathVariable Long id, Model model) {
         ProductCatalog productCatalog = productService.getProductById(id);
