@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/common-head :: commonHeadFragment"></head>
+<head th:replace="~{fragments/common-head :: commonHeadFragment}"></head>
 <body>
 <div class="wrapper">
-    <div th:replace="fragments/header :: headerFragment"></div>
+    <div th:replace="~{fragments/header :: headerFragment}"></div>
     <div class="container content">
         <div layout:fragment="content">
             <p>This is the default content</p>
         </div>
     </div>
-    <div th:replace="fragments/footer :: footerFragment"></div>
+    <div th:replace="~{fragments/footer :: footerFragment}"></div>
 </div>
 
 <!-- Include Bootstrap JS and other scripts -->
