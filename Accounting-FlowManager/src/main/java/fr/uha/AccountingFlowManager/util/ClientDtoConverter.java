@@ -27,7 +27,27 @@ public class ClientDtoConverter {
         user.setCountry(clientDTO.getCountry());
         user.setRole(roleService.getOrCreateRole(clientDTO.getRoleName()));
         // for testing we will have a dto for login
-        user.setPasswordHash(clientDTO.getPasswordHash());
+       // user.setPasswordHash(clientDTO.getPasswordHash());
         return user;
+    }
+    public ClientDTO convertToClientDto(User user) {
+        if (user == null) {
+            return null;
+        }
+        ClientDTO clientDTO = new ClientDTO();
+        clientDTO.setId(user.getId());
+        clientDTO.setFullName(user.getFullName());
+        clientDTO.setBusinessName(user.getBusinessName());
+        clientDTO.setEmail(user.getEmail());
+        clientDTO.setPhoneNumber(user.getPhoneNumber());
+        clientDTO.setAddress(user.getAddress());
+        clientDTO.setCountry(user.getCountry());
+        clientDTO.setRegistrationDate(user.getRegistrationDate());
+        clientDTO.setLastUpdated(user.getLastUpdated());
+        if (user.getRole() != null) {
+            clientDTO.setRoleName(user.getRole().getName());
+        }
+        // Assuming that password hash should not be sent back in DTO for security
+        return clientDTO;
     }
 }

@@ -3,7 +3,9 @@ package fr.uha.AccountingFlowManager.controller;
 import fr.uha.AccountingFlowManager.dto.ProductDTO;
 import fr.uha.AccountingFlowManager.enums.Currency;
 import fr.uha.AccountingFlowManager.model.ProductCatalog;
+import fr.uha.AccountingFlowManager.model.User;
 import fr.uha.AccountingFlowManager.service.ProductService;
+import fr.uha.AccountingFlowManager.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,6 +14,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.security.Provider;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -24,8 +27,15 @@ import static com.fasterxml.jackson.databind.type.LogicalType.DateTime;
 @RequestMapping("/products")
 public class ProductController {
 
+
+    private final ProductService productService;
+    private final UserService userService;
+
     @Autowired
-    private ProductService productService;
+    public ProductController(ProductService productService, UserService userService) {
+        this.productService = productService;
+        this.userService = userService;
+    }
 
     @GetMapping
     public String getAllProducts(Model model) {
@@ -79,7 +89,6 @@ public class ProductController {
         productDTO.setDuration(productCatalog.getDuration());
         productDTO.setDescription(productCatalog.getDescription());
         productDTO.setService(productCatalog.isService());
-
         model.addAttribute("productDTO",productDTO);
         return "product/edit";
     }
@@ -188,7 +197,8 @@ public class ProductController {
 
             System.out.println("The output product is ");
             System.out.println(productCatalog);
-
+            User provider = userService.getUserById(userService.getCurrentUserId()).get();
+            productCatalog.setProvider(provider);
             productService.createProduct(productCatalog);
 
 

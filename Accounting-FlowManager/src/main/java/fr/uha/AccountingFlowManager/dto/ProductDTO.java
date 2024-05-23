@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class ProductDTO {
+    private Long id;
     @NotEmpty(message="Name should not be empty")
     private String name;
 

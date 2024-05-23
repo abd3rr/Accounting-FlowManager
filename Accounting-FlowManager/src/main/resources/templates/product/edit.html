@@ -9,7 +9,13 @@
 <div layout:fragment="content">
     <h1>Edit Product</h1>
 
+<<<<<<< HEAD
+    <form th:action="@{/products/{id}/edit(id=${product.id})}" th:object="${productDTO}" method="post">
+        <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
+
+=======
     <form th:action="@{/products/{id}/edit(id=${product.id})}" th:object="${productDTO}" method="post" th:csrf>
+>>>>>>> 84607d63ce9771da0973b0ca53ced628e263d352
         <!--Inputs -- WARNING: dateAdded and lastUpdated are generated automatically -->
         <input readonly type="text" id="id" th:value="${product.id}">
         <input  readonly type="text" id="dateAdded" th:value="${product.dateAdded}">
