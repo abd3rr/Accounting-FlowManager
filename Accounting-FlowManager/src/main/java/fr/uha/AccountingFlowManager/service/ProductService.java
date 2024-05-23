@@ -15,11 +15,11 @@ import java.util.List;
 @Service
 public class ProductService {
 
-    @Autowired
-    private ProductRepository productRepository;
-    @Autowired
-    private InvoiceLineRepository invoiceLineRepository;
 
+    private final ProductRepository productRepository;
+    private final InvoiceLineRepository invoiceLineRepository;
+
+    @Autowired
     public ProductService(ProductRepository productRepository, InvoiceLineRepository invoiceLineRepository){
         this.productRepository = productRepository;
         this.invoiceLineRepository = invoiceLineRepository;

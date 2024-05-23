@@ -33,8 +33,8 @@ public class ClientDTO {
     private RoleName roleName;
 
     private String passwordHash;
-    @JsonBackReference
-    private List<ProviderDTO> providers;
+    //@JsonBackReference
+    //private List<ProviderDTO> providers;
 
 
 

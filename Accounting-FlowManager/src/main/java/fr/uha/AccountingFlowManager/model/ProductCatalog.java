@@ -42,6 +42,9 @@ public class ProductCatalog {
 
     private boolean isService;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "provider_id")
+    private User provider;  // Update this field to ManyToOne
 
     @PrePersist
     public void setDateAdded() {
@@ -52,6 +55,7 @@ public class ProductCatalog {
     public void setLastUpdated() {
         this.lastUpdated = LocalDateTime.now();
     }
+
 
     @Override
     public String toString() {

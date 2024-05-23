@@ -10,6 +10,8 @@
   <h1>Add a new Product</h1>
 
   <form th:action="@{/products}" method="post" th:object="${product}">
+    <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
+
     <div class="row">
       <div class="col-md-6 form-group">
         <label for="name">Name:</label>

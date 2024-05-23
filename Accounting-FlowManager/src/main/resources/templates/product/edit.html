@@ -10,6 +10,8 @@
     <h1>Edit Product</h1>
 
     <form th:action="@{/products/{id}/edit(id=${product.id})}" th:object="${productDTO}" method="post">
+        <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
+
         <!--Inputs -- WARNING: dateAdded and lastUpdated are generated automatically -->
         <input readonly type="text" id="id" th:value="${product.id}">
         <input  readonly type="text" id="dateAdded" th:value="${product.dateAdded}">

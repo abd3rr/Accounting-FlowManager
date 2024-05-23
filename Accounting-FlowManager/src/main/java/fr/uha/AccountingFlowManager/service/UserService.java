@@ -3,7 +3,9 @@ package fr.uha.AccountingFlowManager.service;
 import fr.uha.AccountingFlowManager.dto.ClientDTO;
 import fr.uha.AccountingFlowManager.dto.ProviderDTO;
 import fr.uha.AccountingFlowManager.enums.RoleName;
+import fr.uha.AccountingFlowManager.model.ProductCatalog;
 import fr.uha.AccountingFlowManager.model.User;
+import fr.uha.AccountingFlowManager.repository.ProductRepository;
 import fr.uha.AccountingFlowManager.repository.UserRepository;
 import fr.uha.AccountingFlowManager.security.CustomUserDetails;
 import fr.uha.AccountingFlowManager.util.ClientDtoConverter;
@@ -17,19 +19,23 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final ProductRepository productRepository;
     private final ProviderDtoConverter providerDtoConverter;
     private final ClientDtoConverter clientDtoConverter;
 
     @Autowired
-    public UserService(UserRepository userRepository, ProviderDtoConverter providerDtoConverter, ClientDtoConverter clientDtoConverter){
+    public UserService(UserRepository userRepository, ProviderDtoConverter providerDtoConverter, ClientDtoConverter clientDtoConverter, ProductRepository productRepository){
         this.userRepository = userRepository;
         this.providerDtoConverter = providerDtoConverter;
         this.clientDtoConverter = clientDtoConverter;
+        this.productRepository = productRepository;
     }
     public Long getCurrentUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -58,6 +64,10 @@ public class UserService {
         return null;
     }
 
+    @Transactional
+    public Optional<User> getUserById(Long id) {
+        return userRepository.findById(id);
+    }
     @Transactional
     public Long addProvider(ProviderDTO providerDTO) {
         User user = providerDtoConverter.providerDtoToUser(providerDTO);
@@ -154,5 +164,35 @@ public class UserService {
         userRepository.saveAll(updatedProviders); // This ensures all providers are updated in the database
     }
 
+    @Transactional( readOnly = true)
+    public List<ClientDTO> getCurrentProviderClients() {
+        Long currentUserId = getCurrentUserId();
+        String currentUserRole = getCurrentUserRole();
+
+        if (currentUserRole == null || !currentUserRole.equals(RoleName.ROLE_PROVIDER.toString())) {
+            throw new IllegalArgumentException("Current user is not a provider");
+        }
+
+        User provider = userRepository.findById(currentUserId)
+                .orElseThrow(() -> new IllegalArgumentException("Provider not found with ID: " + currentUserId));
+
+        return provider.getClients().stream()
+                .map(clientDtoConverter::convertToClientDto)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProductCatalog> getCurrentProviderProducts() {
+        Long currentUserId = getCurrentUserId();
+        String currentUserRole = getCurrentUserRole();
+
+        if (currentUserRole == null || !currentUserRole.equals(RoleName.ROLE_PROVIDER.toString())) {
+            throw new IllegalArgumentException("Current user is not a provider");
+        }
+
+        return productRepository.findByProvider_Id(currentUserId);
+    }
+
 
 }
+
