@@ -43,7 +43,7 @@
             <td th:text="${product.description}"></td>
             <td>
                 <a th:href="@{/products/{id}/edit(id=${product.id})}" class="btn btn-primary">Edit</a>
-                <form th:action="@{/products/{id}/delete(id=${product.id})}" th:method="post">
+                <form th:action="@{/products/{id}/delete(id=${product.id})}" th:method="post" th:csrf>
                     <button type="submit" class="btn btn-danger">Delete</button>
                 </form>
             </td>
