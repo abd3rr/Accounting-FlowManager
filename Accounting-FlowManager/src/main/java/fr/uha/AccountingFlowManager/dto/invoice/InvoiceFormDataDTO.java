@@ -1,4 +1,4 @@
-package fr.uha.AccountingFlowManager.dto;
+package fr.uha.AccountingFlowManager.dto.invoice;
 
 import lombok.Data;
 
@@ -13,7 +13,7 @@ public class InvoiceFormDataDTO {
     private List<ProductInvoiceForm> products;
 
     @Data
-    static
+    public static
     class ProductInvoiceForm {
         private String productId;
         private int quantity;

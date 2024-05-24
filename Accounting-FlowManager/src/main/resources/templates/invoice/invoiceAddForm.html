@@ -9,6 +9,7 @@
     <main>
         <form id="invoiceForm" method="POST" th:action="@{/invoice/preview}">
             <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
+            <input id="userId" th:value="${userId}" type="hidden"/>
 
             <div class="container-md" id="productsContainer">
                 <div class="row mb-3">
@@ -31,7 +32,7 @@
                 <div class="row mb-3 product-row-template" style="display: none;">
                     <div class="col-sm-4">
                         <label class="form-label">Produit</label>
-                        <select class="form-select product-select" >
+                        <select class="form-select product-select">
                             <option value="helper">Choose your product</option>
                             <option th:data-currency="${product.currency}" th:data-price="${product.price}"
                                     th:each="product : ${products}"
@@ -41,17 +42,17 @@
                     </div>
                     <div class="col-sm-1">
                         <label class="form-label">Quantité</label>
-                        <input class="form-control quantity-input"  min="1" type="number">
+                        <input class="form-control quantity-input" min="1" type="number">
                     </div>
 
                     <div class="col-sm-3">
                         <label class="form-label">Prix</label>
-                        <input class="form-control price-input readonly-input"  readonly type="text">
+                        <input class="form-control price-input readonly-input" readonly type="text">
                     </div>
 
                     <div class="col-sm-1">
                         <label class="form-label">Currency</label>
-                        <input class="form-control currency-input readonly-input"  readonly type="text">
+                        <input class="form-control currency-input readonly-input" readonly type="text">
                     </div>
                     <div class="col-sm-1 d-flex align-items-end">
                         <button class="btn btn-danger removeProductRow" type="button">Remove</button>
@@ -62,20 +63,24 @@
 
             <div class="container-md" id="ShippingContainter">
                 <div class="row mb-3">
-                    <label class="col-sm-2 col-form-label">shippingCostType</label>
-                    <div class="col-sm-10">
+                    <label class="col-sm-3 col-form-label">Type de frais de port</label>
+                    <div class="col-sm-8">
                         <select class="form-select" name="shippingCostType">
-                            <option selected value="helper">Choose your shipping Cost Type</option>
-                            <option value="1">One</option>
+                            <option selected value="helper">Choisissez votre type de frais de port</option>
+                            <option th:each="type : ${shippingCostTypes}"
+                                    th:text="${type.displayName}" th:value="${type.name()}">Type
+                            </option>
                         </select>
                     </div>
                 </div>
 
+
                 <div class="row mb-3">
-                    <label class="col-sm-2 col-form-label">Reduction</label>
-                    <div class="col-sm-10">
+                    <label class="col-sm-3 col-form-label">Réduction</label>
+                    <div class="col-sm-8">
                         <select class="form-select" name="reduction">
-                            <option selected value="helper">Choose your reduction</option>
+                            <option selected value="helper">Choisissez votre réduction</option>
+                            <option value="0">0%</option>
                             <option value="10">10%</option>
                             <option value="15">15%</option>
                             <option value="20">20%</option>
@@ -84,16 +89,19 @@
                 </div>
 
                 <div class="row mb-3">
-                    <label class="col-sm-2 col-form-label">additional reduction</label>
-                    <div class="col-sm-10">
+                    <label class="col-sm-3 col-form-label">Réduction Additionnel</label>
+                    <div class="col-sm-8">
                         <select class="form-select" name="additionalReduction">
-                            <option selected value="helper">Choose your reduction Type</option>
-                            <option value="none">none</option>
-                            <option value="financiere">financiere</option>
-                            <option value="commerciale">commerciale</option>
+                            <option selected value="helper">Choisissez votre type de réduction</option>
+                            <option value="NA"> Sans</option>
+                            <option th:each="type : ${reductionTypes}"
+                                    th:text="${type.displayName}" th:value="${type.name()}">Type
+                            </option>
                         </select>
                     </div>
                 </div>
+
+
             </div>
 
             <div id="submit">

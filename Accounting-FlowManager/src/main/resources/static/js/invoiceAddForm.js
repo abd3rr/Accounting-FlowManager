@@ -1,24 +1,25 @@
 $(document).ready(function () {
     let uniqueId = 1; // Start with an initial ID
+    let userId = $('#userId').val(); // Retrieve user ID
 
-    loadFormDataFromSession(); // Load form data from session storage on page load
+    loadFormDataFromSession(userId); // Load form data from session storage on page load
 
     validateForm(); // Initial validation on page load
 
     $('#addProductRow').click(function () {
-        let newRow = $('.product-row-template').first().clone().show();
+        let newRow = $('.product-row-template').first().clone().removeClass('product-row-template').addClass('product-row').show();
         resetNewRow(newRow, uniqueId);
         newRow.hide().insertBefore('#addProductRow').fadeIn(200); // Faster appearance with fadeIn
         uniqueId++; // Increment the ID for the next row
         validateForm(); // Re-validate the form after adding a new row
         checkProductRows(); // Check product rows after adding
-        saveFormDataToSession(); // Save form data to session storage
+        saveFormDataToSession(userId); // Save form data to session storage
     });
 
     // Validate on every change in the form
     $('form').on('change', 'select, input', function () {
         validateForm();
-        saveFormDataToSession(); // Save form data to session storage
+        saveFormDataToSession(userId); // Save form data to session storage
     });
 
     $('#productsContainer').on('click', '.removeProductRow', function () {
@@ -26,7 +27,7 @@ $(document).ready(function () {
             $(this).remove();
             validateForm(); // Re-validate after removal
             checkProductRows(); // Check product rows after removal
-            saveFormDataToSession(); // Save form data to session storage
+            saveFormDataToSession(userId); // Save form data to session storage
         });
     });
 
@@ -34,15 +35,15 @@ $(document).ready(function () {
     $('#productsContainer').on('change', '.product-select', function () {
         updateProductInfo(this);
         validateForm(); // Re-validate when product info is updated
-        saveFormDataToSession(); // Save form data to session storage
+        saveFormDataToSession(userId); // Save form data to session storage
     });
 
     $('form').submit(function (event) {
         if (!validateForm()) { // Prevent submission if validation fails
             event.preventDefault();
         } else {
-            saveFormDataToSession(); // Save form data to session storage before submitting
-            removeTemplateNames(); // Remove names from template row before submission
+            removeTemplateNames(); // Remove names from template row before submitting
+            saveFormDataToSession(userId); // Save form data to session storage before submitting
         }
     });
 
@@ -98,7 +99,7 @@ function validateForm() {
     });
 
     // Ensure there is at least one product row
-    if ($('#productsContainer .product-row-template:visible').length === 0) {
+    if ($('#productsContainer .product-row').length === 0) {
         isValid = false;
         $('#productAlert').fadeIn(200); // Show alert if no product row
         console.log("No product rows found.");
@@ -112,7 +113,7 @@ function validateForm() {
 }
 
 function checkProductRows() {
-    let productRows = $('#productsContainer .product-row-template:visible');
+    let productRows = $('#productsContainer .product-row');
     if (productRows.length === 0) {
         $('#productAlert').fadeIn(200); // Faster appearance with fadeIn
     } else {
@@ -120,7 +121,7 @@ function checkProductRows() {
     }
 }
 
-function saveFormDataToSession() {
+function saveFormDataToSession(userId) {
     let formData = {
         clientId: $('select[name="clientId"]').val(),
         shippingCostType: $('select[name="shippingCostType"]').val(),
@@ -129,7 +130,7 @@ function saveFormDataToSession() {
         products: []
     };
 
-    $('#productsContainer .product-row-template:visible').each(function (index, row) {
+    $('#productsContainer .product-row').each(function (index, row) {
         let product = {
             productId: $(row).find('.product-select').val(),
             quantity: $(row).find('.quantity-input').val(),
@@ -139,11 +140,11 @@ function saveFormDataToSession() {
         formData.products.push(product);
     });
 
-    sessionStorage.setItem('invoiceFormData', JSON.stringify(formData));
+    sessionStorage.setItem('invoiceFormData-' + userId, JSON.stringify(formData));
 }
 
-function loadFormDataFromSession() {
-    let formData = sessionStorage.getItem('invoiceFormData');
+function loadFormDataFromSession(userId) {
+    let formData = sessionStorage.getItem('invoiceFormData-' + userId);
     if (formData) {
         formData = JSON.parse(formData);
 
@@ -156,7 +157,7 @@ function loadFormDataFromSession() {
             if (index > 0) {
                 $('#addProductRow').click();
             }
-            let row = $('#productsContainer .product-row-template:visible').eq(index);
+            let row = $('#productsContainer .product-row').eq(index);
             row.find('.product-select').val(product.productId);
             row.find('.quantity-input').val(product.quantity);
             row.find('.price-input').val(product.price);
@@ -167,8 +168,7 @@ function loadFormDataFromSession() {
 }
 
 function removeTemplateNames() {
-    // Specifically target the template row by its initial hidden state and remove its name attributes
-    $('.product-row-template:hidden').each(function () {
-        $(this).find('input, select').removeAttr('name');
-    });
+    // Explicitly target the template row and remove names from its children
+    let templateRow = $('.product-row-template');
+    templateRow.find('input, select').removeAttr('name');
 }
