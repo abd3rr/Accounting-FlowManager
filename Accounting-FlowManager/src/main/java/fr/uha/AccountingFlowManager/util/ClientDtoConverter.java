@@ -37,7 +37,6 @@ public class ClientDtoConverter {
         ClientDTO clientDTO = new ClientDTO();
         clientDTO.setId(user.getId());
         clientDTO.setFullName(user.getFullName());
-        clientDTO.setBusinessName(user.getBusinessName());
         clientDTO.setEmail(user.getEmail());
         clientDTO.setPhoneNumber(user.getPhoneNumber());
         clientDTO.setAddress(user.getAddress());

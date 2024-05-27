@@ -2,12 +2,72 @@
 <html lang="en" layout:decorate="~{layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
     <meta charset="UTF-8">
-    <title>Invoice Form</title>
+    <title>Invoice Preview</title>
 </head>
 <body>
 <div layout:fragment="content">
-    <main>
-        <h1>Preview invoice</h1>
+    <main class="container mt-5">
+        <div class="invoice-container">
+            <h1 class="mb-4 text-center">Invoice Preview</h1>
+
+            <div class="invoice-header row mb-4">
+                <div class="col-md-6">
+                    <h4>Client Details</h4>
+                    <p><strong>Name:</strong> <span th:text="${previewDTO.clientName}">Client Name</span></p>
+                    <p><strong>Address:</strong> <span th:text="${previewDTO.clientAddress}">Client Address</span></p>
+                    <p><strong>Country:</strong> <span th:text="${previewDTO.clientCountry}">Client Country</span></p>
+                </div>
+                <div class="col-md-6">
+                    <h4>Provider Details</h4>
+                    <p><strong>Name:</strong> <span th:text="${previewDTO.providerName}">Provider Name</span></p>
+                    <p><strong>Address:</strong> <span th:text="${previewDTO.providerAddress}">Provider Address</span></p>
+                    <p><strong>Country:</strong> <span th:text="${previewDTO.providerCountry}">Provider Country</span></p>
+                    <p><strong>Email:</strong> <span th:text="${previewDTO.providerEmail}">Provider Email</span></p>
+                </div>
+            </div>
+
+            <h4 class="mb-3">Product Details</h4>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <th>Quantity</th>
+                    <th>Unit Price</th>
+                    <th>Total Price</th>
+                    <th>Currency</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="product : ${previewDTO.products}">
+                    <td th:text="${product.productName}">Product Name</td>
+                    <td th:text="${product.quantity}">Quantity</td>
+                    <td th:text="${product.unitPrice}">Unit Price</td>
+                    <td th:text="${product.totalPrice}">Total Price</td>
+                    <td th:text="${product.currency}">Currency</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="invoice-section row">
+                <div class="col-md-6">
+                    <h4>Invoice Summary</h4>
+                    <div class="invoice-summary">
+                        <p><strong>Reduction:</strong> <span th:text="${previewDTO.reduction}">Reduction</span>%</p>
+                        <p><strong>Additional Reduction:</strong> <span th:text="${previewDTO.additionalReduction}">Additional Reduction</span>%</p>
+                        <p><strong>Shipping Cost:</strong> <span th:text="${previewDTO.shippingCost}">Shipping Cost</span></p>
+                        <p><strong>Advance Payment:</strong> <span th:text="${previewDTO.advancePayment}">Advance Payment</span></p>
+                        <p><strong>Total HT:</strong> <span th:text="${previewDTO.totalHT}">Total HT</span></p>
+                        <p><strong>Total TTC:</strong> <span th:text="${previewDTO.totalTTC}">Total TTC</span></p>
+                        <p><strong>VAT:</strong> <span th:text="${previewDTO.tva}">VAT</span>%</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4 btn-group">
+                <button class="btn btn-danger" onclick="history.back()">Cancel</button>
+                <button class="btn btn-success" onclick="window.location.href='/invoice/validate'">Validate</button>
+            </div>
+        </div>
     </main>
 </div>
 </body>

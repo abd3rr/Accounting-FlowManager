@@ -32,7 +32,7 @@ public class ClientDTO {
     private LocalDateTime lastUpdated;
     private RoleName roleName;
 
-    private String passwordHash;
+    // private String passwordHash;
     //@JsonBackReference
     //private List<ProviderDTO> providers;
 

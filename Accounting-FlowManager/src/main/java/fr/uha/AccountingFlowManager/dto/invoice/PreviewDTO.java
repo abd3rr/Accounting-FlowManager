@@ -8,11 +8,17 @@ import java.util.List;
 public class PreviewDTO {
     private String clientId;
     private String clientName;
+    private String clientAddress;
+    private String clientCountry;
     private String providerName;
+    private String providerAddress;
+    private String providerCountry;
     private String providerEmail;
     private String shippingCostType;
     private double reduction;
     private double additionalReduction;
+    private String additionalReductionType;
+
     private double shippingCost;
     private double advancePayment;
     private double tva = 15;

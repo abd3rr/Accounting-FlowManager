@@ -25,9 +25,6 @@ public class User {
 
     private String fullName;
 
-    // Optional: Used when the user is a business entity
-    private String businessName;
-
     @Email(message = "Email should be valid")
     private String email;
 

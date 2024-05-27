@@ -1,0 +1,51 @@
+
+
+
+
+.invoice-container {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    max-width: 900px;
+    width: 100%;
+    font-family: Arial, sans-serif;
+}
+
+.invoice-header {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.invoice-section {
+    margin-bottom: 20px;
+}
+
+.invoice-summary p {
+    font-size: 1.1rem;
+}
+
+.btn-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.btn {
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: #ffffff;
+}
+
+.btn-success {
+    background-color: #28a745;
+    color: #ffffff;
+}

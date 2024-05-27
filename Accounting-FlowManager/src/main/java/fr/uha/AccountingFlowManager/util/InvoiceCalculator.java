@@ -1,10 +1,12 @@
-package fr.uha.AccountingFlowManager.utils;
+package fr.uha.AccountingFlowManager.util;
 
 import fr.uha.AccountingFlowManager.dto.invoice.InvoiceFormDataDTO;
 import fr.uha.AccountingFlowManager.enums.ReductionType;
 import fr.uha.AccountingFlowManager.enums.ShippingCostType;
 import fr.uha.AccountingFlowManager.exception.InvoiceExceptions.*;
+import org.springframework.stereotype.Component;
 
+@Component
 public class InvoiceCalculator {
 
     private static final double COMMERCIAL_REDUCTION_PERCENTAGE = 0.01;
@@ -59,20 +61,16 @@ public class InvoiceCalculator {
         double shippingCost = 0.0;
 
         try {
-            switch (ShippingCostType.valueOf(invoiceData.getShippingCostType())) {
-                case PROVIDER_PAYS:
-                    shippingCost = 0.0;
-                    break;
-                case FLAT_RATE:
-                    shippingCost = FLAT_RATE_SHIPPING_COST;
-                    break;
-                case FULL_BILLING:
+            shippingCost = switch (ShippingCostType.valueOf(invoiceData.getShippingCostType())) {
+                case PROVIDER_PAYS -> 0.0;
+                case FLAT_RATE -> FLAT_RATE_SHIPPING_COST;
+                case FULL_BILLING -> {
                     int totalQuantity = invoiceData.getProducts().stream().mapToInt(InvoiceFormDataDTO.ProductInvoiceForm::getQuantity).sum();
-                    shippingCost = totalQuantity * PER_ITEM_SHIPPING_COST;
-                    break;
-                default:
-                    throw new InvalidShippingCostTypeException("Invalid shipping cost type: " + invoiceData.getShippingCostType());
-            }
+                    yield totalQuantity * PER_ITEM_SHIPPING_COST;
+                }
+                default ->
+                        throw new InvalidShippingCostTypeException("Invalid shipping cost type: " + invoiceData.getShippingCostType());
+            };
         } catch (IllegalArgumentException e) {
             throw new InvalidShippingCostTypeException("Invalid shipping cost type: " + invoiceData.getShippingCostType());
         }
@@ -91,6 +89,7 @@ public class InvoiceCalculator {
         totalPrice = totalPrice * (1 - reduction);
         totalPrice += shippingCost;
         totalPrice = totalPrice * (1 + VAT_RATE);
+        totalPrice -= invoiceData.getAdvancePaymentAsDouble(); // Subtract the advance payment from the total price
 
         return totalPrice;
     }

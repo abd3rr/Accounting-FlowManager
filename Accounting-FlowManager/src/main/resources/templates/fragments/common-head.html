@@ -15,7 +15,9 @@
 
     <title th:text="${title}">Default Title</title>
 
-    <!-- style and css for invoiceAddForm.html -->
+    <!--  css  -->
+    <link href="/css/loginForm.css" rel="stylesheet" th:if="${loginForm}">
     <link rel="stylesheet" th:if="${invoiceAddForm}" href="/css/invoiceAddForm.css">
+    <link rel="stylesheet" th:if="${invoicePreview}" href="/css/invoicePreview.css">
 
 </head>

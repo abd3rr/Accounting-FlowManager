@@ -2,9 +2,14 @@ package fr.uha.AccountingFlowManager.controller;
 
 
 import fr.uha.AccountingFlowManager.dto.invoice.InvoiceFormDataDTO;
+import fr.uha.AccountingFlowManager.dto.invoice.PreviewDTO;
 import fr.uha.AccountingFlowManager.enums.ReductionType;
 import fr.uha.AccountingFlowManager.enums.ShippingCostType;
+import fr.uha.AccountingFlowManager.model.ProductCatalog;
+import fr.uha.AccountingFlowManager.model.User;
+import fr.uha.AccountingFlowManager.service.ProductService;
 import fr.uha.AccountingFlowManager.service.UserService;
+import fr.uha.AccountingFlowManager.util.InvoiceDtoHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,10 +25,11 @@ import java.util.stream.Collectors;
 public class InvoiceController {
 
     private final UserService userService;
-
+    private final ProductService productService;
     @Autowired
-    public InvoiceController(UserService userService) {
+    public InvoiceController(UserService userService, ProductService productService) {
         this.userService = userService;
+        this.productService = productService;
     }
     @GetMapping("/addInvoice")
     private String renderInvoiceForm(Model model){
@@ -44,10 +50,30 @@ public class InvoiceController {
                 .collect(Collectors.toList());
         invoiceFormDataDTO.setProducts(validProducts);
 
-        model.addAttribute("invoiceFormData", invoiceFormDataDTO);
-        System.out.println(invoiceFormDataDTO);
+        // Retrieve client and provider information
+        User client = userService.getUserById(Long.valueOf(invoiceFormDataDTO.getClientId()))
+                .orElseThrow(() -> new IllegalArgumentException("Client not found: " + invoiceFormDataDTO.getClientId()));
+        User provider = userService.getUserById(userService.getCurrentUserId())
+                .orElseThrow(() -> new IllegalArgumentException("Provider not found: " + userService.getCurrentUserId()));
+
+        // Retrieve product information
+        List<ProductCatalog> products = validProducts.stream()
+                .map(productInvoiceForm -> productService.getProductById(Long.valueOf(productInvoiceForm.getProductId())))
+                .collect(Collectors.toList());
+
+        // Create preview DTO
+        PreviewDTO previewDTO = InvoiceDtoHelper.createPreviewDTO(client, provider, products, invoiceFormDataDTO);
+
+        // Add preview DTO to the model
+        model.addAttribute("invoicePreview", true);
+        model.addAttribute("previewDTO", previewDTO);
+
+        // For debugging purposes
+        System.out.println(previewDTO);
+
         return "/invoice/invoicePreview";
     }
+
 
 
 }
