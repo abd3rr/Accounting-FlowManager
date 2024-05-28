@@ -1,5 +1,7 @@
 package fr.uha.AccountingFlowManager.dto.invoice;
 
+import fr.uha.AccountingFlowManager.enums.ReductionType;
+import fr.uha.AccountingFlowManager.enums.ShippingCostType;
 import lombok.Data;
 
 import java.util.List;
@@ -10,15 +12,16 @@ public class PreviewDTO {
     private String clientName;
     private String clientAddress;
     private String clientCountry;
+    private String clientEmail;
     private String providerName;
     private String providerAddress;
     private String providerCountry;
     private String providerEmail;
-    private String shippingCostType;
+    private ShippingCostType shippingCostType;
     private double reduction;
     private double additionalReduction;
-    private String additionalReductionType;
-
+    private ReductionType additionalReductionType;
+    private double totalReduction;
     private double shippingCost;
     private double advancePayment;
     private double tva = 15;

@@ -4,6 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum ReductionType {
+    NONE("Aucune Réduction Additionnelle"),
     FINANCIERE("Réduction financière"),
     COMMERCIALE("Réduction commerciale");
 

@@ -92,7 +92,6 @@
                     <div class="col-sm-8">
                         <select class="form-select" name="additionalReduction">
                             <option selected value="helper">Choisissez votre type de réduction</option>
-                            <option value="NA">Sans</option>
                             <option th:each="type : ${reductionTypes}"
                                     th:text="${type.displayName}" th:value="${type.name()}">Type
                             </option>

@@ -1,7 +1,3 @@
-
-
-
-
 .invoice-container {
     background-color: #ffffff;
     padding: 30px;
@@ -17,6 +13,20 @@
     padding: 20px;
     border-radius: 5px;
     margin-bottom: 20px;
+    border: 1px solid #ddd;
+}
+
+.invoice-header h4 {
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.invoice-header p {
+    background-color: #ffffff;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
 }
 
 .invoice-section {

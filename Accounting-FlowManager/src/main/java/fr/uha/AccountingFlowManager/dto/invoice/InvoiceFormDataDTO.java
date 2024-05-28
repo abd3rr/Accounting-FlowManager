@@ -1,5 +1,7 @@
 package fr.uha.AccountingFlowManager.dto.invoice;
 
+import fr.uha.AccountingFlowManager.enums.ReductionType;
+import fr.uha.AccountingFlowManager.enums.ShippingCostType;
 import fr.uha.AccountingFlowManager.exception.InvoiceExceptions;
 import lombok.Data;
 
@@ -8,10 +10,10 @@ import java.util.List;
 @Data
 public class InvoiceFormDataDTO {
     private String clientId;
-    private String shippingCostType;
+    private ShippingCostType shippingCostType;
     private String reduction;
-    private String additionalReduction;
-    private String advancePayment;
+    private ReductionType additionalReduction; //type
+    private String advancePayment; //type
     private List<ProductInvoiceForm> products;
 
     @Data
