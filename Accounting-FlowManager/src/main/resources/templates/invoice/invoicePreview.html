@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Aperçu de la Facture</title>
-    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <div layout:fragment="content">
@@ -90,7 +89,7 @@
 
             <div class="mt-4 btn-group">
                 <button class="btn btn-danger" onclick="history.back()">Annuler</button>
-                <button class="btn btn-success" onclick="window.location.href='/invoice/validate'">Valider</button>
+                <a th:href="@{/invoice/create}" class="btn btn-success">Valider</a>
             </div>
         </div>
     </main>

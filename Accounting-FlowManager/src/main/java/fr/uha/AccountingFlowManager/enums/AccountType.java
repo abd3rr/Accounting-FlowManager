@@ -4,8 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum AccountType {
-    OUTSTANDING_RECEIVABLES("Outstanding Receivables"),
-    ADVANCE_PAYMENTS("Advance Payments");
+    BALANCE("Balance");
 
     private final String displayName;
 

@@ -60,13 +60,7 @@ public class User {
     )
     private List<User> clients;
 
-    // Providers for whom this user is a client
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "user_clients_providers",
-            joinColumns = @JoinColumn(name = "client_id"),
-            inverseJoinColumns = @JoinColumn(name = "provider_id")
-    )
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "clients")
     private List<User> providers;
 
 

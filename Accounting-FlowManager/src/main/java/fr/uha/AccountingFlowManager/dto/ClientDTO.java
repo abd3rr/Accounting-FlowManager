@@ -32,6 +32,9 @@ public class ClientDTO {
     private LocalDateTime lastUpdated;
     private RoleName roleName;
 
+    public void setPasswordHash(String passwordHash) {
+    }
+
     // private String passwordHash;
     //@JsonBackReference
     //private List<ProviderDTO> providers;

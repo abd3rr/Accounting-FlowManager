@@ -35,6 +35,6 @@ public class ProviderDTO {
     @JsonManagedReference
     private List<ClientDTO> clients;
 
-    private List<ProductCatalogDTO> products;
+    //private List<ProductCatalogDTO> products;
 
 }

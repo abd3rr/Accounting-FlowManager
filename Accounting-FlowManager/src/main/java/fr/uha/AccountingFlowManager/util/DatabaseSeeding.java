@@ -30,7 +30,7 @@ public class DatabaseSeeding implements CommandLineRunner {
         client1.setPhoneNumber("123-456-7890");
         client1.setAddress("1234 Client St.");
         client1.setCountry(Country.NORWAY);
-     //   client1.setPasswordHash(passwordHash);
+        client1.setPasswordHash(passwordHash);
         client1.setRoleName(RoleName.ROLE_CLIENT);
 
         ClientDTO client2 = new ClientDTO();
@@ -39,7 +39,7 @@ public class DatabaseSeeding implements CommandLineRunner {
         client2.setPhoneNumber("234-567-8901");
         client2.setAddress("2345 Client Ave.");
         client2.setCountry(Country.NORWAY);
-        //client2.setPasswordHash(passwordHash);
+        client2.setPasswordHash(passwordHash);
         client2.setRoleName(RoleName.ROLE_CLIENT);
 
         ClientDTO client3 = new ClientDTO();
@@ -48,7 +48,7 @@ public class DatabaseSeeding implements CommandLineRunner {
         client3.setPhoneNumber("345-678-9012");
         client3.setAddress("3456 Client Blvd.");
         client3.setCountry(Country.NORWAY);
-        //client3.setPasswordHash(passwordHash);
+        client3.setPasswordHash(passwordHash);
         client3.setRoleName(RoleName.ROLE_CLIENT);
 
         // Define test providers
@@ -95,6 +95,8 @@ public class DatabaseSeeding implements CommandLineRunner {
         userService.addProviderClients(providerId1, clientIdsForProvider1);
         userService.addProviderClients(providerId2, clientIdsForProvider2);
     }
+
+
 
     @Override
     public void run(String... args) throws Exception {

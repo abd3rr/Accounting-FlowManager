@@ -3,6 +3,7 @@ package fr.uha.AccountingFlowManager.model;
 import fr.uha.AccountingFlowManager.enums.Currency;
 import fr.uha.AccountingFlowManager.enums.TransactionType;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Size;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -23,7 +24,7 @@ public class Transaction {
 
     private LocalDateTime date;
 
-    @Size(min = 0)
+    @DecimalMin(value = "0.0", inclusive = false)
     private Double amount;
 
     @Enumerated(EnumType.STRING)

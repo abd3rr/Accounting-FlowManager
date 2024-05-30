@@ -5,7 +5,6 @@ import lombok.Getter;
 
 @Getter
 public enum TransactionType {
-    CREDIT("Credit"),
     DEBIT("Debit");
 
     private final String displayName;

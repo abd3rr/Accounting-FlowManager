@@ -7,9 +7,11 @@ import fr.uha.AccountingFlowManager.enums.ReductionType;
 import fr.uha.AccountingFlowManager.enums.ShippingCostType;
 import fr.uha.AccountingFlowManager.model.ProductCatalog;
 import fr.uha.AccountingFlowManager.model.User;
+import fr.uha.AccountingFlowManager.service.InvoiceService;
 import fr.uha.AccountingFlowManager.service.ProductService;
 import fr.uha.AccountingFlowManager.service.UserService;
 import fr.uha.AccountingFlowManager.util.InvoiceDtoHelper;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,10 +28,12 @@ public class InvoiceController {
 
     private final UserService userService;
     private final ProductService productService;
+    private final InvoiceService invoiceService;
     @Autowired
-    public InvoiceController(UserService userService, ProductService productService) {
+    public InvoiceController(UserService userService, ProductService productService, InvoiceService invoiceService) {
         this.userService = userService;
         this.productService = productService;
+        this.invoiceService = invoiceService;
     }
     @GetMapping("/addInvoice")
     private String renderInvoiceForm(Model model){
@@ -43,7 +47,7 @@ public class InvoiceController {
     }
 
     @PostMapping("/invoice/preview")
-    public String renderPreviewInvoice(@ModelAttribute("invoiceFormData") InvoiceFormDataDTO invoiceFormDataDTO, Model model) {
+    public String renderPreviewInvoice(@ModelAttribute("invoiceFormData") InvoiceFormDataDTO invoiceFormDataDTO, Model model, HttpSession session) {
         // Filter out invalid products
         List<InvoiceFormDataDTO.ProductInvoiceForm> validProducts = invoiceFormDataDTO.getProducts().stream()
                 .filter(product -> product.getProductId() != null && !product.getProductId().isEmpty())
@@ -67,13 +71,32 @@ public class InvoiceController {
         // Add preview DTO to the model
         model.addAttribute("invoicePreview", true);
         model.addAttribute("previewDTO", previewDTO);
+        session.setAttribute("previewDTO", previewDTO);
 
-        // For debugging purposes
-        System.out.println(previewDTO);
 
         return "/invoice/invoicePreview";
     }
 
+    @GetMapping("/invoice/create")
+    public String createInvoice(HttpSession session, Model model) {
+        PreviewDTO previewDTO = (PreviewDTO) session.getAttribute("previewDTO");
+        if (previewDTO == null) {
+           System.out.println("error create null previewDTO");
+        }
+        System.out.println(previewDTO);
+
+        if (previewDTO != null) {
+            invoiceService.createInvoiceAndTransaction(previewDTO);
+        }
+        session.removeAttribute("previewDTO");
+
+        return "redirect:/invoice/list";
+    }
+
+    @GetMapping("/invoice/list")
+    public String listInvoices(Model model) {
+        return "/invoice/invoiceList";
+    }
 
 
 }

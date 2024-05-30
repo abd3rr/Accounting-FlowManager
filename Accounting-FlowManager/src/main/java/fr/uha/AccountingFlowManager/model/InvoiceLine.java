@@ -1,6 +1,7 @@
 package fr.uha.AccountingFlowManager.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -28,14 +29,14 @@ public class InvoiceLine {
     private ProductCatalog product;
 
 
-    @Size(min = 0)
+    @DecimalMin(value = "0.0", inclusive = false)
     private double quantity;
 
-    @Size(min = 0)
+    @DecimalMin(value = "0.0", inclusive = false)
     private double price;
 
-    @Size(min = 0)
-    private double total;  // price * quantity
+    @DecimalMin(value = "0.0", inclusive = false)
+    private double total;
 
     @PostLoad
     @PrePersist

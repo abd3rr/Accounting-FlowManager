@@ -2,8 +2,8 @@ package fr.uha.AccountingFlowManager.model;
 
 import fr.uha.AccountingFlowManager.enums.ShippingCostType;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.EqualsAndHashCode;
@@ -35,14 +35,16 @@ public class Invoice {
     @Enumerated(EnumType.STRING)
     private fr.uha.AccountingFlowManager.enums.Currency currency;
 
-
-    @Size(min = 0)
+    @DecimalMin(value = "0.0", inclusive = true)
     private double subtotal;  // Total before discounts and taxes
-    @Size(min = 0)
+
+    @DecimalMin(value = "0.0", inclusive = true)
     private double discount;  // Total discounts
-    @Size(min = 0)
+
+    @DecimalMin(value = "0.0", inclusive = true)
     private double advancePayment;  // Amount paid in advance (acomptes)
-    @Size(min = 0)
+
+    @DecimalMin(value = "0.0", inclusive = true)
     private double total;  // Total after all adjustments
 
     private double shippingCost;
@@ -50,7 +52,7 @@ public class Invoice {
     @Enumerated(EnumType.STRING)
     private fr.uha.AccountingFlowManager.enums.ShippingCostType shippingCostType;  // Enum for shipping cost type
 
-    @Size(min = 0)
+    @DecimalMin(value = "0.0", inclusive = true)
     private double vat;  // VAT amount
 
     @PrePersist
@@ -69,10 +71,10 @@ public class Invoice {
     private void calculateShippingCost() {
         switch (shippingCostType) {
             case PROVIDER_PAYS:
-                shippingCost = 0;  // Provider pays, so no cost to the customer
+                shippingCost = 0;
                 break;
             case FLAT_RATE:
-                shippingCost = 5;  // Flat rate contribution, e.g., 5 euros
+                shippingCost = 5;
                 break;
             case FULL_BILLING:
                 shippingCost = lines.stream().mapToDouble(line -> line.getQuantity() * 0.10).sum();  // Full billing to the customer, e.g., 10 cents per item
