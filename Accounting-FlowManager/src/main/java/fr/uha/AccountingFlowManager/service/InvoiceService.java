@@ -1,5 +1,6 @@
 package fr.uha.AccountingFlowManager.service;
 
+import fr.uha.AccountingFlowManager.dto.invoice.InvoiceItemDTO;
 import fr.uha.AccountingFlowManager.dto.invoice.PreviewDTO;
 import fr.uha.AccountingFlowManager.enums.Currency;
 import fr.uha.AccountingFlowManager.enums.TransactionType;
@@ -7,9 +8,13 @@ import fr.uha.AccountingFlowManager.model.Invoice;
 import fr.uha.AccountingFlowManager.model.ProductCatalog;
 import fr.uha.AccountingFlowManager.model.User;
 import fr.uha.AccountingFlowManager.repository.InvoiceRepository;
+import fr.uha.AccountingFlowManager.util.InvoiceDtoHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class InvoiceService {
@@ -45,6 +50,7 @@ public class InvoiceService {
         return invoice;
     }
 
+
     @Transactional
     public Invoice createInvoiceAndTransaction(PreviewDTO previewDTO) {
 
@@ -68,5 +74,13 @@ public class InvoiceService {
         }
 
         return invoice;
+    }
+
+    @Transactional( readOnly = true)
+    public List<InvoiceItemDTO> getAllInvoiceItemDTOs() {
+        List<Invoice> invoices = invoiceRepository.findAll();
+        return invoices.stream()
+                .map(InvoiceDtoHelper::mapToInvoiceItemDTO)
+                .collect(Collectors.toList());
     }
 }

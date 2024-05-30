@@ -1,0 +1,40 @@
+.highlight {
+    font-weight: bold;
+    color: #0056b3; /* Bootstrap primary color for emphasis */
+}
+
+.date-cell {
+    font-style: italic;
+    color: #6c757d; /* Bootstrap secondary color */
+}
+
+#searchInput {
+    margin-bottom: 1rem;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.action-buttons a, .action-buttons button {
+    padding: 6px 10px;
+    text-decoration: none;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.view-btn {
+    background-color: #007bff; /* Blue */
+}
+
+.delete-btn {
+    background-color: #dc3545; /* Red */
+}
+
+.view-btn:hover, .delete-btn:hover {
+    opacity: 0.8;
+}

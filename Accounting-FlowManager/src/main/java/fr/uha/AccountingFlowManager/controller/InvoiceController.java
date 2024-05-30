@@ -29,18 +29,20 @@ public class InvoiceController {
     private final UserService userService;
     private final ProductService productService;
     private final InvoiceService invoiceService;
+
     @Autowired
     public InvoiceController(UserService userService, ProductService productService, InvoiceService invoiceService) {
         this.userService = userService;
         this.productService = productService;
         this.invoiceService = invoiceService;
     }
+
     @GetMapping("/addInvoice")
-    private String renderInvoiceForm(Model model){
+    private String renderInvoiceForm(Model model) {
         model.addAttribute("invoiceAddForm", true);
-        model.addAttribute("clients",userService.getCurrentProviderClients());
-        model.addAttribute("products",userService.getCurrentProviderProducts());
-        model.addAttribute("userId",userService.getCurrentUserId());
+        model.addAttribute("clients", userService.getCurrentProviderClients());
+        model.addAttribute("products", userService.getCurrentProviderProducts());
+        model.addAttribute("userId", userService.getCurrentUserId());
         model.addAttribute("shippingCostTypes", ShippingCostType.values());
         model.addAttribute("reductionTypes", ReductionType.values());
         return "/invoice/invoiceAddForm";
@@ -81,7 +83,7 @@ public class InvoiceController {
     public String createInvoice(HttpSession session, Model model) {
         PreviewDTO previewDTO = (PreviewDTO) session.getAttribute("previewDTO");
         if (previewDTO == null) {
-           System.out.println("error create null previewDTO");
+            System.out.println("error create null previewDTO");
         }
         System.out.println(previewDTO);
 
@@ -95,6 +97,9 @@ public class InvoiceController {
 
     @GetMapping("/invoice/list")
     public String listInvoices(Model model) {
+        System.out.println(invoiceService.getAllInvoiceItemDTOs());
+        model.addAttribute("invoiceList", true);
+        model.addAttribute("invoiceItems",invoiceService.getAllInvoiceItemDTOs());
         return "/invoice/invoiceList";
     }
 

@@ -1,7 +1,9 @@
 package fr.uha.AccountingFlowManager.util;
 
 import fr.uha.AccountingFlowManager.dto.invoice.InvoiceFormDataDTO;
+import fr.uha.AccountingFlowManager.dto.invoice.InvoiceItemDTO;
 import fr.uha.AccountingFlowManager.dto.invoice.PreviewDTO;
+import fr.uha.AccountingFlowManager.model.Invoice;
 import fr.uha.AccountingFlowManager.model.ProductCatalog;
 import fr.uha.AccountingFlowManager.model.User;
 import org.springframework.stereotype.Component;
@@ -64,5 +66,13 @@ public class InvoiceDtoHelper {
         previewDTO.setProducts(previewProducts);
 
         return previewDTO;
+    }
+    public static InvoiceItemDTO mapToInvoiceItemDTO(Invoice invoice) {
+        InvoiceItemDTO dto = new InvoiceItemDTO();
+        dto.setInvoiceId(invoice.getId());
+        dto.setCustomerId(invoice.getCustomer().getId());
+        dto.setCustomerName(invoice.getCustomer().getFullName());  // Assuming Customer has a getFullName method
+        dto.setIssueDate(invoice.getIssueDate());
+        return dto;
     }
 }
