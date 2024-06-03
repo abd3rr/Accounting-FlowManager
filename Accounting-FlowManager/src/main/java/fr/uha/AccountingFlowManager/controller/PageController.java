@@ -2,10 +2,10 @@ package fr.uha.AccountingFlowManager.controller;
 
 import fr.uha.AccountingFlowManager.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class PageController {
 
-   private final UserService userService;
+    private final UserService userService;
 
     @Autowired
-    public PageController(UserService userService){
+    public PageController(UserService userService) {
         this.userService = userService;
     }
 
@@ -25,12 +25,12 @@ public class PageController {
         model.addAttribute(page, true);
     }
 
-    @GetMapping({"/","/home"})
+    @GetMapping({"/", "/home"})
     public String index(Model model) {
         setActivePage(model, "home");
         model.addAttribute("userRole", userService.getCurrentUserRole());
-        model.addAttribute("userId",userService.getCurrentUserId());
-        model.addAttribute("userEmail",userService.getCurrentUserEmail());
+        model.addAttribute("userId", userService.getCurrentUserId());
+        model.addAttribute("userEmail", userService.getCurrentUserEmail());
 
         return "home";
     }
@@ -40,19 +40,31 @@ public class PageController {
         setActivePage(model, "about");
         return "about";
     }
+
     @GetMapping("/help")
     public String help(Model model) {
         setActivePage(model, "help");
         return "help";
     }
+
     @GetMapping("/terms")
     public String terms(Model model) {
-        setActivePage(model,  "terms");
+        setActivePage(model, "terms");
         return "terms";
     }
+
     @GetMapping("/services")
     public String services(Model model) {
-        setActivePage(model,  "services");
+        setActivePage(model, "services");
         return "services";
     }
+
+    @GetMapping("/json/French.json")
+    public ResponseEntity<Resource> getFrenchJson() {
+        Resource file = new ClassPathResource("static/json/French.json");
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_TYPE, "application/json")
+                .body(file);
+    }
+
 }

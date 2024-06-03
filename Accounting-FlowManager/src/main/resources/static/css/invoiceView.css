@@ -1,0 +1,48 @@
+.invoice-container {
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.invoice-header {
+    margin-bottom: 20px;
+}
+
+.invoice-dates, .client-details, .provider-details {
+    margin-bottom: 10px;
+}
+
+.invoice-details table, .invoice-totals table {
+    width: 100%;
+    margin-top: 10px;
+}
+
+.invoice-footer {
+    margin-top: 20px;
+    text-align: center;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 8px;
+    border: 1px solid #dee2e6;
+}
+
+h1, h2 {
+    color: #333;
+}
+.invoice-footer button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px; /* Increased gap for better visual separation */
+    padding: 8px 12px; /* Increased padding for a larger button */
+}
+
+.invoice-footer svg {
+    fill: #fff; /* Ensure the icon color matches the text for visibility */
+}

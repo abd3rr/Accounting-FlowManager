@@ -1,9 +1,9 @@
 package fr.uha.AccountingFlowManager.util;
 
-import fr.uha.AccountingFlowManager.dto.invoice.InvoiceFormDataDTO;
-import fr.uha.AccountingFlowManager.dto.invoice.InvoiceItemDTO;
-import fr.uha.AccountingFlowManager.dto.invoice.PreviewDTO;
+import fr.uha.AccountingFlowManager.dto.invoice.*;
+import fr.uha.AccountingFlowManager.enums.Currency;
 import fr.uha.AccountingFlowManager.model.Invoice;
+import fr.uha.AccountingFlowManager.model.InvoiceLine;
 import fr.uha.AccountingFlowManager.model.ProductCatalog;
 import fr.uha.AccountingFlowManager.model.User;
 import org.springframework.stereotype.Component;
@@ -74,5 +74,53 @@ public class InvoiceDtoHelper {
         dto.setCustomerName(invoice.getCustomer().getFullName());  // Assuming Customer has a getFullName method
         dto.setIssueDate(invoice.getIssueDate());
         return dto;
+    }
+    public static Invoice previewDtoToInvoice(PreviewDTO previewDTO, User client) {
+        Invoice invoice = new Invoice();
+        invoice.setCustomer(client);
+        invoice.setCurrency(Currency.EUR);
+        invoice.setSubtotal(previewDTO.getTotalHT());
+        invoice.setDiscount(previewDTO.getTotalReduction());
+        invoice.setAdvancePayment(previewDTO.getAdvancePayment());
+        invoice.setTotal(previewDTO.getTotalTTC());
+        invoice.setShippingCost(previewDTO.getShippingCost());
+        invoice.setShippingCostType(previewDTO.getShippingCostType());
+        invoice.setVat(previewDTO.getTva());
+        return invoice;
+    }
+
+    public static InvoiceDisplayDTO invoiceToInvoiceDisplayDto(Invoice invoice, User provider) {
+        InvoiceDisplayDTO dto = new InvoiceDisplayDTO();
+        dto.setInvoiceId(invoice.getId());
+        dto.setCustomerName(invoice.getCustomer().getFullName());
+        dto.setCustomerAddress(invoice.getCustomer().getAddress());
+        dto.setCustomerCountry(invoice.getCustomer().getCountry().toString());
+        dto.setCustomerEmail(invoice.getCustomer().getEmail());
+        dto.setProviderName(provider.getFullName());
+        dto.setProviderAddress(provider.getAddress());
+        dto.setProviderCountry(provider.getCountry().toString());
+        dto.setProviderEmail(provider.getEmail());
+        dto.setIssueDate(invoice.getIssueDate());
+        dto.setCurrency(invoice.getCurrency());
+        dto.setSubtotal(invoice.getSubtotal());
+        dto.setDiscount(invoice.getDiscount());
+        dto.setAdvancePayment(invoice.getAdvancePayment());
+        dto.setTotal(invoice.getTotal());
+        dto.setShippingCost(invoice.getShippingCost());
+        dto.setShippingCostType(invoice.getShippingCostType());
+        dto.setVat(invoice.getVat());
+        // Map lines
+        dto.setLines(invoice.getLines().stream().map(InvoiceDtoHelper::invoiceLineToInvoiceLineDisplayDto).collect(Collectors.toList()));
+        return dto;
+    }
+
+    private static InvoiceLineDisplayDTO invoiceLineToInvoiceLineDisplayDto(InvoiceLine line) {
+        InvoiceLineDisplayDTO lineDTO = new InvoiceLineDisplayDTO();
+        lineDTO.setProductId(line.getProduct().getId());
+        lineDTO.setProductName(line.getProduct().getName());
+        lineDTO.setQuantity(line.getQuantity());
+        lineDTO.setUnitPrice(line.getPrice());
+        lineDTO.setTotal(line.getTotal());
+        return lineDTO;
     }
 }

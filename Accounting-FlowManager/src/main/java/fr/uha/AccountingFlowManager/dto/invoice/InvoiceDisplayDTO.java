@@ -34,11 +34,3 @@ public class InvoiceDisplayDTO {
     private List<InvoiceLineDisplayDTO> lines;
 }
 
-@Data
-class InvoiceLineDisplayDTO {
-    private long productId;
-    private String productName;
-    private double quantity;
-    private double unitPrice;
-    private double total;
-}

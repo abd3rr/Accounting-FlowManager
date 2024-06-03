@@ -2,7 +2,6 @@ package fr.uha.AccountingFlowManager.service;
 
 import fr.uha.AccountingFlowManager.dto.invoice.InvoiceItemDTO;
 import fr.uha.AccountingFlowManager.dto.invoice.PreviewDTO;
-import fr.uha.AccountingFlowManager.enums.Currency;
 import fr.uha.AccountingFlowManager.enums.TransactionType;
 import fr.uha.AccountingFlowManager.model.Invoice;
 import fr.uha.AccountingFlowManager.model.ProductCatalog;
@@ -12,9 +11,12 @@ import fr.uha.AccountingFlowManager.util.InvoiceDtoHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import fr.uha.AccountingFlowManager.dto.invoice.InvoiceDisplayDTO;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static fr.uha.AccountingFlowManager.util.InvoiceDtoHelper.previewDtoToInvoice;
 
 @Service
 public class InvoiceService {
@@ -36,20 +38,6 @@ public class InvoiceService {
         this.transactionService = transactionService;
     }
 
-    private static Invoice getInvoice(PreviewDTO previewDTO, User client) {
-        Invoice invoice = new Invoice();
-        invoice.setCustomer(client);
-        invoice.setCurrency(Currency.EUR);
-        invoice.setSubtotal(previewDTO.getTotalHT());
-        invoice.setDiscount(previewDTO.getTotalReduction());
-        invoice.setAdvancePayment(previewDTO.getAdvancePayment());
-        invoice.setTotal(previewDTO.getTotalTTC());
-        invoice.setShippingCost(previewDTO.getShippingCost());
-        invoice.setShippingCostType(previewDTO.getShippingCostType());
-        invoice.setVat(previewDTO.getTva());
-        return invoice;
-    }
-
 
     @Transactional
     public Invoice createInvoiceAndTransaction(PreviewDTO previewDTO) {
@@ -60,7 +48,7 @@ public class InvoiceService {
         User client = userService.getUserById(Long.valueOf(previewDTO.getClientId()))
                 .orElseThrow(() -> new IllegalArgumentException("Client not found"));
 
-        Invoice invoice = getInvoice(previewDTO, client);
+        Invoice invoice = previewDtoToInvoice(previewDTO, client);
 
         invoice = invoiceRepository.save(invoice);
 
@@ -76,11 +64,22 @@ public class InvoiceService {
         return invoice;
     }
 
-    @Transactional( readOnly = true)
+    @Transactional(readOnly = true)
     public List<InvoiceItemDTO> getAllInvoiceItemDTOs() {
         List<Invoice> invoices = invoiceRepository.findAll();
         return invoices.stream()
                 .map(InvoiceDtoHelper::mapToInvoiceItemDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public InvoiceDisplayDTO getInvoiceDisplayDTO(long invoiceId) {
+        Invoice invoice = invoiceRepository.findById(invoiceId)
+                .orElseThrow(() -> new RuntimeException("Invoice not found with ID: " + invoiceId));
+
+        User provider = userService.getUserById(userService.getCurrentUserId())
+                .orElseThrow(() -> new IllegalArgumentException("Provider not found"));
+
+        return InvoiceDtoHelper.invoiceToInvoiceDisplayDto(invoice, provider);
     }
 }

@@ -20,21 +20,21 @@
 .action-buttons a, .action-buttons button {
     padding: 6px 10px;
     text-decoration: none;
-    color: white;
     border: none;
     cursor: pointer;
     border-radius: 4px;
     text-align: center;
+    background: none;
 }
 
-.view-btn {
-    background-color: #007bff; /* Blue */
+.view-btn svg {
+    fill: #007bff; /* Blue */
 }
 
-.delete-btn {
-    background-color: #dc3545; /* Red */
+.delete-btn svg {
+    fill: #dc3545; /* Red */
 }
 
-.view-btn:hover, .delete-btn:hover {
+.view-btn:hover svg, .delete-btn:hover svg {
     opacity: 0.8;
 }
