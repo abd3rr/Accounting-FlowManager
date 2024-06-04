@@ -6,12 +6,10 @@ import fr.uha.AccountingFlowManager.dto.invoice.InvoiceFormDataDTO;
 import fr.uha.AccountingFlowManager.dto.invoice.PreviewDTO;
 import fr.uha.AccountingFlowManager.enums.ReductionType;
 import fr.uha.AccountingFlowManager.enums.ShippingCostType;
+import fr.uha.AccountingFlowManager.model.File;
 import fr.uha.AccountingFlowManager.model.ProductCatalog;
 import fr.uha.AccountingFlowManager.model.User;
-import fr.uha.AccountingFlowManager.service.InvoiceService;
-import fr.uha.AccountingFlowManager.service.PDFInvoiceService;
-import fr.uha.AccountingFlowManager.service.ProductService;
-import fr.uha.AccountingFlowManager.service.UserService;
+import fr.uha.AccountingFlowManager.service.*;
 import fr.uha.AccountingFlowManager.util.InvoiceDtoHelper;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +18,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -40,13 +36,15 @@ public class InvoiceController {
     private final ProductService productService;
     private final InvoiceService invoiceService;
     private final PDFInvoiceService pdfInvoiceService;
+    private final FileService fileService;
 
     @Autowired
-    public InvoiceController(UserService userService, ProductService productService, InvoiceService invoiceService, PDFInvoiceService pdfInvoiceService) {
+    public InvoiceController(UserService userService, ProductService productService, InvoiceService invoiceService, PDFInvoiceService pdfInvoiceService, FileService fileService) {
         this.userService = userService;
         this.productService = productService;
         this.invoiceService = invoiceService;
         this.pdfInvoiceService = pdfInvoiceService;
+        this.fileService = fileService;
     }
 
     @GetMapping("/addInvoice")
@@ -111,18 +109,19 @@ public class InvoiceController {
     public String listInvoices(Model model) {
         System.out.println(invoiceService.getAllInvoiceItemDTOs());
         model.addAttribute("invoiceList", true);
-        model.addAttribute("invoiceItems",invoiceService.getAllInvoiceItemDTOs());
+        model.addAttribute("invoiceItems", invoiceService.getAllInvoiceItemDTOs());
         return "/invoice/invoiceList";
     }
 
     @GetMapping("/invoice/view/{id}")
-    public String renderInvoiceView(@PathVariable("id") Long invoiceId, Model model){
+    public String renderInvoiceView(@PathVariable("id") Long invoiceId, Model model) {
         System.out.println(invoiceService.getInvoiceDisplayDTO(invoiceId));
         model.addAttribute("invoiceView", true);
         model.addAttribute("invoiceDisplayDTO", invoiceService.getInvoiceDisplayDTO(invoiceId));
 
         return "/invoice/invoiceView";
     }
+
     @GetMapping("/invoice/generate/{id}")
     public ResponseEntity<Void> generateInvoice(@PathVariable long id) throws IOException {
         InvoiceDisplayDTO invoiceDTO = invoiceService.getInvoiceDisplayDTO(id);
@@ -153,5 +152,18 @@ public class InvoiceController {
                 .body(resource);
     }
 
+    @GetMapping("/invoice/upload")
+    public String renderUploadPage(Model model) {
+        model.addAttribute("invoiceUpload", true);
+
+        return "/invoice/invoiceUpload";
+    }
+
+    @PostMapping("/invoice/uploadAction")
+    public String uploadInvoice(@RequestParam("file") MultipartFile multipartFile) {
+        File savedFile = fileService.storeFile(multipartFile);
+        invoiceService.saveInvoiceFromFile(savedFile);
+        return "redirect:/invoice/list";
+    }
 
 }

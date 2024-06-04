@@ -10,6 +10,7 @@ import fr.uha.AccountingFlowManager.repository.UserRepository;
 import fr.uha.AccountingFlowManager.security.CustomUserDetails;
 import fr.uha.AccountingFlowManager.util.ClientDtoConverter;
 import fr.uha.AccountingFlowManager.util.ProviderDtoConverter;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -56,6 +57,13 @@ public class UserService {
         return null;
     }
 
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email).orElse(null);
+    }
+
+    public User getUserByFullName(String fullName) {
+        return userRepository.findByFullName(fullName).orElse(null);
+    }
     public String getCurrentUserEmail() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails userDetails) {
@@ -192,6 +200,7 @@ public class UserService {
 
         return productRepository.findByProvider_Id(currentUserId);
     }
+
 
 
 }

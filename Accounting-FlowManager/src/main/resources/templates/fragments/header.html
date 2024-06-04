@@ -1,7 +1,7 @@
-<header th:if="!${loginForm}" th:fragment="headerFragment" class="header">
+<header class="header" th:fragment="headerFragment" th:if="!${loginForm}">
     <nav class="nav container">
         <div class="nav__data">
-            <a href="#" class="nav__logo">
+            <a class="nav__logo" href="#">
                 <i class="ri-code-s-slash-line"></i> Accounting-FlowManager
             </a>
         </div>
@@ -12,7 +12,7 @@
         <div class="nav__menu" id="nav-menu">
             <ul class="nav__list">
                 <li>
-                    <a href="/" class="nav__link">Accueil</a>
+                    <a class="nav__link" href="/">Accueil</a>
                 </li>
                 <li class="dropdown__item">
                     <div class="nav__link dropdown__button">
@@ -25,7 +25,8 @@
                                     <a href="/addInvoice"><i class="ri-add-fill"></i></a>
                                 </div>
 
-                                <a href="/addInvoice" class="dropdown__link"><span class="dropdown__title">Ajouter</span></a>
+                                <a class="dropdown__link" href="/addInvoice"><span
+                                        class="dropdown__title">Ajouter</span></a>
 
                             </div>
 
@@ -33,8 +34,16 @@
                                 <div class="dropdown__icon">
                                     <a href="/invoice/list"><i class="ri-list-check"></i></a>
                                 </div>
-                                <a href="/invoice/list" class="dropdown__link">
+                                <a class="dropdown__link" href="/invoice/list">
                                     <span class="dropdown__title">Liste des factures</span>
+                                </a>
+                            </div>
+                            <div class="dropdown__group">
+                                <div class="dropdown__icon">
+                                    <a href="/invoice/upload"><i class="ri-list-check"></i></a>
+                                </div>
+                                <a class="dropdown__link" href="/invoice/upload">
+                                    <span class="dropdown__title">Upload une factures</span>
                                 </a>
                             </div>
                         </div>
@@ -50,13 +59,14 @@
                                 <div class="dropdown__icon">
                                     <a href="/products/add"><i class="ri-add-fill"></i></a>
                                 </div>
-                                <a href="/products/add" class="nav__link"><span class="dropdown__title">Ajouter produits</span></a>
+                                <a class="nav__link" href="/products/add"><span
+                                        class="dropdown__title">Ajouter produits</span></a>
                             </div>
                             <div class="dropdown__group">
                                 <div class="dropdown__icon">
                                     <i class="ri-folder-3-line"></i>
                                 </div>
-                                <a href="/product/management" class="dropdown__link">
+                                <a class="dropdown__link" href="/product/management">
                                     <span class="dropdown__title">Gestion</span>
                                 </a>
                             </div>
@@ -64,7 +74,7 @@
                                 <div class="dropdown__icon">
                                     <i class="ri-list-check"></i>
                                 </div>
-                                <a href="/products" class="dropdown__link">
+                                <a class="dropdown__link" href="/products">
                                     <span class="dropdown__title">Liste des produits</span>
                                 </a>
                             </div>
@@ -78,7 +88,7 @@
                     </div>
                 </li>
                 <li>
-                    <a href="/services" class="nav__link">Services</a>
+                    <a class="nav__link" href="/services">Services</a>
                 </li>
                 <li class="dropdown__item">
                     <div class="nav__link dropdown__button">
@@ -91,9 +101,9 @@
                                     <i class="ri-add-fill"></i>
                                 </div>
 
-                                <a href="/help" class="dropdown__link">Suivi et Maintenance</a>
-                                <a href="/profile" class="dropdown__link">Profil</a>
-                                <a href="/logout" class="dropdown__link">Déconnexion</a>
+                                <a class="dropdown__link" href="/help">Suivi et Maintenance</a>
+                                <a class="dropdown__link" href="/profile">Profil</a>
+                                <a class="dropdown__link" href="/logout">Déconnexion</a>
                             </div>
                             <div class="dropdown__group">
                                 <div class="dropdown__icon">

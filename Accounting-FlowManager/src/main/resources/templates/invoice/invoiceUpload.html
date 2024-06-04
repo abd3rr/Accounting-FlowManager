@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="fr" layout:decorate="~{layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <title>upload de Facture</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <main class="container mt-5">
+        <div class="uploadContainer">
+            <h2>File Upload & Image Preview</h2>
+
+            <!-- Upload  -->
+            <form class="uploader" enctype="multipart/form-data" id="file-upload-form" method="post"
+                  th:action="@{/invoice/uploadAction}">
+                <div class="mb-3">
+                    <label class="form-label" for="formFile">Default file input example</label>
+                    <input class="form-control" id="formFile" name="file" type="file">
+                </div>
+                <input type="submit" value="envoyer">
+            </form>
+        </div>
+    </main>
+</div>
+</body>
+</html>

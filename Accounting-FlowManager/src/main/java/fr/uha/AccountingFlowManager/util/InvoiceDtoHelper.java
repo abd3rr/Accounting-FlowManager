@@ -1,5 +1,7 @@
 package fr.uha.AccountingFlowManager.util;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.uha.AccountingFlowManager.dto.invoice.*;
 import fr.uha.AccountingFlowManager.enums.Currency;
 import fr.uha.AccountingFlowManager.model.Invoice;
@@ -8,6 +10,9 @@ import fr.uha.AccountingFlowManager.model.ProductCatalog;
 import fr.uha.AccountingFlowManager.model.User;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,6 +20,8 @@ import java.util.stream.Collectors;
 public class InvoiceDtoHelper {
 
     private static final double VAT_RATE = 0.15;
+    private static final ObjectMapper objectMapper = new ObjectMapper();
+
 
     public static PreviewDTO createPreviewDTO(User client, User provider, List<ProductCatalog> products, InvoiceFormDataDTO invoiceFormData) {
         PreviewDTO previewDTO = new PreviewDTO();
@@ -67,6 +74,7 @@ public class InvoiceDtoHelper {
 
         return previewDTO;
     }
+
     public static InvoiceItemDTO mapToInvoiceItemDTO(Invoice invoice) {
         InvoiceItemDTO dto = new InvoiceItemDTO();
         dto.setInvoiceId(invoice.getId());
@@ -75,6 +83,7 @@ public class InvoiceDtoHelper {
         dto.setIssueDate(invoice.getIssueDate());
         return dto;
     }
+
     public static Invoice previewDtoToInvoice(PreviewDTO previewDTO, User client) {
         Invoice invoice = new Invoice();
         invoice.setCustomer(client);
@@ -123,4 +132,90 @@ public class InvoiceDtoHelper {
         lineDTO.setTotal(line.getTotal());
         return lineDTO;
     }
+
+    public static InvoiceDisplayDTO uploadedInvoiceToDisplayDTO(String json, User provider) {
+        try {
+            JsonNode rootNode = objectMapper.readTree(json);
+            JsonNode contentNode = rootNode.path("choices").path(0).path("message").path("content");
+
+            // Parse the content as a separate JSON
+            JsonNode invoiceNode = objectMapper.readTree(contentNode.asText());
+
+            InvoiceDisplayDTO dto = new InvoiceDisplayDTO();
+
+            dto.setCustomerName(getJsonNodeValue(invoiceNode, "Customer Name"));
+            dto.setCustomerAddress(getJsonNodeValue(invoiceNode, "Customer Address"));
+            dto.setCustomerCountry(getJsonNodeValue(invoiceNode, "Customer Country"));
+            dto.setCustomerEmail(getJsonNodeValue(invoiceNode, "Customer Email"));
+
+            String issueDateStr = getJsonNodeValue(invoiceNode, "Issue Date");
+            if (!issueDateStr.isEmpty()) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+                dto.setIssueDate(LocalDateTime.parse(issueDateStr, formatter));
+            } else {
+                dto.setIssueDate(LocalDateTime.now());
+            }
+
+            dto.setCurrency(Currency.EUR);
+            dto.setSubtotal(parseDouble(getJsonNodeValue(invoiceNode, "Subtotal")));
+            dto.setDiscount(parseDouble(getJsonNodeValue(invoiceNode, "Discount")));
+            dto.setAdvancePayment(parseDouble(getJsonNodeValue(invoiceNode, "Advance Payment")));
+            dto.setTotal(parseDouble(getJsonNodeValue(invoiceNode, "Total")));
+            dto.setShippingCost(parseDouble(getJsonNodeValue(invoiceNode, "Shipping Cost")));
+            dto.setVat(parseDouble(getJsonNodeValue(invoiceNode, "VAT")));
+
+            // Parse product lines
+            List<InvoiceLineDisplayDTO> lines = new ArrayList<>();
+            JsonNode linesNode = invoiceNode.path("Lines");
+            if (linesNode.isArray()) {
+                for (JsonNode lineNode : linesNode) {
+                    InvoiceLineDisplayDTO line = new InvoiceLineDisplayDTO();
+                    line.setProductName(getJsonNodeValue(lineNode, "Product Name"));
+                    line.setQuantity(parseDouble(getJsonNodeValue(lineNode, "Quantity")));
+                    line.setUnitPrice(parseDouble(getJsonNodeValue(lineNode, "Unit Price")));
+                    line.setTotal(parseDouble(getJsonNodeValue(lineNode, "Total Price")));
+                    lines.add(line);
+                }
+            }
+            dto.setLines(lines);
+
+            // Set provider information
+            dto.setProviderName(provider.getFullName());
+            dto.setProviderAddress(provider.getAddress());
+            dto.setProviderCountry(provider.getCountry().toString());
+            dto.setProviderEmail(provider.getEmail());
+
+            return dto;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException("Failed to parse json: " + json);
+        }
+    }
+
+    private static String getJsonNodeValue(JsonNode node, String fieldName) {
+        JsonNode valueNode = node.path(fieldName);
+        if (valueNode.isMissingNode() || valueNode.isNull()) {
+            System.err.println("Missing or null field: " + fieldName);
+            return "";
+        }
+        String value = valueNode.asText().trim();
+        System.out.println("Extracted field " + fieldName + ": " + value);
+        return value;
+    }
+
+    private static double parseDouble(String value) {
+        if (value == null || value.trim().isEmpty()) {
+            return 0.0;
+        }
+        try {
+            value = value.replace(",", ".");
+            System.out.println("Parsed double: " + value);
+            return Double.parseDouble(value);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return 0.0;
+        }
+    }
+
+
 }

@@ -1,18 +1,25 @@
 package fr.uha.AccountingFlowManager.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.uha.AccountingFlowManager.dto.invoice.InvoiceDisplayDTO;
 import fr.uha.AccountingFlowManager.dto.invoice.InvoiceItemDTO;
+import fr.uha.AccountingFlowManager.dto.invoice.InvoiceLineDisplayDTO;
 import fr.uha.AccountingFlowManager.dto.invoice.PreviewDTO;
 import fr.uha.AccountingFlowManager.enums.TransactionType;
+import fr.uha.AccountingFlowManager.model.File;
 import fr.uha.AccountingFlowManager.model.Invoice;
 import fr.uha.AccountingFlowManager.model.ProductCatalog;
 import fr.uha.AccountingFlowManager.model.User;
+import fr.uha.AccountingFlowManager.repository.FileRepository;
 import fr.uha.AccountingFlowManager.repository.InvoiceRepository;
 import fr.uha.AccountingFlowManager.util.InvoiceDtoHelper;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.text.PDFTextStripper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import fr.uha.AccountingFlowManager.dto.invoice.InvoiceDisplayDTO;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,16 +33,20 @@ public class InvoiceService {
     private final ProductService productService;
     private final InvoiceLineService invoiceLineService;
     private final TransactionService transactionService;
+    private final AIExtractionService aiExtractionService;
+    private final FileRepository fileRepository;
 
     @Autowired
     public InvoiceService(InvoiceRepository invoiceRepository, UserService userService,
                           ProductService productService, InvoiceLineService invoiceLineService,
-                          TransactionService transactionService) {
+                          TransactionService transactionService, AIExtractionService aiExtractionService, ObjectMapper objectMapper, FileRepository fileRepository) {
         this.invoiceRepository = invoiceRepository;
         this.userService = userService;
         this.productService = productService;
         this.invoiceLineService = invoiceLineService;
         this.transactionService = transactionService;
+        this.aiExtractionService = aiExtractionService;
+        this.fileRepository = fileRepository;
     }
 
 
@@ -57,9 +68,9 @@ public class InvoiceService {
             invoiceLineService.createInvoiceLine(invoice, product, productDto.getQuantity(), productDto.getUnitPrice());
         }
 
-        if (previewDTO.getAdvancePayment() > 0) {
-            transactionService.createTransaction(previewDTO.getAdvancePayment(), provider, invoice, TransactionType.DEBIT);
-        }
+
+        transactionService.createTransaction(previewDTO.getTotalTTC(), provider, invoice, TransactionType.DEBIT);
+
 
         return invoice;
     }
@@ -82,4 +93,66 @@ public class InvoiceService {
 
         return InvoiceDtoHelper.invoiceToInvoiceDisplayDto(invoice, provider);
     }
+
+    @Transactional
+    public void saveInvoiceFromFile(File savedFile) {
+
+        PDDocument document = null;
+        PDFTextStripper pdfStripper = null;
+        String text = null;
+        try {
+            java.io.File file = new java.io.File(savedFile.getFilePath());
+            document = PDDocument.load(file);
+            pdfStripper = new PDFTextStripper();
+            text = pdfStripper.getText(document);
+
+            String invoiceData = aiExtractionService.getInvoiceDataResponse(text);
+            System.out.println("Invoice data: " + invoiceData);
+            User provider = userService.getUserById(userService.getCurrentUserId()).
+                    orElseThrow(() -> new IllegalArgumentException("Provider not found"));
+
+            System.out.println("Invoice Display upp" + InvoiceDtoHelper.uploadedInvoiceToDisplayDTO(invoiceData, provider));
+            saveInvoice(InvoiceDtoHelper.uploadedInvoiceToDisplayDTO(invoiceData, provider), savedFile);
+            document.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Transactional
+    public Invoice saveInvoice(InvoiceDisplayDTO invoiceDisplayDTO, File file) {
+
+        User provider = userService.getUserById(userService.getCurrentUserId())
+                .orElseThrow(() -> new IllegalArgumentException("Provider not found"));
+        User client = userService.getUserByEmail(invoiceDisplayDTO.getCustomerEmail());
+        if (client == null) {
+            client = userService.getUserByFullName(invoiceDisplayDTO.getCustomerName());
+        }
+
+        Invoice invoice = new Invoice();
+        invoice.setCustomer(client);
+        invoice.setIssueDate(invoiceDisplayDTO.getIssueDate());
+        invoice.setCurrency(invoiceDisplayDTO.getCurrency());
+        invoice.setSubtotal(invoiceDisplayDTO.getSubtotal());
+        invoice.setDiscount(invoiceDisplayDTO.getDiscount());
+        invoice.setAdvancePayment(invoiceDisplayDTO.getAdvancePayment());
+        invoice.setTotal(invoiceDisplayDTO.getTotal());
+        invoice.setShippingCost(invoiceDisplayDTO.getShippingCost());
+        invoice.setShippingCostType(invoiceDisplayDTO.getShippingCostType());
+        invoice.setVat(invoiceDisplayDTO.getVat());
+
+        invoice = invoiceRepository.save(invoice);
+
+        for (InvoiceLineDisplayDTO lineDTO : invoiceDisplayDTO.getLines()) {
+            ProductCatalog product = productService.getProductById(Long.valueOf(lineDTO.getProductId()));
+            invoiceLineService.createInvoiceLine(invoice, product, (int) lineDTO.getQuantity(), lineDTO.getUnitPrice());
+        }
+
+        transactionService.createTransaction(invoiceDisplayDTO.getTotal(), provider, invoice, TransactionType.DEBIT);
+        file.setInvoice(invoice);
+        fileRepository.save(file);
+        return invoice;
+    }
+
+
 }
