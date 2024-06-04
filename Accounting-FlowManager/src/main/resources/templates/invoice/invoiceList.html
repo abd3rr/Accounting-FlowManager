@@ -23,6 +23,7 @@
                 </thead>
                 <tbody>
                 <tr th:each="invoice : ${invoiceItems}">
+
                     <td th:text="${invoice.invoiceId}"></td>
                     <td th:text="${invoice.customerName}"></td>
                     <td th:text="${#temporals.format(invoice.issueDate, 'dd/MM/yyyy HH:mm:ss')}"></td>

@@ -14,6 +14,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 @Service
@@ -21,6 +22,7 @@ public class PDFInvoiceService {
 
     private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#,##0.00");
     private static final NumberFormat CURRENCY_FORMAT = NumberFormat.getCurrencyInstance(Locale.FRANCE);
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private PDType1Font regularFont;
     private PDType1Font boldFont;
 
@@ -40,8 +42,15 @@ public class PDFInvoiceService {
                 // Title
                 contentStream.beginText();
                 contentStream.setFont(boldFont, 18);
-                contentStream.newLineAtOffset(100, 750);
+                contentStream.newLineAtOffset(50, 750);
                 contentStream.showText("Facture N°: " + cleanText(String.valueOf(invoiceDTO.getInvoiceId())));
+                contentStream.endText();
+
+                // Issue Date
+                contentStream.beginText();
+                contentStream.setFont(regularFont, 12);
+                contentStream.newLineAtOffset(400, 750);
+                contentStream.showText("Date d'émission: " + cleanText(invoiceDTO.getIssueDate().format(DATE_FORMATTER)));
                 contentStream.endText();
 
                 // Header
@@ -51,7 +60,7 @@ public class PDFInvoiceService {
                 drawInvoiceTable(contentStream, invoiceDTO);
 
                 // Summary
-                drawSummary(contentStream, invoiceDTO, 150);
+                drawSummary(contentStream, invoiceDTO, 120);
             }
 
             ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -65,27 +74,40 @@ public class PDFInvoiceService {
 
         // Client information
         contentStream.beginText();
-        contentStream.setFont(regularFont, 12);
+        contentStream.setFont(boldFont, 12);
         contentStream.newLineAtOffset(50, top);
-        contentStream.showText("Client: " + cleanText(invoiceDTO.getCustomerName()));
+        contentStream.showText("Facturé à :");
+        contentStream.endText();
+
+        contentStream.beginText();
+        contentStream.setFont(regularFont, 12);
+        contentStream.newLineAtOffset(50, top - 20);
+        contentStream.showText(cleanText(invoiceDTO.getCustomerName()));
         contentStream.newLine();
-        contentStream.showText("Adresse: " + cleanText(invoiceDTO.getCustomerAddress()));
+        contentStream.showText(cleanText(invoiceDTO.getCustomerAddress()));
         contentStream.newLine();
-        contentStream.showText("Pays: " + cleanText(invoiceDTO.getCustomerCountry()));
+        contentStream.showText(cleanText(invoiceDTO.getCustomerCountry()));
         contentStream.newLine();
-        contentStream.showText("Email: " + cleanText(invoiceDTO.getCustomerEmail()));
+        contentStream.showText(cleanText(invoiceDTO.getCustomerEmail()));
         contentStream.endText();
 
         // Provider information
         contentStream.beginText();
+        contentStream.setFont(boldFont, 12);
         contentStream.newLineAtOffset(300, top);
-        contentStream.showText("Fournisseur: " + cleanText(invoiceDTO.getProviderName()));
+        contentStream.showText("Facturé par :");
+        contentStream.endText();
+
+        contentStream.beginText();
+        contentStream.setFont(regularFont, 12);
+        contentStream.newLineAtOffset(300, top - 20);
+        contentStream.showText(cleanText(invoiceDTO.getProviderName()));
         contentStream.newLine();
-        contentStream.showText("Adresse: " + cleanText(invoiceDTO.getProviderAddress()));
+        contentStream.showText(cleanText(invoiceDTO.getProviderAddress()));
         contentStream.newLine();
-        contentStream.showText("Pays: " + cleanText(invoiceDTO.getProviderCountry()));
+        contentStream.showText(cleanText(invoiceDTO.getProviderCountry()));
         contentStream.newLine();
-        contentStream.showText("Email: " + cleanText(invoiceDTO.getProviderEmail()));
+        contentStream.showText(cleanText(invoiceDTO.getProviderEmail()));
         contentStream.endText();
     }
 
@@ -96,19 +118,24 @@ public class PDFInvoiceService {
         int[] columnWidths = {200, 100, 100, 100};
         int currentX = 50;
 
+        // Draw table headers
         for (int i = 0; i < headers.length; i++) {
             contentStream.beginText();
             contentStream.newLineAtOffset(currentX, startY);
             contentStream.showText(headers[i]);
             contentStream.endText();
-            contentStream.moveTo(currentX, startY - 15);
-            contentStream.lineTo(currentX + columnWidths[i], startY - 15);
-            contentStream.stroke();
             currentX += columnWidths[i];
         }
 
+        // Draw table header lines
+        contentStream.moveTo(50, startY - 5);
+        contentStream.lineTo(50 + columnWidths[0] + columnWidths[1] + columnWidths[2] + columnWidths[3], startY - 5);
+        contentStream.stroke();
+
         startY -= 20;
         contentStream.setFont(regularFont, 12);
+
+        // Draw product details
         for (InvoiceLineDisplayDTO line : invoiceDTO.getLines()) {
             currentX = 50;
             String[] lineDetails = {
@@ -129,17 +156,14 @@ public class PDFInvoiceService {
     }
 
     private void drawSummary(PDPageContentStream contentStream, InvoiceDisplayDTO invoiceDTO, int startY) throws IOException {
-        contentStream.beginText();
-        contentStream.setFont(boldFont, 12);
-        contentStream.newLineAtOffset(50, startY);
-        contentStream.showText(cleanText("Résumé de la Facture:"));
-        contentStream.endText();
+        int rightAlign = 10;
 
-        startY -= 20;
-        String[] labels = {"Sous-total:", "Remise:", "TVA:", "Total:"};
+        String[] labels = {"Sous-total:", "Remise:", "Acompte:", "Frais de port:", "TVA:", "Total:"};
         String[] values = {
                 cleanText(CURRENCY_FORMAT.format(invoiceDTO.getSubtotal())),
                 cleanText(CURRENCY_FORMAT.format(invoiceDTO.getDiscount())),
+                cleanText(CURRENCY_FORMAT.format(invoiceDTO.getAdvancePayment())),
+                cleanText(CURRENCY_FORMAT.format(invoiceDTO.getShippingCost())),
                 cleanText(invoiceDTO.getVat() + "% (" + CURRENCY_FORMAT.format(invoiceDTO.getSubtotal() * invoiceDTO.getVat() / 100) + ")"),
                 cleanText(CURRENCY_FORMAT.format(invoiceDTO.getTotal()))
         };
@@ -147,9 +171,15 @@ public class PDFInvoiceService {
         for (int i = 0; i < labels.length; i++) {
             contentStream.beginText();
             contentStream.setFont(regularFont, 12);
-            contentStream.newLineAtOffset(50, startY);
-            contentStream.showText(cleanText(labels[i]) + " " + cleanText(values[i]));
+            contentStream.newLineAtOffset(rightAlign, startY);
+            contentStream.showText(cleanText(labels[i]));
             contentStream.endText();
+
+            contentStream.beginText();
+            contentStream.newLineAtOffset(rightAlign + 100, startY);
+            contentStream.showText(cleanText(values[i]));
+            contentStream.endText();
+
             startY -= 20;
         }
     }

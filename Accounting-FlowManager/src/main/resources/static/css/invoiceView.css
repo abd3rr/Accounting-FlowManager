@@ -1,48 +1,48 @@
+
 .invoice-container {
-    background-color: #fff;
-    border: 1px solid #dee2e6;
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
     padding: 20px;
-    margin-top: 20px;
+    border: 1px solid #ccc;
 }
 
 .invoice-header {
+    text-align: right;
+}
+
+.invoice-header h1 {
+    margin-top: 0;
+}
+
+.invoice-parties {
+    display: flex;
+    justify-content: space-between;
     margin-bottom: 20px;
 }
 
-.invoice-dates, .client-details, .provider-details {
-    margin-bottom: 10px;
-}
-
-.invoice-details table, .invoice-totals table {
+.invoice-details table {
     width: 100%;
-    margin-top: 10px;
-}
-
-.invoice-footer {
-    margin-top: 20px;
-    text-align: center;
-}
-
-table {
     border-collapse: collapse;
 }
 
-th, td {
-    padding: 8px;
-    border: 1px solid #dee2e6;
+.invoice-details th, .invoice-details td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ccc;
 }
 
-h1, h2 {
-    color: #333;
-}
-.invoice-footer button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px; /* Increased gap for better visual separation */
-    padding: 8px 12px; /* Increased padding for a larger button */
+.invoice-totals table {
+    width: 100%;
+    border-collapse: collapse;
 }
 
-.invoice-footer svg {
-    fill: #fff; /* Ensure the icon color matches the text for visibility */
+.invoice-totals th, .invoice-totals td {
+    padding: 10px;
+    text-align: right;
+}
+
+.invoice-footer {
+    text-align: center;
+    margin-top: 20px;
 }

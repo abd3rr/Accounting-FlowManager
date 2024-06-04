@@ -6,24 +6,24 @@ $(document).ready(function() {
 
         // Perform an AJAX call to generate the PDF
         $.ajax({
-            url: '/invoice/generate/' + invoiceId, // URL for backend processing
+            url: '/invoice/generate/' + invoiceId, // URL for generating the PDF
             method: 'GET',
             success: function(response) {
-                // After successful backend processing, create a temporary link to download the file
+                // After successful generation, initiate the download
                 var downloadLink = document.createElement('a');
                 downloadLink.href = '/invoice/download/' + invoiceId;
-                downloadLink.download = 'Facture#' + invoiceId + '.pdf';
+                downloadLink.target = '_blank'; // Open the download in a new tab/window
                 document.body.appendChild(downloadLink);
                 downloadLink.click();
                 document.body.removeChild(downloadLink);
 
-                // Optionally, redirect to the view page after the download starts
+                // Redirect to the view page after the download starts
                 window.location.href = '/invoice/view/' + invoiceId;
             },
             error: function(error) {
                 // Handle any errors
-                console.error('Error processing invoice:', error);
-                alert('An error occurred while processing the invoice. Please try again.');
+                console.error('Error generating invoice:', error);
+                alert('An error occurred while generating the invoice. Please try again.');
             }
         });
     });
