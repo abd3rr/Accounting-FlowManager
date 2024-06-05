@@ -55,6 +55,7 @@ public class InvoiceController {
         model.addAttribute("userId", userService.getCurrentUserId());
         model.addAttribute("shippingCostTypes", ShippingCostType.values());
         model.addAttribute("reductionTypes", ReductionType.values());
+        System.out.println("products in add form "+ userService.getCurrentProviderProducts());
         return "/invoice/invoiceAddForm";
     }
 

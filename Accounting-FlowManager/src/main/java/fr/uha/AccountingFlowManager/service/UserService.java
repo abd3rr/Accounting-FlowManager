@@ -172,7 +172,7 @@ public class UserService {
         userRepository.saveAll(updatedProviders); // This ensures all providers are updated in the database
     }
 
-    @Transactional( readOnly = true)
+    @Transactional(readOnly = true)
     public List<ClientDTO> getCurrentProviderClients() {
         Long currentUserId = getCurrentUserId();
         String currentUserRole = getCurrentUserRole();
@@ -185,7 +185,8 @@ public class UserService {
                 .orElseThrow(() -> new IllegalArgumentException("Provider not found with ID: " + currentUserId));
 
         return provider.getClients().stream()
-                .map(clientDtoConverter::convertToClientDto)
+                .filter(client -> client.getPasswordHash() != null && !client.getPasswordHash().isEmpty()) // Filter clients who have passwords
+                .map(clientDtoConverter::convertToClientDto) // Assuming convertToClientDto handles Client to ClientDTO conversion
                 .collect(Collectors.toList());
     }
 

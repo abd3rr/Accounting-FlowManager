@@ -59,7 +59,7 @@ public class Invoice {
     public void setIssueDate() {
         this.issueDate = LocalDateTime.now();
     }
-
+/*
     @PreUpdate
     public void updateSubtotalAndTotal() {
         this.subtotal = lines.stream().mapToDouble(InvoiceLine::getTotal).sum();
@@ -86,4 +86,6 @@ public class Invoice {
         double taxableAmount = subtotal - discount - advancePayment + shippingCost;  // Taxable amount includes shipping cost
         this.vat = taxableAmount * 0.15;  // VAT at 15%
     }
+
+ */
 }

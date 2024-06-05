@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductService {
@@ -67,5 +68,10 @@ public class ProductService {
 
     public List<ProductCatalog> searchProducts(String name) {
         return productRepository.findByNameContainingIgnoreCase(name);
+    }
+
+
+    public Optional<ProductCatalog> getProductByNameAndProviderId(String name, Long providerId) {
+        return productRepository.findByNameAndProvider_Id(name, providerId);
     }
 }

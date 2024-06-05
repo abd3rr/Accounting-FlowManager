@@ -91,12 +91,34 @@ public class InvoiceDtoHelper {
         invoice.setSubtotal(previewDTO.getTotalHT());
         invoice.setDiscount(previewDTO.getTotalReduction());
         invoice.setAdvancePayment(previewDTO.getAdvancePayment());
-        invoice.setTotal(previewDTO.getTotalTTC());
         invoice.setShippingCost(previewDTO.getShippingCost());
         invoice.setShippingCostType(previewDTO.getShippingCostType());
-        invoice.setVat(previewDTO.getTva());
+
+        // Calculate VAT and Total
+        double taxableAmount = calculateTaxableAmount(invoice);
+        double vat = calculateVAT(taxableAmount);
+        invoice.setVat(vat);
+
+        // Set total which now includes recalculated VAT
+        double total = calculateTotal(invoice, vat);
+        invoice.setTotal(total);
+
         return invoice;
     }
+
+    private static double calculateTaxableAmount(Invoice invoice) {
+        return invoice.getSubtotal() - invoice.getDiscount() + invoice.getShippingCost() - invoice.getAdvancePayment();
+    }
+
+    private static double calculateVAT(double taxableAmount) {
+        final double VAT_RATE = 0.15; // 15% VAT
+        return taxableAmount * VAT_RATE;
+    }
+
+    private static double calculateTotal(Invoice invoice, double vat) {
+        return invoice.getSubtotal() - invoice.getDiscount() + invoice.getShippingCost() - invoice.getAdvancePayment() + vat;
+    }
+
 
     public static InvoiceDisplayDTO invoiceToInvoiceDisplayDto(Invoice invoice, User provider) {
         InvoiceDisplayDTO dto = new InvoiceDisplayDTO();
@@ -208,7 +230,12 @@ public class InvoiceDtoHelper {
             return 0.0;
         }
         try {
-            value = value.replace(",", ".");
+            // Remove any space characters
+            value = value.replaceAll("\\s", "");
+
+            // Remove the thousands separator (comma)
+            value = value.replace(",", "");
+
             System.out.println("Parsed double: " + value);
             return Double.parseDouble(value);
         } catch (NumberFormatException e) {
@@ -216,6 +243,5 @@ public class InvoiceDtoHelper {
             return 0.0;
         }
     }
-
 
 }

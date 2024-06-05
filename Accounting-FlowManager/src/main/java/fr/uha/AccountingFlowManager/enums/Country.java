@@ -25,13 +25,20 @@ public enum Country {
     POLAND("Poland"),
     CZECH_REPUBLIC("Czech Republic"),
     HUNGARY("Hungary"),
-    MOROCCO("Morocco");
-
+    MOROCCO("Morocco"),
+    DEFAULT("France");
     private final String displayName;
 
     Country(String displayName) {
         this.displayName = displayName;
     }
 
+    public static Country fromString(String name) {
+        for (Country country : Country.values()) {
+            if (country.name().equalsIgnoreCase(name)) {
+                return country;
+            }
+        }
+        return DEFAULT;
+    }
 }
-

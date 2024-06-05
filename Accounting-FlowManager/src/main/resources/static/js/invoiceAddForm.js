@@ -13,6 +13,7 @@ $(document).ready(function () {
         uniqueId++; // Increment the ID for the next row
         validateForm(); // Re-validate the form after adding a new row
         checkProductRows(); // Check product rows after adding
+
         saveFormDataToSession(userId); // Save form data to session storage
     });
 
@@ -67,9 +68,16 @@ function updateProductInfo(element) {
     let quantity = row.find('.quantity-input').val();
     let totalPrice = quantity * price;
 
+    // Debugging logs
+    console.log("Selected product price:", price);
+    console.log("Selected product currency:", currency);
+    console.log("Entered quantity:", quantity);
+    console.log("Calculated total price:", totalPrice);
+
     row.find('.price-input').val(totalPrice.toFixed(2));
     row.find('.currency-input').val(currency);
 }
+
 
 function validateForm() {
     let isValid = true;
@@ -167,8 +175,9 @@ function loadFormDataFromSession(userId) {
     }
 }
 
-function removeTemplateNames() {
+/*function removeTemplateNames() {
     // Explicitly target the template row and remove names from its children
     let templateRow = $('.product-row-template');
     templateRow.find('input, select').removeAttr('name');
 }
+*/
