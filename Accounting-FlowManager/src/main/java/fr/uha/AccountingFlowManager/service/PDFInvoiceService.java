@@ -154,35 +154,38 @@ public class PDFInvoiceService {
             startY -= 20;
         }
     }
-
     private void drawSummary(PDPageContentStream contentStream, InvoiceDisplayDTO invoiceDTO, int startY) throws IOException {
-        int rightAlign = 10;
+        int leftAlign = 50;  // Adjusted for better alignment
 
+        // Labels for the summary section
         String[] labels = {"Sous-total:", "Remise:", "Acompte:", "Frais de port:", "TVA:", "Total:"};
         String[] values = {
-                cleanText(CURRENCY_FORMAT.format(invoiceDTO.getSubtotal())),
-                cleanText(CURRENCY_FORMAT.format(invoiceDTO.getDiscount())),
-                cleanText(CURRENCY_FORMAT.format(invoiceDTO.getAdvancePayment())),
-                cleanText(CURRENCY_FORMAT.format(invoiceDTO.getShippingCost())),
-                cleanText(invoiceDTO.getVat() + "% (" + CURRENCY_FORMAT.format(invoiceDTO.getSubtotal() * invoiceDTO.getVat() / 100) + ")"),
-                cleanText(CURRENCY_FORMAT.format(invoiceDTO.getTotal()))
+                CURRENCY_FORMAT.format(invoiceDTO.getSubtotal()),
+                DECIMAL_FORMAT.format(invoiceDTO.getDiscount() * 100) + " %",  // Multiply by 100 to convert to percentage
+                CURRENCY_FORMAT.format(invoiceDTO.getAdvancePayment()),
+                CURRENCY_FORMAT.format(invoiceDTO.getShippingCost()),
+                "15% (" + CURRENCY_FORMAT.format(invoiceDTO.getVat()) + ")",  // 15% VAT rate with the calculated VAT amount
+                CURRENCY_FORMAT.format(invoiceDTO.getTotal())
         };
 
+        contentStream.setFont(regularFont, 12);
+
+        // Iterate through each label and value to display them
         for (int i = 0; i < labels.length; i++) {
             contentStream.beginText();
-            contentStream.setFont(regularFont, 12);
-            contentStream.newLineAtOffset(rightAlign, startY);
-            contentStream.showText(cleanText(labels[i]));
+            contentStream.newLineAtOffset(leftAlign, startY);
+            contentStream.showText(labels[i]);
             contentStream.endText();
 
             contentStream.beginText();
-            contentStream.newLineAtOffset(rightAlign + 100, startY);
-            contentStream.showText(cleanText(values[i]));
+            contentStream.newLineAtOffset(leftAlign + 200, startY);  // Adjusted for right alignment of values
+            contentStream.showText(values[i]);
             contentStream.endText();
 
-            startY -= 20;
+            startY -= 20;  // Move down to the next line
         }
     }
+
 
     private String cleanText(String input) {
         if (input == null) {

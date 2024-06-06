@@ -17,7 +17,7 @@ public class InvoiceCalculator {
     private static final double VAT_RATE = 0.15;
     private static final int[] ALLOWED_REDUCTIONS = {0, 10, 15, 20};
 
-    public static double calculateReduction(InvoiceFormDataDTO invoiceData) {
+    public static double calculateReductionRate(InvoiceFormDataDTO invoiceData) {
         double reduction = 0.0;
 
         // Validate specified reduction
@@ -43,7 +43,7 @@ public class InvoiceCalculator {
         return reduction;
     }
 
-    public static double calculateAdditionalReduction(InvoiceFormDataDTO invoiceData) {
+    public static double calculateAdditionalReductionRate(InvoiceFormDataDTO invoiceData) {
         double additionalReduction = 0.0;
 
         // Calculate additional reduction based on the type
@@ -64,8 +64,8 @@ public class InvoiceCalculator {
     }
 
     public static double calculateTotalReduction(InvoiceFormDataDTO invoiceData) {
-        double reduction = calculateReduction(invoiceData);
-        double additionalReduction = calculateAdditionalReduction(invoiceData);
+        double reduction = calculateReductionRate(invoiceData);
+        double additionalReduction = calculateAdditionalReductionRate(invoiceData);
         return reduction + additionalReduction;
     }
 
@@ -88,19 +88,18 @@ public class InvoiceCalculator {
         return shippingCost;
     }
 
-    public static double calculateTotalPrice(InvoiceFormDataDTO invoiceData) {
-        double totalPrice = invoiceData.getProducts().stream()
-                .mapToDouble(product -> product.getQuantity() * product.getPrice())
-                .sum();
+  public static double calculateHT(InvoiceFormDataDTO invoiceFormDataDTO){
+      return invoiceFormDataDTO.getProducts().stream()
+              .mapToDouble(product -> product.getQuantity() * product.getPrice())
+              .sum();
+  }
 
-        double totalReduction = calculateTotalReduction(invoiceData);
-        double shippingCost = calculateShippingCost(invoiceData);
+  public static double calculateTTC(InvoiceFormDataDTO invoiceFormDataDTO){
+        double totalHT = calculateHT(invoiceFormDataDTO);
+        double vat = totalHT * VAT_RATE;
+        double shippingCost = calculateShippingCost(invoiceFormDataDTO);
+        double totalReduction  = totalHT * calculateTotalReduction(invoiceFormDataDTO);
+        return totalHT + vat + shippingCost - totalReduction - Double.parseDouble(invoiceFormDataDTO.getAdvancePayment());
 
-        totalPrice = totalPrice * (1 - totalReduction);
-        totalPrice += shippingCost;
-        totalPrice = totalPrice * (1 + VAT_RATE);
-        totalPrice -= invoiceData.getAdvancePaymentAsDouble(); // Subtract the advance payment from the total price
-
-        return totalPrice;
-    }
+  }
 }

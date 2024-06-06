@@ -80,7 +80,9 @@ public class InvoiceController {
 
         // Create preview DTO
         PreviewDTO previewDTO = InvoiceDtoHelper.createPreviewDTO(client, provider, products, invoiceFormDataDTO);
+        System.out.println("InvoiceFormData DTO ############" + invoiceFormDataDTO);
 
+        System.out.println("PREVIEW DTO ############" + previewDTO);
         // Add preview DTO to the model
         model.addAttribute("invoicePreview", true);
         model.addAttribute("previewDTO", previewDTO);

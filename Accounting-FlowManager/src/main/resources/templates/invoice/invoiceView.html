@@ -66,7 +66,7 @@
                     </tr>
                     <tr>
                         <th>Réduction :</th>
-                        <td th:text="${invoiceDisplayDTO.discount} + ' %'"></td>
+                        <td th:text="${invoiceDisplayDTO.discount * 100} + ' %'"></td>
                     </tr>
                     <tr th:if="${invoiceDisplayDTO.advancePayment > 0}">
                         <th>Acompte :</th>
@@ -77,8 +77,8 @@
                         <td th:text="${invoiceDisplayDTO.shippingCost} + ' ' + ${invoiceDisplayDTO.currency}"></td>
                     </tr>
                     <tr>
-                        <th>TVA (<span th:text="${invoiceDisplayDTO.vat} + ' %'"></span>) :</th>
-                        <td th:text="${(invoiceDisplayDTO.subtotal - invoiceDisplayDTO.discount) * (invoiceDisplayDTO.vat / 100)} + ' ' + ${invoiceDisplayDTO.currency}"></td>
+                        <th>TVA (15 %) :</th>
+                        <td th:text="${invoiceDisplayDTO.vat} + ' ' + ${invoiceDisplayDTO.currency}"></td>
                     </tr>
                     <tr>
                         <th>Total TTC :</th>

@@ -41,18 +41,24 @@ public class InvoiceDtoHelper {
 
         // Set invoice details
         previewDTO.setShippingCostType(invoiceFormData.getShippingCostType());
-        double reduction = InvoiceCalculator.calculateReduction(invoiceFormData);
-        double additionalReduction = InvoiceCalculator.calculateAdditionalReduction(invoiceFormData);
+        double totalHT = InvoiceCalculator.calculateHT(invoiceFormData);
+        double reduction = InvoiceCalculator.calculateReductionRate(invoiceFormData);
+        double additionalReduction = InvoiceCalculator.calculateAdditionalReductionRate(invoiceFormData);
         double totalReduction = reduction + additionalReduction;
+        double shippingCost = InvoiceCalculator.calculateShippingCost(invoiceFormData);
+        double advancePayment = invoiceFormData.getAdvancePaymentAsDouble();
+        double totalTTC = InvoiceCalculator.calculateTTC(invoiceFormData);
+
+        // Set calculated values to DTO
         previewDTO.setReduction(reduction);
         previewDTO.setAdditionalReduction(additionalReduction);
         previewDTO.setTotalReduction(totalReduction);
-        previewDTO.setShippingCost(InvoiceCalculator.calculateShippingCost(invoiceFormData));
-        previewDTO.setAdvancePayment(invoiceFormData.getAdvancePaymentAsDouble());
-        previewDTO.setTotalHT(InvoiceCalculator.calculateTotalPrice(invoiceFormData) / (1 + VAT_RATE));
-        previewDTO.setTotalTTC(InvoiceCalculator.calculateTotalPrice(invoiceFormData));
-        previewDTO.setTva(VAT_RATE * 100);
-        previewDTO.setAdditionalReductionType(invoiceFormData.getAdditionalReduction()); // Set the additional reduction type
+        previewDTO.setShippingCost(shippingCost);
+        previewDTO.setAdvancePayment(advancePayment);
+        previewDTO.setTotalHT(totalHT);
+        previewDTO.setTotalTTC(totalTTC);
+        previewDTO.setTva(VAT_RATE * 100); // Assuming VAT_RATE is statically imported or defined
+        previewDTO.setAdditionalReductionType(invoiceFormData.getAdditionalReduction());
 
         // Set product details
         List<PreviewDTO.PreviewProduct> previewProducts = invoiceFormData.getProducts().stream().map(productInvoiceForm -> {
@@ -94,14 +100,12 @@ public class InvoiceDtoHelper {
         invoice.setShippingCost(previewDTO.getShippingCost());
         invoice.setShippingCostType(previewDTO.getShippingCostType());
 
-        // Calculate VAT and Total
-        double taxableAmount = calculateTaxableAmount(invoice);
-        double vat = calculateVAT(taxableAmount);
-        invoice.setVat(vat);
+
+        invoice.setVat(previewDTO.getTotalHT() * (previewDTO.getTva() / 100));
 
         // Set total which now includes recalculated VAT
-        double total = calculateTotal(invoice, vat);
-        invoice.setTotal(total);
+
+        invoice.setTotal(previewDTO.getTotalTTC());
 
         return invoice;
     }
