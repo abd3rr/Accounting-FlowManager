@@ -2,32 +2,26 @@
 <html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}">
 <head>
   <meta charset="UTF-8">
-  <title>Add a new Product</title>
+  <title>Ajouter un produit</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.6.0/css/bootstrap.min.css">
 </head>
 <body>
-<div layout:fragment="content">
-  <h1>Add a new Product</h1>
-
-<<<<<<< HEAD
+<div layout:fragment="content" class="container mt-5">
+  <h1 class="mb-4">Ajouter un produit</h1>
   <form th:action="@{/products}" method="post" th:object="${product}">
     <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
-
-=======
-  <form th:action="@{/products}" method="post" th:object="${product}" th:csrf >
->>>>>>> 84607d63ce9771da0973b0ca53ced628e263d352
     <div class="row">
-      <div class="col-md-6 form-group">
-        <label for="name">Name:</label>
+      <div class="col-md-6 form-group mb-3">
+        <label for="name">Nom du produit :</label>
         <input type="text" id="name" th:field="*{name}" class="form-control" placeholder="Enter product name">
       </div>
-      <div class="col-md-6 form-group">
-        <label for="price">Price:</label>
+      <div class="col-md-6 form-group mb-3">
+        <label for="price">Prix :</label>
         <input type="number" id="price" th:field="*{price}" class="form-control" placeholder="Enter product price">
       </div>
     </div>
-    <div class="form-group">
-      <label for="currency">Currency:</label>
+    <div class="form-group mb-3">
+      <label for="currency">Devise :</label>
       <select id="currency" th:field="*{currency}" class="form-control">
         <option th:each="currency : ${T(fr.uha.AccountingFlowManager.enums.Currency).values()}"
                 th:value="${currency}"
@@ -35,28 +29,24 @@
         </option>
       </select>
     </div>
-    <div class="row">
-      <div class="col-md-6 form-group">
-        <label for="description">Description:</label>
-        <textarea id="description" th:field="*{description}" class="form-control" placeholder="Enter product description"></textarea>
-      </div>
+    <div class="form-group mb-3">
+      <label for="description">Description :</label>
+      <textarea id="description" th:field="*{description}" class="form-control" rows="4" placeholder="Entrez une description du produit/service"></textarea>
     </div>
-    <div class="form-group">
-      <label for="duration">Duration in seconds (optional):</label>
-      <input type="number" id="duration" th:field="*{duration}" class="form-control" placeholder="Enter duration">
+    <div class="form-group mb-3">
+      <label for="duration">Durée en secondes (optionnel) :</label>
+      <input type="number" id="duration" th:field="*{duration}" class="form-control" placeholder="Entrer une durée">
     </div>
-    <div class="form-group form-check">
-      <label class="form-check-label" for="isService">
-        <input type="checkbox" class="form-check-input" id="isService" th:field="*{service}">
-        Is this product a Service?
-      </label>
+    <div class="form-group form-check mb-4">
+      <input type="checkbox" class="form-check-input" id="isService" th:field="*{service}">
+      <label class="form-check-label" for="isService">Service</label>
     </div>
     <div class="row">
       <div class="col-md-6 form-group">
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary btn-block">Ajouter</button>
       </div>
       <div class="col-md-6 form-group">
-        <a href="/products" class="btn btn-primary">cancel</a>
+        <a href="/products" class="btn btn-secondary btn-block">Annuler</a>
       </div>
     </div>
   </form>
