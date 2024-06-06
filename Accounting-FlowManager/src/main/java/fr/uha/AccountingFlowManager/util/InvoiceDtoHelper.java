@@ -144,6 +144,7 @@ public class InvoiceDtoHelper {
         dto.setShippingCost(invoice.getShippingCost());
         dto.setShippingCostType(invoice.getShippingCostType());
         dto.setVat(invoice.getVat());
+        if(invoice.getFile() != null) dto.setFileExist(true);
         // Map lines
         dto.setLines(invoice.getLines().stream().map(InvoiceDtoHelper::invoiceLineToInvoiceLineDisplayDto).collect(Collectors.toList()));
         return dto;

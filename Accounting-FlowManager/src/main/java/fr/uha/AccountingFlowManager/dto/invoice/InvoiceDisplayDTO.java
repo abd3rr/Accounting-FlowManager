@@ -19,6 +19,7 @@ public class InvoiceDisplayDTO {
     private String providerAddress;
     private String providerCountry;
     private String providerEmail;
+    private boolean fileExist = false;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss", timezone = "Europe/Paris")
     private LocalDateTime issueDate;

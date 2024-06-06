@@ -1,13 +1,12 @@
 package fr.uha.AccountingFlowManager.model;
 
-import fr.uha.AccountingFlowManager.enums.ShippingCostType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.EqualsAndHashCode;
 import lombok.ToString;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -54,6 +53,9 @@ public class Invoice {
 
     @DecimalMin(value = "0.0", inclusive = true)
     private double vat;  // VAT amount
+
+    @OneToOne(mappedBy = "invoice", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private File file;
 
     @PrePersist
     public void setIssueDate() {

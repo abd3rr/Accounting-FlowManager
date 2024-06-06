@@ -151,7 +151,7 @@ public class InvoiceService {
         invoice.setAdvancePayment(invoiceDisplayDTO.getAdvancePayment());
         invoice.setTotal(invoiceDisplayDTO.getTotal());
         invoice.setShippingCost(invoiceDisplayDTO.getShippingCost());
-        //invoice.setVat(invoiceDisplayDTO.getVat());
+        invoice.setVat(invoiceDisplayDTO.getVat());
         invoice = invoiceRepository.save(invoice);
 
         for (InvoiceLineDisplayDTO lineDTO : invoiceDisplayDTO.getLines()) {
@@ -162,6 +162,7 @@ public class InvoiceService {
                 product.setPrice(lineDTO.getUnitPrice());
                 product.setCurrency(Currency.EUR);
                 product.setProvider(provider);
+                product.setListed(false);
                 product = productRepository.save(product);
             }
             invoiceLineService.createInvoiceLine(invoice, product, (int) lineDTO.getQuantity(), lineDTO.getUnitPrice());

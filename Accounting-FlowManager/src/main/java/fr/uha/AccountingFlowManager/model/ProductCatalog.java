@@ -42,6 +42,8 @@ public class ProductCatalog {
 
     private boolean isService;
 
+    private boolean isListed = true;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "provider_id")
     private User provider;  // Update this field to ManyToOne

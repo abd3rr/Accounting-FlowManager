@@ -14,6 +14,7 @@ import fr.uha.AccountingFlowManager.util.InvoiceDtoHelper;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -24,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -154,6 +156,28 @@ public class InvoiceController {
                 .contentType(org.springframework.http.MediaType.APPLICATION_PDF)
                 .body(resource);
     }
+    @GetMapping("/invoice/download/uploaded/{invoiceId}")
+    public ResponseEntity<Resource> downloadUploadedInvoice(@PathVariable long invoiceId) {
+        File file = fileService.getFileByInvoiceId(invoiceId); // Fetch the file associated with the invoice
+        if (file == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Path path = Paths.get(file.getFilePath());
+        ByteArrayResource resource;
+        try {
+            resource = new ByteArrayResource(Files.readAllBytes(path));
+        } catch (IOException e) {
+            return ResponseEntity.internalServerError().build();
+        }
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFileName() + "\"")
+                .contentLength(resource.contentLength())
+                .contentType(org.springframework.http.MediaType.parseMediaType(file.getContentType()))
+                .body(resource);
+    }
+
 
     @GetMapping("/invoice/upload")
     public String renderUploadPage(Model model) {

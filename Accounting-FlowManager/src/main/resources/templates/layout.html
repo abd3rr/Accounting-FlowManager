@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="~{fragments/common-head :: commonHeadFragment}"></head>
 <body>
 <div class="wrapper">
@@ -24,14 +24,16 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
 <!-- js for *.html -->
-<script defer src="/js/invoiceAddForm.js" th:if="${invoiceAddForm}"></script>
-<script defer src="/js/invoiceList.js" th:if="${invoiceList}"></script>
-<script defer src="/js/invoiceView.js" th:if="${invoiceView}"></script>
-<script defer src="/js/invoiceUpload.js" th:if="${invoiceUpload}"></script>
-<<script defer src="/js/main.js"></script>
+<script defer th:if="${invoiceAddForm}" th:src="@{/js/invoiceAddForm.js}"></script>
+<script defer th:if="${invoiceList}" th:src="@{/js/invoiceList.js}"></script>
+<script defer th:if="${invoiceView}" th:src="@{/js/invoiceView.js}"></script>
+<script defer th:if="${invoiceUpload}" th:src="@{/js/invoiceUpload.js}"></script>
+<script defer th:if="${logoutForm}" th:src="@{/js/logoutForm.js}"></script>
+
+<script defer th:src="@{/js/main.js}"></script>
 
 <!-- ----------------------------------------------------------------------------- -->
 <!-- js for loginForm.html -->
-<script defer src="/js/loginForm.js" th:if="${loginForm}"></script>
+<script defer th:if="${loginForm}" th:src="@{/js/loginForm.js}"></script>
 </body>
 </html>

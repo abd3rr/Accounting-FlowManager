@@ -10,4 +10,7 @@ public interface FileRepository extends JpaRepository<File, Long> {
     List<File> findAll();
 
     Optional<File> findById(long id);
+
+    File findByInvoice_Id(Long invoiceId);
+
 }

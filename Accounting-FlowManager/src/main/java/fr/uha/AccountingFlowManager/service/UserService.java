@@ -199,7 +199,7 @@ public class UserService {
             throw new IllegalArgumentException("Current user is not a provider");
         }
 
-        return productRepository.findByProvider_Id(currentUserId);
+        return productRepository.findByProvider_IdAndIsListedTrue(currentUserId);
     }
 
 

@@ -9,6 +9,7 @@
     <main class="container mt-5">
         <div class="uploadContainer">
             <h2>File Upload & Image Preview</h2>
+            <div class="mb-3 file-info">No file selected</div>
 
             <!-- Upload  -->
             <form class="uploader" enctype="multipart/form-data" id="file-upload-form" method="post"
@@ -20,6 +21,14 @@
                 <input type="submit" value="envoyer">
             </form>
         </div>
+
+        <div class="loading-indicator" style="display: none;">
+            <div class="spinner-border" role="status">
+
+            </div>
+        </div>
+
+
     </main>
 </div>
 </body>

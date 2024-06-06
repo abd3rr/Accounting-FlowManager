@@ -1,4 +1,4 @@
-<header class="header" th:fragment="headerFragment" th:if="!${loginForm}">
+<header class="header" th:fragment="headerFragment" th:if="!${loginForm} and !${genericError}">
     <nav class="nav container">
         <div class="nav__data">
             <a class="nav__logo" href="#">

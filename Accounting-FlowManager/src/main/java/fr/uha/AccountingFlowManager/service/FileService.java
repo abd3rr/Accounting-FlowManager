@@ -63,5 +63,7 @@ public class FileService {
         return fileRepository.save(file);
     }
 
-
+    public File getFileByInvoiceId(Long invoiceId) {
+        return fileRepository.findByInvoice_Id(invoiceId);
+    }
 }

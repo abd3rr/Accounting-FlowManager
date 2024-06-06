@@ -141,8 +141,8 @@ public class PDFInvoiceService {
             String[] lineDetails = {
                     cleanText(line.getProductName()),
                     cleanText(String.valueOf(line.getQuantity())),
-                    DECIMAL_FORMAT.format(line.getUnitPrice()) + " €",
-                    DECIMAL_FORMAT.format(line.getTotal()) + " €"
+                    cleanText(DECIMAL_FORMAT.format(line.getUnitPrice()) + " €"),
+                    cleanText(DECIMAL_FORMAT.format(line.getTotal()) + " €")
             };
             for (int i = 0; i < lineDetails.length; i++) {
                 contentStream.beginText();
@@ -154,18 +154,19 @@ public class PDFInvoiceService {
             startY -= 20;
         }
     }
+
     private void drawSummary(PDPageContentStream contentStream, InvoiceDisplayDTO invoiceDTO, int startY) throws IOException {
         int leftAlign = 50;  // Adjusted for better alignment
 
         // Labels for the summary section
         String[] labels = {"Sous-total:", "Remise:", "Acompte:", "Frais de port:", "TVA:", "Total:"};
         String[] values = {
-                CURRENCY_FORMAT.format(invoiceDTO.getSubtotal()),
-                DECIMAL_FORMAT.format(invoiceDTO.getDiscount() * 100) + " %",  // Multiply by 100 to convert to percentage
-                CURRENCY_FORMAT.format(invoiceDTO.getAdvancePayment()),
-                CURRENCY_FORMAT.format(invoiceDTO.getShippingCost()),
-                "15% (" + CURRENCY_FORMAT.format(invoiceDTO.getVat()) + ")",  // 15% VAT rate with the calculated VAT amount
-                CURRENCY_FORMAT.format(invoiceDTO.getTotal())
+                cleanText(CURRENCY_FORMAT.format(invoiceDTO.getSubtotal()) + " €"),
+                cleanText(DECIMAL_FORMAT.format(invoiceDTO.getDiscount() * 100) + " %"),  // Multiply by 100 to convert to percentage
+                cleanText(CURRENCY_FORMAT.format(invoiceDTO.getAdvancePayment()) + " €"),
+                cleanText(CURRENCY_FORMAT.format(invoiceDTO.getShippingCost()) + " €"),
+                cleanText("15% (" + CURRENCY_FORMAT.format(invoiceDTO.getVat()) + ")"),  // 15% VAT rate with the calculated VAT amount
+                cleanText(CURRENCY_FORMAT.format(invoiceDTO.getTotal()) + " €")
         };
 
         contentStream.setFont(regularFont, 12);
@@ -191,8 +192,11 @@ public class PDFInvoiceService {
         if (input == null) {
             return "";
         }
+        //input = input.replace("\n", "").replace("\r", "");
+        //return input;
+
         // Replace narrow no-break spaces and non-breaking spaces with regular spaces
-        input = input.replaceAll("[\\u202F\\u00A0]", " ");
+        //input = input.replaceAll("[\\u202F\\u00A0]", " ");
         // Remove characters not supported by WinAnsiEncoding
         StringBuilder sanitized = new StringBuilder();
         for (char c : input.toCharArray()) {
@@ -203,6 +207,9 @@ public class PDFInvoiceService {
             }
         }
         return sanitized.toString();
+
+
     }
+
 
 }
