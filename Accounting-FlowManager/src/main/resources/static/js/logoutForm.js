@@ -1,13 +1,21 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Assuming 'userId' is passed dynamically and we've added a data attribute in the HTML to retrieve it.
-    var userId = document.querySelector('form').getAttribute('data-user-id');
+    var logoutForm = document.getElementById('logoutForm');
+    var userId = logoutForm.getAttribute('data-user-id');
 
     function clearFormDataFromSession(userId) {
-        sessionStorage.removeItem('invoiceFormData-' + userId);
+        if (userId) {
+            const formDataKey = 'invoiceFormData-' + userId;
+            if (sessionStorage.getItem(formDataKey)) {
+                sessionStorage.removeItem(formDataKey);
+                console.log('Session data cleared for user:', userId);
+            }
+        }
     }
 
     clearFormDataFromSession(userId);
 
-    // Automatically submit the logout form
-    document.querySelector('form').submit();
+    // Optionally delay the logout submission to ensure all scripts have finished executing
+    setTimeout(function() {
+        logoutForm.submit();
+    }, 500); // Delay of 500 milliseconds
 });

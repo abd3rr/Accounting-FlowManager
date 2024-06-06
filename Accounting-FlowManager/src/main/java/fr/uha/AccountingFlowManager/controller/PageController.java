@@ -25,13 +25,16 @@ public class PageController {
         model.addAttribute(page, true);
     }
 
-    @GetMapping({"/", "/home"})
-    public String index(Model model) {
-        setActivePage(model, "home");
-        model.addAttribute("userRole", userService.getCurrentUserRole());
-        model.addAttribute("userId", userService.getCurrentUserId());
-        model.addAttribute("userEmail", userService.getCurrentUserEmail());
+    @GetMapping({"/index", "/"})
+    public String renderIndex(Model model) {
+        model.addAttribute("index", true);
 
+        return "index";
+    }
+
+    @GetMapping("/home")
+    public String home(Model model) {
+        setActivePage(model, "home");
         return "home";
     }
 

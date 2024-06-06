@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/common-head :: commonHeadFragment}"></head>
 <body>
 <div class="wrapper">
@@ -29,6 +29,10 @@
 <script defer th:if="${invoiceView}" th:src="@{/js/invoiceView.js}"></script>
 <script defer th:if="${invoiceUpload}" th:src="@{/js/invoiceUpload.js}"></script>
 <script defer th:if="${logoutForm}" th:src="@{/js/logoutForm.js}"></script>
+<script defer th:if="${index}" th:src="@{/js/index.js}"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"
+        th:if="${index}"></script>
+
 
 <script defer th:src="@{/js/main.js}"></script>
 

@@ -1,9 +1,8 @@
-
 <!DOCTYPE html>
 <html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
 <head>
     <meta charset="UTF-8">
-    <title>Index Page</title>
+    <title>Page d'accueil</title>
 </head>
 <body>
 <div layout:fragment="content">
@@ -11,43 +10,38 @@
     <main class="container">
         <section class="section">
             <div class="container">
-                <h1>Home</h1>
-                <p>This is the home page</p>
-                <span th:text="${userRole}"></span>
-                <span> ID :  #<span th:text="${userId}"></span></span>
-                <span><span th:text="${userEmail}"></span> </span>
+                <h1>Bienvenue sur la page d'accueil</h1>
+                <p>Bonjour, <span th:text="${userName}">Utilisateur</span>!</p>
+                <p>Votre rôle : <span th:text="${userRole}"></span></p>
             </div>
         </section>
-        <table class="table">
-            <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">First</th>
-                <th scope="col">Last</th>
-                <th scope="col">Handle</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-            </tr>
-            <tr>
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>@fat</td>
-            </tr>
-            <tr>
-                <th scope="row">3</th>
-                <td>Larry</td>
-                <td>the Bird</td>
-                <td>@twitter</td>
-            </tr>
-            </tbody>
-        </table>
+
+        <!-- Section spécifique aux fournisseurs (ROLE_PROVIDER) -->
+        <section th:if="${userRole} == 'ROLE_PROVIDER'">
+            <h2>Section Fournisseur</h2>
+            <p>Cette partie est spécialement conçue pour les fournisseurs.</p>
+            <div>
+                <ul>
+                    <li>Accédez à vos projets</li>
+                    <li>Gérez vos factures</li>
+                    <li>Autres outils et ressources</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Section spécifique aux clients (ROLE_CLIENT) -->
+        <section th:if="${userRole} == 'ROLE_CLIENT'">
+            <h2>Section Client</h2>
+            <p>Cette section est destinée aux clients.</p>
+            <div>
+                <ul>
+                    <li>Consulter vos factures</li>
+                    <li>Accéder à l'assistance</li>
+                    <li>Informations personnalisées</li>
+                </ul>
+            </div>
+        </section>
+
     </main>
 
 </div>

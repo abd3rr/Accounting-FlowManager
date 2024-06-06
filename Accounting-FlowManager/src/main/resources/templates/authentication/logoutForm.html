@@ -1,27 +1,22 @@
 <!DOCTYPE html>
-<html lang="en" layout:decorate="~{layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
->
+<html lang="en" layout:decorate="~{layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
     <meta charset="UTF-8">
-    <title> logout </title>
+    <title>Logout</title>
 </head>
 <body>
 
 <div layout:fragment="content">
     <main>
-        <form method="post" style="display:inline;" th:action="@{/logout}">
-            <input data-user-id="[[${userId}]]" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"
-                   type="hidden"/>
-            <button class="dropdown__link"
-                    style="border:none; background:none; padding:0; margin:0; color: blue; cursor: pointer;"
-                    type="submit">Déconnexion
+        <form id="logoutForm" method="post" th:action="@{/logout}">
+            <input data-user-id="[[${userId}]]" name="${_csrf.parameterName}" type="hidden" value="${_csrf.token}"/>
+            <button style="border:none; background:none; padding:0; margin:0; color: blue; cursor: pointer;"
+                    type="submit">
+                Déconnexion
             </button>
         </form>
-
     </main>
-
 </div>
 
 </body>
-
 </html>
