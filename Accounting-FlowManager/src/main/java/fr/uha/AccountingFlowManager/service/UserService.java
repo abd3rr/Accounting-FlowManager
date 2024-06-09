@@ -1,15 +1,15 @@
 package fr.uha.AccountingFlowManager.service;
 
+import fr.uha.AccountingFlowManager.dto.AccountTransactionsDTO;
 import fr.uha.AccountingFlowManager.dto.ClientDTO;
 import fr.uha.AccountingFlowManager.dto.ProviderDTO;
 import fr.uha.AccountingFlowManager.dto.client.ProviderItemDTO;
 import fr.uha.AccountingFlowManager.dto.registerForm.ProviderInfosDTO;
 import fr.uha.AccountingFlowManager.dto.registerForm.RegistrationDTO;
+import fr.uha.AccountingFlowManager.enums.AccountType;
 import fr.uha.AccountingFlowManager.enums.Country;
 import fr.uha.AccountingFlowManager.enums.RoleName;
-import fr.uha.AccountingFlowManager.model.ProductCatalog;
-import fr.uha.AccountingFlowManager.model.Role;
-import fr.uha.AccountingFlowManager.model.User;
+import fr.uha.AccountingFlowManager.model.*;
 import fr.uha.AccountingFlowManager.repository.ProductRepository;
 import fr.uha.AccountingFlowManager.repository.RoleRepository;
 import fr.uha.AccountingFlowManager.repository.UserRepository;
@@ -37,9 +37,11 @@ public class UserService {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleService roleService;
+    private final AccountService accountService;
+    private final TransactionService transactionService;
 
     @Autowired
-    public UserService(UserRepository userRepository, ProviderDtoConverter providerDtoConverter, ClientDtoConverter clientDtoConverter, ProductRepository productRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, RoleService roleService) {
+    public UserService(UserRepository userRepository, ProviderDtoConverter providerDtoConverter, ClientDtoConverter clientDtoConverter, ProductRepository productRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, RoleService roleService, AccountService accountService, TransactionService transactionService) {
         this.userRepository = userRepository;
         this.providerDtoConverter = providerDtoConverter;
         this.clientDtoConverter = clientDtoConverter;
@@ -47,6 +49,8 @@ public class UserService {
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleService = roleService;
+        this.accountService = accountService;
+        this.transactionService = transactionService;
     }
 
     public Long getCurrentUserId() {
@@ -356,6 +360,23 @@ public class UserService {
         // Save the updated client and provider
         userRepository.save(client);
         userRepository.save(provider);
+    }
+
+    @Transactional(readOnly = true)
+    public AccountTransactionsDTO getAccountTransactionsDTOByUser(User user) {
+        Account account = accountService.getAccountByProviderAndType(user, AccountType.BALANCE);
+        List<Transaction> transactions = transactionService.getTransactionsForProvider(user);
+
+        List<AccountTransactionsDTO.TransactionDTO> transactionDTOs = transactions.stream()
+                .map(transaction -> new AccountTransactionsDTO.TransactionDTO(
+                        transaction.getDate(),
+                        transaction.getAmount(),
+                        transaction.getTransactionType(),
+                        transaction.getDescription()
+                ))
+                .collect(Collectors.toList());
+
+        return new AccountTransactionsDTO(account.getBalance(), transactionDTOs);
     }
 }
 

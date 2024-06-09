@@ -9,16 +9,45 @@
 
     <main class="container my-5">
 
-        <!-- Section spécifique aux fournisseurs (ROLE_PROVIDER) -->
-        <section th:if="${userRole} == 'ROLE_PROVIDER'">
-            <h2>Section Fournisseur</h2>
-            <p>Cette partie est spécialement conçue pour les fournisseurs.</p>
-            <div>
-                <ul>
-                    <li>Accédez à vos projets</li>
-                    <li>Gérez vos factures</li>
-                    <li>Autres outils et ressources</li>
-                </ul>
+        <section class="provider-section" th:if="${userRole} == 'ROLE_PROVIDER'">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card balance-card">
+                            <div class="card-body">
+                                <h5 class="card-title">Solde du compte</h5>
+                                <p class="card-text balance-amount" th:text="${accountTransactions.balance + ' €'}"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card transactions-card">
+                            <div class="card-body">
+                                <h5 class="card-title">Transactions</h5>
+                                <div class="table-responsive">
+                                    <table class="table table-hover" id="transactionsTable">
+                                        <thead class="table-light">
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Montant</th>
+                                            <th>Type</th>
+                                            <th>Description</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="transaction : ${accountTransactions.transactions}">
+                                            <td th:text="${transaction.date}"></td>
+                                            <td th:text="${transaction.amount + ' €'}"></td>
+                                            <td th:text="${transaction.transactionType}"></td>
+                                            <td th:text="${transaction.description}"></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -56,7 +85,20 @@
         </section>
 
     </main>
-
+    <div th:if="${userRole} == 'ROLE_PROVIDER'">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                $('#transactionsTable').DataTable({
+                    "autoWidth": false,
+                    "language": {
+                        "url": "//cdn.datatables.net/plug-ins/1.10.21/i18n/French.json"
+                    }
+                });
+            });
+        </script>
+    </div>
 </div>
 
 </body>

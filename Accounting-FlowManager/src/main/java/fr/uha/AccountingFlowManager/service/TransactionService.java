@@ -10,7 +10,7 @@ import fr.uha.AccountingFlowManager.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import java.util.List;
 import java.time.LocalDateTime;
 
 @Service
@@ -38,6 +38,17 @@ public class TransactionService {
         transaction.setProvider(provider);
         transaction.setInvoice(invoice);
         return transactionRepository.save(transaction);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Transaction> getTransactionsForProvider(User provider) {
+        // Validate that the provider is not null
+        if (provider == null) {
+            throw new IllegalArgumentException("Provider cannot be null");
+        }
+
+        // Retrieve and return all transactions associated with the provider
+        return transactionRepository.findByProvider(provider);
     }
 }
 

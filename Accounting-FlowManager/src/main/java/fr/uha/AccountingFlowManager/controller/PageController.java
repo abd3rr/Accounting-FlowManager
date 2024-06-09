@@ -1,5 +1,8 @@
 package fr.uha.AccountingFlowManager.controller;
 
+import fr.uha.AccountingFlowManager.dto.AccountTransactionsDTO;
+import fr.uha.AccountingFlowManager.enums.RoleName;
+import fr.uha.AccountingFlowManager.model.User;
 import fr.uha.AccountingFlowManager.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -35,7 +38,15 @@ public class PageController {
     @GetMapping("/home")
     public String home(Model model) {
         setActivePage(model, "home");
-        model.addAttribute("home",true);
+        model.addAttribute("home", true);
+        Long userId = userService.getCurrentUserId();
+        User currentUser = userService.getUserById(userId).orElse(null);
+        if (currentUser != null && userService.getCurrentUserRole().equals(RoleName.ROLE_PROVIDER.toString())) {
+            AccountTransactionsDTO accountTransactionsDTO = userService.getAccountTransactionsDTOByUser(currentUser);
+            model.addAttribute("accountTransactions", accountTransactionsDTO);
+            System.out.println(accountTransactionsDTO);
+
+        }
         return "home";
     }
 
