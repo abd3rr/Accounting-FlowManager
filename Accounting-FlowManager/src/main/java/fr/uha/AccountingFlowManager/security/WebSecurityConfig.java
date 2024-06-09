@@ -54,7 +54,7 @@ public class WebSecurityConfig {
         http
                 .csrf(csrf -> csrf.csrfTokenRepository(new CookieCsrfTokenRepository()))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/js/**", "/css/**","/images/**", "/logout","/index","/").permitAll()
+                        .requestMatchers("/login", "/js/**", "/css/**","/images/**", "/logout","/index","/","/register","/registerAction").permitAll()
                         .anyRequest().authenticated())
                 .formLogin(form -> form
                         .loginPage("/login")

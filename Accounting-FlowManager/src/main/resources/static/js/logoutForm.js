@@ -1,6 +1,6 @@
-document.addEventListener('DOMContentLoaded', function() {
-    var logoutForm = document.getElementById('logoutForm');
-    var userId = logoutForm.getAttribute('data-user-id');
+document.addEventListener('DOMContentLoaded', function () {
+    const logoutForm = document.getElementById('logoutForm');
+    const userId = logoutForm.getAttribute('data-user-id');
 
     function clearFormDataFromSession(userId) {
         if (userId) {
@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
     clearFormDataFromSession(userId);
 
     // Optionally delay the logout submission to ensure all scripts have finished executing
-    setTimeout(function() {
+    setTimeout(function () {
         logoutForm.submit();
     }, 500); // Delay of 500 milliseconds
 });

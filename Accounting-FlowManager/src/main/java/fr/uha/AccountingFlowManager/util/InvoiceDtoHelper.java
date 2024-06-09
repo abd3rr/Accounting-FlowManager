@@ -90,7 +90,7 @@ public class InvoiceDtoHelper {
         return dto;
     }
 
-    public static Invoice previewDtoToInvoice(PreviewDTO previewDTO, User client) {
+    public static Invoice previewDtoToInvoice(PreviewDTO previewDTO, User client, User provider) {
         Invoice invoice = new Invoice();
         invoice.setCustomer(client);
         invoice.setCurrency(Currency.EUR);
@@ -99,7 +99,7 @@ public class InvoiceDtoHelper {
         invoice.setAdvancePayment(previewDTO.getAdvancePayment());
         invoice.setShippingCost(previewDTO.getShippingCost());
         invoice.setShippingCostType(previewDTO.getShippingCostType());
-
+        invoice.setProvider(provider);
 
         invoice.setVat(previewDTO.getTotalHT() * (previewDTO.getTva() / 100));
 

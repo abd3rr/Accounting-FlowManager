@@ -1,5 +1,6 @@
 package fr.uha.AccountingFlowManager.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -30,7 +31,7 @@ public class User {
 
     private String passwordHash;
 
-    @Pattern(regexp = "^[+]?[(]?[0-9]{3}[)]?[-\\s.]?[0-9]{3}[-\\s.]?[0-9]{4,6}$", message = "Invalid phone number format")
+    @Pattern(regexp = "^$|^[+]?[(]?[0-9]{3}[)]?[-\\s.]?[0-9]{3}[-\\s.]?[0-9]{4,6}$", message = "Invalid phone number format")
     private String phoneNumber;
 
     private String address;
@@ -58,11 +59,12 @@ public class User {
             joinColumns = @JoinColumn(name = "provider_id"),
             inverseJoinColumns = @JoinColumn(name = "client_id")
     )
+    @JsonIgnoreProperties("providers")
     private List<User> clients;
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "clients")
+    @JsonIgnoreProperties("clients")
     private List<User> providers;
-
 
 
     @PrePersist

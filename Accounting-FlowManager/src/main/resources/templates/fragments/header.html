@@ -1,7 +1,7 @@
-<header class="header" th:fragment="headerFragment" th:if="!${loginForm} and !${genericError} and !${index}">
+<header class="header" th:fragment="headerFragment" th:if="!${loginForm} and !${genericError} and !${index} and !${registerForm}">
     <nav class="nav container">
         <div class="nav__data">
-            <a class="nav__logo" href="/">
+            <a class="nav__logo" href="/home">
                 <i class="ri-code-s-slash-line"></i> Accounting-FlowManager
             </a>
         </div>
@@ -12,62 +12,28 @@
         <div class="nav__menu" id="nav-menu">
             <ul class="nav__list">
                 <!-- Common link visible to any authenticated user -->
-                <li th:if="${userRole != null}"><a class="nav__link" href="/">Accueil</a></li>
+                <li th:if="${userRole != null}"><a class="nav__link" href="/home">Accueil</a></li>
 
                 <!-- Provider-specific content -->
                 <li class="dropdown__item" th:if="${userRole == 'ROLE_PROVIDER'}">
                     <div class="nav__link dropdown__button">
                         Factures <i class="ri-arrow-down-s-line dropdown__arrow"></i>
                     </div>
-                    <div class="dropdown__container">
-                        <div class="dropdown__content">
-                            <div class="dropdown__group">
-                                <div class="dropdown__icon">
-                                    <a href="/addInvoice"><i class="ri-add-fill"></i></a>
-                                </div>
-                                <a class="dropdown__link" href="/addInvoice">Ajouter</a>
-                            </div>
-                            <div class="dropdown__group">
-                                <div class="dropdown__icon">
-                                    <a href="/invoice/list"><i class="ri-list-check"></i></a>
-                                </div>
-                                <a class="dropdown__link" href="/invoice/list">Liste des factures</a>
-                            </div>
-                            <div class="dropdown__group">
-                                <div class="dropdown__icon">
-                                    <a href="/invoice/upload"><i class="ri-list-check"></i></a>
-                                </div>
-                                <a class="dropdown__link" href="/invoice/upload">Upload une facture</a>
-                            </div>
-                        </div>
-                    </div>
+                    <ul class="dropdown__list">
+                        <li><a class="dropdown__link" href="/addInvoice">Ajouter</a></li>
+                        <li><a class="dropdown__link" href="/invoice/list">Liste des factures</a></li>
+                        <li><a class="dropdown__link" href="/invoice/upload">Upload une facture</a></li>
+                    </ul>
                 </li>
                 <li class="dropdown__item" th:if="${userRole == 'ROLE_PROVIDER'}">
                     <div class="nav__link dropdown__button">
                         Produits <i class="ri-arrow-down-s-line dropdown__arrow"></i>
                     </div>
-                    <div class="dropdown__container">
-                        <div class="dropdown__content">
-                            <div class="dropdown__group">
-                                <div class="dropdown__icon">
-                                    <a href="/products/add"><i class="ri-add-fill"></i></a>
-                                </div>
-                                <a class="dropdown__link" href="/products/add">Ajouter produits</a>
-                            </div>
-                            <div class="dropdown__group">
-                                <div class="dropdown__icon">
-                                    <a href="/product/management"><i class="ri-folder-3-line"></i></a>
-                                </div>
-                                <a class="dropdown__link" href="/product/management">Gestion</a>
-                            </div>
-                            <div class="dropdown__group">
-                                <div class="dropdown__icon">
-                                    <a href="/products"><i class="ri-list-check"></i></a>
-                                </div>
-                                <a class="dropdown__link" href="/products">Liste des produits</a>
-                            </div>
-                        </div>
-                    </div>
+                    <ul class="dropdown__list">
+                        <li><a class="dropdown__link" href="/products/add">Ajouter produits</a></li>
+                        <li><a class="dropdown__link" href="/product/management">Gestion</a></li>
+                        <li><a class="dropdown__link" href="/products">Liste des produits</a></li>
+                    </ul>
                 </li>
 
                 <!-- Client-specific content -->
@@ -75,56 +41,29 @@
                     <div class="nav__link dropdown__button">
                         Factures <i class="ri-arrow-down-s-line dropdown__arrow"></i>
                     </div>
-                    <div class="dropdown__container">
-                        <div class="dropdown__content">
-                            <div class="dropdown__group">
-                                <a class="dropdown__link" href="/invoice/list">Liste des factures</a>
-                            </div>
-                        </div>
-                    </div>
+                    <ul class="dropdown__list">
+                        <li><a class="dropdown__link" href="/invoice/list">Liste des factures</a></li>
+                    </ul>
                 </li>
                 <li class="dropdown__item" th:if="${userRole == 'ROLE_CLIENT'}">
                     <div class="nav__link dropdown__button">
                         Fournisseurs <i class="ri-arrow-down-s-line dropdown__arrow"></i>
                     </div>
-                    <div class="dropdown__container">
-                        <div class="dropdown__content">
-                            <div class="dropdown__group">
-                                <a class="dropdown__link" href="/supplier/add">Ajouter fournisseur</a>
-                            </div>
-                            <div class="dropdown__group">
-                                <a class="dropdown__link" href="/supplier/list">Liste des fournisseurs</a>
-                            </div>
-                        </div>
-                    </div>
+                    <ul class="dropdown__list">
+                        <li><a class="dropdown__link" href="/client/providerAdd">Ajouter fournisseur</a></li>
+                        <li><a class="dropdown__link" href="/client/listProviders">Liste des fournisseurs</a></li>
+                    </ul>
                 </li>
 
                 <!-- Profile and Logout section accessible to any authenticated user -->
                 <li class="dropdown__item" th:if="${userRole != null}">
                     <div class="nav__link dropdown__button">
-                        <i class="ri-user-line"></i> <span th:text="${userEmail}"></span> <i
-                            class="ri-arrow-down-s-line dropdown__arrow"></i>
+                        <i class="ri-user-line"></i> <span th:text="${userEmail}"></span> <i class="ri-arrow-down-s-line dropdown__arrow"></i>
                     </div>
-                    <div class="dropdown__container">
-                        <div class="dropdown__content">
-                            <div class="dropdown__group">
-                                <div class="dropdown__icon">
-                                    <i class="ri-user-fill"></i>
-                                </div>
-                                <a class="dropdown__link" href="/profile">Profile</a>
-                                <a class="dropdown__link logout-link" href="/logout">Logout</a>
-                            </div>
-                            <div class="dropdown__group">
-                                <div class="dropdown__icon">
-                                    <i class="ri-information-line"></i>
-                                </div>
-                                <span class="dropdown__title">Information</span>
-                                <span>ID: #<span th:text="${userId}"></span></span>
-                                <span><span th:text="${userEmail}"></span></span>
-                                <a class="dropdown__link" href="/help">Support</a>
-                            </div>
-                        </div>
-                    </div>
+                    <ul class="dropdown__list">
+                        <li><a class="dropdown__link" href="/profile">Profile</a></li>
+                        <li><a class="dropdown__link logout-link" href="/logout">Logout</a></li>
+                    </ul>
                 </li>
             </ul>
         </div>

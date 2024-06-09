@@ -1,11 +1,11 @@
-<div th:if="!${loginForm}" th:fragment="footerFragment" class="footer-basic">
+<div th:if="!${loginForm} and !${registerForm}"  th:fragment="footerFragment" class="footer-basic">
     <footer>
         <ul class="list-inline">
             <li class="list-inline-item"><a href="/static">Home</a></li>
             <li class="list-inline-item"><a href="/services">Services</a></li>
             <li class="list-inline-item"><a href="/about">About</a></li>
             <li class="list-inline-item"><a href="/terms">Terms</a></li>
-            <li class="list-inline-item"><a href="#">Privacy Policy</a></li>
+            <li class="list-inline-item"><a href="#">Privacy <P></P>olicy</a></li>
 
 
         </ul>

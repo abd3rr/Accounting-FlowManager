@@ -35,6 +35,7 @@ public class PageController {
     @GetMapping("/home")
     public String home(Model model) {
         setActivePage(model, "home");
+        model.addAttribute("home",true);
         return "home";
     }
 

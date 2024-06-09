@@ -5,7 +5,10 @@ import fr.uha.AccountingFlowManager.dto.invoice.InvoiceDisplayDTO;
 import fr.uha.AccountingFlowManager.dto.invoice.InvoiceItemDTO;
 import fr.uha.AccountingFlowManager.dto.invoice.InvoiceLineDisplayDTO;
 import fr.uha.AccountingFlowManager.dto.invoice.PreviewDTO;
-import fr.uha.AccountingFlowManager.enums.*;
+import fr.uha.AccountingFlowManager.enums.Country;
+import fr.uha.AccountingFlowManager.enums.Currency;
+import fr.uha.AccountingFlowManager.enums.RoleName;
+import fr.uha.AccountingFlowManager.enums.TransactionType;
 import fr.uha.AccountingFlowManager.model.File;
 import fr.uha.AccountingFlowManager.model.Invoice;
 import fr.uha.AccountingFlowManager.model.ProductCatalog;
@@ -40,6 +43,7 @@ public class InvoiceService {
     private final ProductRepository productRepository;
     private final RoleService roleService;
     private final UserRepository userRepository;
+
     @Autowired
     public InvoiceService(InvoiceRepository invoiceRepository, UserService userService,
                           ProductService productService, InvoiceLineService invoiceLineService,
@@ -66,7 +70,7 @@ public class InvoiceService {
         User client = userService.getUserById(Long.valueOf(previewDTO.getClientId()))
                 .orElseThrow(() -> new IllegalArgumentException("Client not found"));
 
-        Invoice invoice = previewDtoToInvoice(previewDTO, client);
+        Invoice invoice = previewDtoToInvoice(previewDTO, client, provider);
         invoice = invoiceRepository.save(invoice);
 
         for (PreviewDTO.PreviewProduct productDto : previewDTO.getProducts()) {
@@ -82,12 +86,27 @@ public class InvoiceService {
     }
 
     @Transactional(readOnly = true)
-    public List<InvoiceItemDTO> getAllInvoiceItemDTOs() {
-        List<Invoice> invoices = invoiceRepository.findAll();
+    public List<InvoiceItemDTO> getAllInvoiceItemDTOsForCurrentUser() {
+        User currentUser = userService.getUserById(userService.getCurrentUserId()).orElseThrow(() -> new IllegalArgumentException("Current user not found"));
+        long currentUserId = currentUser.getId();
+        List<Invoice> invoices;
+
+        switch (currentUser.getRole().getName()) {
+            case ROLE_PROVIDER:
+                invoices = invoiceRepository.findByProviderId(currentUserId);
+                break;
+            case ROLE_CLIENT:
+                invoices = invoiceRepository.findByCustomerId(currentUserId);
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown role: " + currentUser.getRole().getName());
+        }
+
         return invoices.stream()
                 .map(InvoiceDtoHelper::mapToInvoiceItemDTO)
                 .collect(Collectors.toList());
     }
+
 
     @Transactional(readOnly = true)
     public InvoiceDisplayDTO getInvoiceDisplayDTO(long invoiceId) {
@@ -132,18 +151,19 @@ public class InvoiceService {
         if (client == null) {
             client = userService.getUserByFullName(invoiceDisplayDTO.getCustomerName());
         }
-        if(client == null){
+        if (client == null) {
             client = new User();
             client.setFullName(invoiceDisplayDTO.getCustomerName());
             client.setRole(roleService.getOrCreateRole(RoleName.ROLE_CLIENT));
             client.setAddress(invoiceDisplayDTO.getCustomerAddress());
             client.setCountry(Country.fromString(invoiceDisplayDTO.getCustomerCountry()));
-            if(invoiceDisplayDTO.getCustomerEmail()!=null) client.setEmail(invoiceDisplayDTO.getCustomerEmail());
+            if (invoiceDisplayDTO.getCustomerEmail() != null) client.setEmail(invoiceDisplayDTO.getCustomerEmail());
             client = userRepository.save(client);
         }
 
         Invoice invoice = new Invoice();
         invoice.setCustomer(client);
+        invoice.setProvider(provider);
         invoice.setIssueDate(invoiceDisplayDTO.getIssueDate());
         invoice.setCurrency(invoiceDisplayDTO.getCurrency());
         invoice.setSubtotal(invoiceDisplayDTO.getSubtotal());

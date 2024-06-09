@@ -1,0 +1,24 @@
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translate3d(0, 50px, 0);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+.animate__fadeInUp {
+    animation-name: fadeInUp;
+    animation-duration: 1s;
+}
+.hero-section {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+}
+
+.cta-section {
+    padding: 80px 0;
+}

@@ -79,7 +79,7 @@ public class InvoiceController {
         List<ProductCatalog> products = validProducts.stream()
                 .map(productInvoiceForm -> productService.getProductById(Long.valueOf(productInvoiceForm.getProductId())))
                 .collect(Collectors.toList());
-
+        if(invoiceFormDataDTO.getAdvancePayment().trim().isEmpty()) invoiceFormDataDTO.setAdvancePayment("0");
         // Create preview DTO
         PreviewDTO previewDTO = InvoiceDtoHelper.createPreviewDTO(client, provider, products, invoiceFormDataDTO);
         System.out.println("InvoiceFormData DTO ############" + invoiceFormDataDTO);
@@ -112,9 +112,9 @@ public class InvoiceController {
 
     @GetMapping("/invoice/list")
     public String listInvoices(Model model) {
-        System.out.println(invoiceService.getAllInvoiceItemDTOs());
+        System.out.println(invoiceService.getAllInvoiceItemDTOsForCurrentUser());
         model.addAttribute("invoiceList", true);
-        model.addAttribute("invoiceItems", invoiceService.getAllInvoiceItemDTOs());
+        model.addAttribute("invoiceItems", invoiceService.getAllInvoiceItemDTOsForCurrentUser());
         return "/invoice/invoiceList";
     }
 

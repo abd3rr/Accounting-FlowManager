@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="fr" layout:decorate="~{layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des Fournisseurs</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <main class="container mt-5">
+        <h1 class="text-center">Liste des Fournisseurs</h1>
+
+        <div class="table-responsive">
+            <table class="table table-hover" id="providersTable">
+                <thead class="table-light">
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Nom Complet</th>
+                    <th scope="col">Adresse Email</th>
+                    <th scope="col">Adresse</th>
+                    <th scope="col">Pays</th>
+                    <th scope="col">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="provider : ${providers}">
+                    <td th:text="${provider.id}"></td>
+                    <td th:text="${provider.fullName}"></td>
+                    <td th:text="${provider.email}"></td>
+                    <td th:text="${provider.address}"></td>
+                    <td th:text="${provider.country}"></td>
+                    <td>
+                        <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal"
+                                th:attr="data-bs-provider-id=${provider.id}">Supprimer
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- Delete Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Confirmation de suppression</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                </div>
+                <div class="modal-body">
+                    Êtes-vous sûr de vouloir supprimer ce fournisseur ?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteButton">Supprimer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#providersTable').DataTable({
+                "autoWidth": false,
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.21/i18n/French.json"
+                }
+            });
+
+            let providerId;
+            $('#deleteModal').on('show.bs.modal', function (event) {
+                let button = $(event.relatedTarget); // Button that triggered the modal
+                providerId = button.data('bs-provider-id'); // Extract provider id from data-* attribute
+            });
+
+            $('#confirmDeleteButton').click(function () {
+                // Perform AJAX request to delete the provider
+                $.ajax({
+                    url: '/client/deleteProvider/' + providerId,
+                    type: 'GET', // Use GET method
+                    success: function (response) {
+                        // Handle successful response
+                        console.log(response);
+                        // Optionally, you can refresh the table or update the UI
+                        location.reload(); // Reload the page
+                    },
+                    error: function (xhr, status, error) {
+                        // Handle error
+                        console.error(error);
+                    },
+                    complete: function () {
+                        // Close the modal after the AJAX request is completed
+                        $('#deleteModal').modal('hide');
+                    }
+                });
+            });
+        });
+    </script>
+</div>
+</body>
+</html>

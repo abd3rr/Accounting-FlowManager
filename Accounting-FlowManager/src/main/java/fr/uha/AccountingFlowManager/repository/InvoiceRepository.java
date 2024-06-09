@@ -10,6 +10,8 @@ import java.util.Optional;
 @Repository
 public interface InvoiceRepository extends JpaRepository<Invoice, Integer> {
     List<Invoice> findAll();
+    List<Invoice> findByProviderId(Long currentUserId);
+    List<Invoice> findByCustomerId(Long currentUserId);
 
     Optional<Invoice> findById(long id);
 

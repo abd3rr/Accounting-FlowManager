@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<html lang="en" layout:decorate="~{layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
     <meta charset="UTF-8">
     <title>Page d'accueil</title>
@@ -7,14 +7,7 @@
 <body>
 <div layout:fragment="content">
 
-    <main class="container">
-        <section class="section">
-            <div class="container">
-                <h1>Bienvenue sur la page d'accueil</h1>
-                <p>Bonjour, <span th:text="${userName}">Utilisateur</span>!</p>
-                <p>Votre rôle : <span th:text="${userRole}"></span></p>
-            </div>
-        </section>
+    <main class="container my-5">
 
         <!-- Section spécifique aux fournisseurs (ROLE_PROVIDER) -->
         <section th:if="${userRole} == 'ROLE_PROVIDER'">
@@ -30,15 +23,35 @@
         </section>
 
         <!-- Section spécifique aux clients (ROLE_CLIENT) -->
-        <section th:if="${userRole} == 'ROLE_CLIENT'">
-            <h2>Section Client</h2>
-            <p>Cette section est destinée aux clients.</p>
-            <div>
-                <ul>
-                    <li>Consulter vos factures</li>
-                    <li>Accéder à l'assistance</li>
-                    <li>Informations personnalisées</li>
-                </ul>
+        <section class="text-center" th:if="${userRole} == 'ROLE_CLIENT'">
+            <h2 class="section-title mb-4">Votre Espace Client</h2>
+            <p class="section-description mb-5">Gérez facilement vos factures et fournisseurs depuis cet espace
+                dédié.</p>
+            <div class="row justify-content-center">
+                <div class="col-md-6 mb-4">
+                    <div class="card shadow h-100">
+                        <div class="card-body">
+                            <i class="bi bi-file-earmark-text card-icon mb-3"></i>
+                            <h5 class="card-title">Vos Factures</h5>
+                            <p class="card-text">Consultez, téléchargez et gérez vos factures en toute simplicité.</p>
+                            <a class="btn btn-primary" href="/invoice/list">Voir les factures</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="card shadow h-100">
+                        <div class="card-body">
+                            <i class="bi bi-people-fill card-icon mb-3"></i>
+                            <h5 class="card-title">Vos Fournisseurs</h5>
+                            <p class="card-text">Ajoutez, supprimez ou consultez la liste de vos fournisseurs
+                                privilégiés.</p>
+                            <div class="d-flex justify-content-between">
+                                <a class="btn btn-primary" href="/client/providerAdd">Ajouter</a>
+                                <a class="btn btn-outline-primary" href="/client/listProviders">Liste</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 

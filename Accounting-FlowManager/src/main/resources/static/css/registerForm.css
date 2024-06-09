@@ -1,0 +1,67 @@
+body {
+    background-color: #f8f9fa;
+    background-image: url('../images/kevin-matos-Nl_FMFpXo2g-unsplash.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
+.register-container {
+    max-width: 600px;
+    margin: 40px auto;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+}
+
+.register-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.register-header h1 {
+    color: #333;
+}
+
+.form-section {
+    margin-bottom: 30px;
+}
+
+.form-section h2 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.register-container .form-control {
+    border-radius: 5px;
+}
+
+.register-container .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.register-container .btn-primary:hover {
+    background-color: #0069d9;
+    border-color: #0062cc;
+}
+
+.register-container .login-link {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.register-container .login-link:hover {
+    text-decoration: underline;
+}
+
+.provider-list .list-group-item {
+    cursor: pointer;
+}
+
+.provider-list .list-group-item.active {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: #fff;
+}

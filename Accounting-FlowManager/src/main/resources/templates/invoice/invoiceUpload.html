@@ -7,28 +7,26 @@
 <body>
 <div layout:fragment="content">
     <main class="container mt-5">
-        <div class="uploadContainer">
-            <h2>File Upload & Image Preview</h2>
-            <div class="mb-3 file-info">No file selected</div>
+        <div class="upload-container">
+            <i class="bi bi-cloud-upload display-1 text-primary mb-3"></i>
+            <h2 class="mb-4">Téléverser une facture</h2>
+            <div class="file-info mb-3">Aucun fichier sélectionné</div>
 
-            <!-- Upload  -->
+            <!-- Upload Form -->
             <form class="uploader" enctype="multipart/form-data" id="file-upload-form" method="post"
                   th:action="@{/invoice/uploadAction}">
                 <div class="mb-3">
-                    <label class="form-label" for="formFile">Default file input example</label>
                     <input class="form-control" id="formFile" name="file" type="file">
                 </div>
-                <input type="submit" value="envoyer">
+                <button class="btn btn-primary" type="submit">Téléverser</button>
             </form>
         </div>
 
         <div class="loading-indicator" style="display: none;">
             <div class="spinner-border" role="status">
-
+                <span class="visually-hidden">Loading...</span>
             </div>
         </div>
-
-
     </main>
 </div>
 </body>

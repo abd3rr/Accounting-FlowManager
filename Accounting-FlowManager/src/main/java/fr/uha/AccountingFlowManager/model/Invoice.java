@@ -25,6 +25,10 @@ public class Invoice {
     @JoinColumn(name = "user_id")
     private User customer;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "provider_id")
+    private User provider;
+
     @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<InvoiceLine> lines;  // List of invoice lines
 

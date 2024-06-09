@@ -3,22 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <title>Gestion de factures simplifiée</title>
+    <style>
+
+    </style>
 </head>
 <body>
 <div layout:fragment="content">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
         <div class="container">
             <a class="navbar-brand" href="#">InvoiceApp</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <button aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"
+                    data-bs-target="#navbarNav" data-bs-toggle="collapse" type="button">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Contact</a>
+                        <a class="nav-link" href="#contact">Contact</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Services</a>
+                        <a class="nav-link" href="#services">Services</a>
                     </li>
                     <li class="nav-item">
                         <a class="btn btn-outline-light ms-lg-2" href="/register">S'inscrire</a>
@@ -33,43 +37,51 @@
 
     <div class="hero-section">
         <div class="owl-carousel owl-theme">
+            <!-- ... -->
             <div class="item">
-                <img th:src="@{/images/sean-pollock-PhYq704ffdA-unsplash.jpg}" alt="Slide 1">
+                <img alt="Slide 1" th:src="@{/images/sean-pollock-PhYq704ffdA-unsplash.jpg}">
                 <div class="carousel-caption animate__animated animate__fadeInUp">
                     <div class="caption-content bg-dark bg-opacity-50 p-4 rounded">
                         <h2 class="text-white">Gérez vos factures en toute simplicité</h2>
-                        <p class="text-white">Notre plateforme intuitive vous offre une solution complète pour une gestion efficace de vos factures.</p>
+                        <p class="text-white">Notre plateforme intuitive vous offre une solution complète pour une
+                            gestion efficace de vos factures.</p>
                     </div>
                 </div>
             </div>
             <div class="item">
-                <img th:src="@{/images/brooke-cagle-WHWYBmtn3_0-unsplash.jpg}" alt="Slide 2">
+                <img alt="Slide 2" th:src="@{/images/brooke-cagle-WHWYBmtn3_0-unsplash.jpg}">
                 <div class="carousel-caption animate__animated animate__fadeInUp">
                     <div class="caption-content bg-dark bg-opacity-50 p-4 rounded">
                         <h2 class="text-white">Gagnez en productivité</h2>
-                        <p class="text-white">Suivez vos paiements, consultez vos historiques et optimisez vos processus avec notre outil puissant.</p>
+                        <p class="text-white">Suivez vos paiements, consultez vos historiques et optimisez vos processus
+                            avec notre outil puissant.</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="cta-section">
+    <div class="cta-section" id="services">
         <div class="container">
             <div class="row">
                 <div class="col-md-8 offset-md-2 text-center">
                     <h2 class="animate__animated animate__fadeInUp">Rejoignez dès maintenant notre communauté</h2>
-                    <p class="animate__animated animate__fadeInUp">Profitez d'une expérience utilisateur simplifiée et d'une gestion efficace de vos factures.</p>
+                    <p class="animate__animated animate__fadeInUp">Profitez d'une expérience utilisateur simplifiée et
+                        d'une gestion efficace de vos factures.</p>
                     <div class="cta-buttons animate__animated animate__fadeInUp">
-                        <a href="/register" class="btn btn-outline-primary btn-lg me-3">S'inscrire</a>
-                        <a href="/login" class="btn btn-primary btn-lg">Se connecter</a>
+                        <a class="btn btn-outline-primary btn-lg me-3" href="/register">S'inscrire</a>
+                        <a class="btn btn-primary btn-lg" href="/login">Se connecter</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+
 </div>
 
+<script>
 
+</script>
 </body>
 </html>
