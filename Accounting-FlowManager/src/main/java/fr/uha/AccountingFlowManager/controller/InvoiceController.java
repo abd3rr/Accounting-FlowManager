@@ -21,6 +21,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -39,14 +40,16 @@ public class InvoiceController {
     private final InvoiceService invoiceService;
     private final PDFInvoiceService pdfInvoiceService;
     private final FileService fileService;
+    private final FileStorageService fileStorageService;
 
     @Autowired
-    public InvoiceController(UserService userService, ProductService productService, InvoiceService invoiceService, PDFInvoiceService pdfInvoiceService, FileService fileService) {
+    public InvoiceController(UserService userService, ProductService productService, InvoiceService invoiceService, PDFInvoiceService pdfInvoiceService, FileService fileService, FileStorageService fileStorageService) {
         this.userService = userService;
         this.productService = productService;
         this.invoiceService = invoiceService;
         this.pdfInvoiceService = pdfInvoiceService;
         this.fileService = fileService;
+        this.fileStorageService = fileStorageService;
     }
 
     @GetMapping("/addInvoice")
@@ -57,7 +60,7 @@ public class InvoiceController {
         model.addAttribute("userId", userService.getCurrentUserId());
         model.addAttribute("shippingCostTypes", ShippingCostType.values());
         model.addAttribute("reductionTypes", ReductionType.values());
-        System.out.println("products in add form "+ userService.getCurrentProviderProducts());
+        System.out.println("products in add form " + userService.getCurrentProviderProducts());
         return "/invoice/invoiceAddForm";
     }
 
@@ -79,7 +82,7 @@ public class InvoiceController {
         List<ProductCatalog> products = validProducts.stream()
                 .map(productInvoiceForm -> productService.getProductById(Long.valueOf(productInvoiceForm.getProductId())))
                 .collect(Collectors.toList());
-        if(invoiceFormDataDTO.getAdvancePayment().trim().isEmpty()) invoiceFormDataDTO.setAdvancePayment("0");
+        if (invoiceFormDataDTO.getAdvancePayment().trim().isEmpty()) invoiceFormDataDTO.setAdvancePayment("0");
         // Create preview DTO
         PreviewDTO previewDTO = InvoiceDtoHelper.createPreviewDTO(client, provider, products, invoiceFormDataDTO);
         System.out.println("InvoiceFormData DTO ############" + invoiceFormDataDTO);
@@ -156,6 +159,7 @@ public class InvoiceController {
                 .contentType(org.springframework.http.MediaType.APPLICATION_PDF)
                 .body(resource);
     }
+
     @GetMapping("/invoice/download/uploaded/{invoiceId}")
     public ResponseEntity<Resource> downloadUploadedInvoice(@PathVariable long invoiceId) {
         File file = fileService.getFileByInvoiceId(invoiceId); // Fetch the file associated with the invoice
@@ -187,10 +191,31 @@ public class InvoiceController {
     }
 
     @PostMapping("/invoice/uploadAction")
-    public String uploadInvoice(@RequestParam("file") MultipartFile multipartFile) {
-        File savedFile = fileService.storeFile(multipartFile);
-        invoiceService.saveInvoiceFromFile(savedFile);
-        return "redirect:/invoice/list";
+    public String uploadInvoice(@RequestParam("file") MultipartFile multipartFile, RedirectAttributes redirectAttributes) {
+        File savedFile = null; // Initialize with a default value
+        try {
+            savedFile = fileService.storeFile(multipartFile);
+            invoiceService.saveInvoiceFromFile(savedFile);
+            return "redirect:/invoice/list";
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Une erreur s'est produite lors du traitement de la facture. Veuillez réessayer.");
+            if (savedFile != null) { 
+                fileStorageService.deleteFile(savedFile.getFilePath());
+            }
+            return "redirect:/invoice/upload";
+        }
+    }
+
+    @GetMapping("/invoice/delete/{id}")
+    public String deleteInvoice(@PathVariable("id") long invoiceId, RedirectAttributes redirectAttributes) {
+        try {
+            invoiceService.deleteInvoice(invoiceId);
+            redirectAttributes.addFlashAttribute("successMessage", "Invoice deleted successfully.");
+            return "redirect:/invoice/list"; // Return the redirect URL
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Error deleting invoice: " + e.getMessage());
+            return "redirect:/invoice/list"; // Return the redirect URL even in case of error
+        }
     }
 
 }

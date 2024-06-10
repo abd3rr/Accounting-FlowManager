@@ -21,23 +21,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
 //to delete product
 
-$(document).ready(function() {
-$('.delete-btn').click(function (e) {
-    e.preventDefault();
-    var productId = $(this).data('id');
-    $.ajax({
-        url: '/products/' + productId + '/delete',
-        type: 'POST',
-        success: function () {
-            alert('Product deleted');
-            location.reload();
-        },
-        error: function () {
-            alert('Failed to delete product');
-        }
-    });
-});
-});
+
 document.addEventListener('DOMContentLoaded', (event) => {
     let toastElList = [].slice.call(document.querySelectorAll('.toast'))
     let toastList = toastElList.map(function(toastEl) {

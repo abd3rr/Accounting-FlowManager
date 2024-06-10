@@ -1,5 +1,6 @@
 package fr.uha.AccountingFlowManager.repository;
 
+import fr.uha.AccountingFlowManager.model.Invoice;
 import fr.uha.AccountingFlowManager.model.Transaction;
 import fr.uha.AccountingFlowManager.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,4 +15,6 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
 
     Optional<Transaction> findById(long id);
     List<Transaction> findByProvider(User provider);
+    List<Transaction> findByInvoice(Invoice invoice);
+
 }

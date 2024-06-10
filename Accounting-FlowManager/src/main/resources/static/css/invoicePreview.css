@@ -1,6 +1,6 @@
 .invoice-container {
     background-color: #ffffff;
-    padding: 30px;
+    padding: 40px;
     border-radius: 10px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
     max-width: 900px;
@@ -8,54 +8,51 @@
     font-family: Arial, sans-serif;
 }
 
-.invoice-header {
-    background-color: #f8f9fa;
-    padding: 20px;
-    border-radius: 5px;
-    margin-bottom: 20px;
-    border: 1px solid #ddd;
-}
-
-.invoice-header h4 {
-    color: #333;
-    margin-bottom: 15px;
-}
-
-.invoice-header p {
-    background-color: #ffffff;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ddd;
-    margin-bottom: 10px;
-}
-
 .invoice-section {
+    margin-bottom: 40px;
+}
+
+.invoice-section h4 {
+    color: #333;
     margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #007bff;
 }
 
-.invoice-summary p {
-    font-size: 1.1rem;
+.table {
+    margin-bottom: 0;
 }
 
-.btn-group {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
+.table th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+}
+
+.invoice-summary {
+    background-color: #f8f9fa;
+    padding: 30px;
+    border-radius: 5px;
+}
+
+.total-ttc td {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #007bff;
 }
 
 .btn {
-    padding: 10px 20px;
+    padding: 12px 30px;
     border-radius: 5px;
-    border: none;
-    cursor: pointer;
+    font-weight: bold;
+    text-transform: uppercase;
 }
 
-.btn-danger {
-    background-color: #dc3545;
+.btn-secondary {
+    background-color: #6c757d;
     color: #ffffff;
 }
 
-.btn-success {
-    background-color: #28a745;
+.btn-primary {
+    background-color: #007bff;
     color: #ffffff;
 }

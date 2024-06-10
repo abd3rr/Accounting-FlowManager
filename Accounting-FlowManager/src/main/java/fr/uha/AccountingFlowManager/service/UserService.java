@@ -362,9 +362,9 @@ public class UserService {
         userRepository.save(provider);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public AccountTransactionsDTO getAccountTransactionsDTOByUser(User user) {
-        Account account = accountService.getAccountByProviderAndType(user, AccountType.BALANCE);
+        Account account = accountService.findOrCreateAccountByProviderAndType(user, AccountType.BALANCE);
         List<Transaction> transactions = transactionService.getTransactionsForProvider(user);
 
         List<AccountTransactionsDTO.TransactionDTO> transactionDTOs = transactions.stream()

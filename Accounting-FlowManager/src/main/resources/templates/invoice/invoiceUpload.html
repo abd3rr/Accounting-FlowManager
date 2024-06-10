@@ -7,6 +7,9 @@
 <body>
 <div layout:fragment="content">
     <main class="container mt-5">
+        <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+            <span th:text="${errorMessage}"></span>
+        </div>
         <div class="upload-container">
             <i class="bi bi-cloud-upload display-1 text-primary mb-3"></i>
             <h2 class="mb-4">Téléverser une facture</h2>

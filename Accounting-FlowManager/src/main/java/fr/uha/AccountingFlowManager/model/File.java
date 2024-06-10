@@ -28,7 +28,7 @@ public class File {
 
     private LocalDateTime uploadDateTime;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.REMOVE)
     private Invoice invoice;
 
     @PrePersist
