@@ -33,18 +33,17 @@ public class FileService {
     public File storeFile(@Valid MultipartFile multipartFile) {
         String originalFileName = multipartFile.getOriginalFilename();
         if (originalFileName == null || originalFileName.contains("..")) {
-            throw new IllegalArgumentException("Invalid file name.");
+            throw new IllegalArgumentException("Nom de fichier invalide.");
         }
 
         String fileExtension = FilenameUtils.getExtension(originalFileName);
-
         List<String> acceptedExtensionsList = Arrays.asList(ACCEPTED_EXTENSIONS);
         if (!acceptedExtensionsList.contains(fileExtension)) {
-            throw new IllegalArgumentException("Invalid file type.");
+            throw new IllegalArgumentException("Type de fichier invalide.");
         }
 
         if (multipartFile.getSize() > MAX_FILE_SIZE) {
-            throw new IllegalArgumentException("File size exceeds limit.");
+            throw new IllegalArgumentException("La taille du fichier dépasse la limite autorisée.");
         }
 
         Path filePath = fileStorageService.storeFile(multipartFile);

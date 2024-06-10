@@ -192,16 +192,15 @@ public class InvoiceController {
 
     @PostMapping("/invoice/uploadAction")
     public String uploadInvoice(@RequestParam("file") MultipartFile multipartFile, RedirectAttributes redirectAttributes) {
-        File savedFile = null; // Initialize with a default value
         try {
-            savedFile = fileService.storeFile(multipartFile);
+            File savedFile = fileService.storeFile(multipartFile);
             invoiceService.saveInvoiceFromFile(savedFile);
             return "redirect:/invoice/list";
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/invoice/upload";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "Une erreur s'est produite lors du traitement de la facture. Veuillez réessayer.");
-            if (savedFile != null) { 
-                fileStorageService.deleteFile(savedFile.getFilePath());
-            }
             return "redirect:/invoice/upload";
         }
     }

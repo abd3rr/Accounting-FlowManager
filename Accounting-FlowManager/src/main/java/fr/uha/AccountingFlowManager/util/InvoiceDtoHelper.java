@@ -144,7 +144,7 @@ public class InvoiceDtoHelper {
         dto.setShippingCost(invoice.getShippingCost());
         dto.setShippingCostType(invoice.getShippingCostType());
         dto.setVat(invoice.getVat());
-        if(invoice.getFile() != null) dto.setFileExist(true);
+        if (invoice.getFile() != null) dto.setFileExist(true);
         // Map lines
         dto.setLines(invoice.getLines().stream().map(InvoiceDtoHelper::invoiceLineToInvoiceLineDisplayDto).collect(Collectors.toList()));
         return dto;
@@ -177,7 +177,12 @@ public class InvoiceDtoHelper {
 
             String issueDateStr = getJsonNodeValue(invoiceNode, "Issue Date");
             if (!issueDateStr.isEmpty()) {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+                DateTimeFormatter formatter;
+                if (issueDateStr.length() > 10) { // Check if the string contains time information
+                    formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+                } else {
+                    formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                }
                 dto.setIssueDate(LocalDateTime.parse(issueDateStr, formatter));
             } else {
                 dto.setIssueDate(LocalDateTime.now());

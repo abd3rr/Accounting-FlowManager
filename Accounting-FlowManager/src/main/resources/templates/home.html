@@ -11,16 +11,18 @@
 
         <section class="provider-section" th:if="${userRole} == 'ROLE_PROVIDER'">
             <div class="container">
-                <div class="row">
-                    <div class="col-md-6">
+                <div class="row mb-4">
+                    <div class="col-md-6 offset-md-3">
                         <div class="card balance-card">
-                            <div class="card-body">
-                                <h5 class="card-title">Solde du compte</h5>
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Account Balance</h5>
                                 <p class="card-text balance-amount" th:text="${accountTransactions.balance + ' €'}"></p>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
                         <div class="card transactions-card">
                             <div class="card-body">
                                 <h5 class="card-title">Transactions</h5>
@@ -29,7 +31,7 @@
                                         <thead class="table-light">
                                         <tr>
                                             <th>Date</th>
-                                            <th>Montant</th>
+                                            <th>Amount</th>
                                             <th>Type</th>
                                             <th>Description</th>
                                         </tr>
@@ -50,7 +52,6 @@
                 </div>
             </div>
         </section>
-
         <!-- Section spécifique aux clients (ROLE_CLIENT) -->
         <section class="text-center" th:if="${userRole} == 'ROLE_CLIENT'">
             <h2 class="section-title mb-4">Votre Espace Client</h2>
