@@ -197,7 +197,7 @@ public class InvoiceController {
             invoiceService.saveInvoiceFromFile(savedFile);
             return "redirect:/invoice/list";
         } catch (IllegalArgumentException e) {
-            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            redirectAttributes.addFlashAttribute("errorMessage", "Une erreur s'est produite lors du traitement de la facture. Veuillez réessayer.");
             return "redirect:/invoice/upload";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "Une erreur s'est produite lors du traitement de la facture. Veuillez réessayer.");

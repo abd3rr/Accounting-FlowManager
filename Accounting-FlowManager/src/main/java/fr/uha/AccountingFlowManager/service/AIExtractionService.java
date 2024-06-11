@@ -41,7 +41,7 @@ public class AIExtractionService {
         headers.setBearerAuth(openAiApiKey);
 
         Map<String, Object> body = new HashMap<>();
-        body.put("model", "gpt-3.5-turbo");
+        body.put("model", "gpt-3.5-turbo-0125");
         body.put("messages", Collections.singletonList(Map.of("role", "user", "content", prompt)));
         body.put("max_tokens", maxTokens);
 
@@ -63,15 +63,12 @@ public class AIExtractionService {
 
 
     private String createIsInvoicePrompt(String text) {
-        return "Based on the following French text, determine if it is an invoice. An invoice is characterized by the presence of at least one item with its corresponding price and a total amount due. " +
-                "Review the text for the following essential elements to confirm if it is an invoice:\n\n" +
-                "- At least one line item description with a price (look for descriptions followed by numerical values indicating cost)\n" +
-                "- A total amount due that summarizes the cost of the items\n" +
-                "Additional common features of an invoice such as a unique invoice number, date of issue, and the names and addresses of both the supplier and the customer can help confirm the identification but are not strictly necessary for the definition. " +
-                "Respond only with 'yes' or 'no' based on the presence of these key elements.\n\n" +
-                "Here is the text:\n\n" +
-                text + "\n\nIs this text an invoice? Respond strictly with 'yes' or 'no'.";
+        return "Please determine if the following French text is an invoice. An invoice typically includes at least one line item description with a corresponding price and a total amount due. It may also include an invoice number, date of issue, and the names and addresses of the supplier and customer. Respond with 'yes' if these elements are present and 'no' if they are not.\n\n" +
+                "Text:\n" +
+                text + "\n\n" +
+                "Is this text an invoice? Respond with 'yes' or 'no'.";
     }
+
 
 
     public boolean isInvoice(String text) {
@@ -89,41 +86,62 @@ public class AIExtractionService {
 
 
     private String createExtractionPrompt(String text) {
-        return "Extract the following client information and other details from the French invoice provided, ensuring that the data is complete and correctly formatted before encoding it into JSON. For services, generate a descriptive, contextually appropriate name that reflects the service being invoiced, with a maximum length of 50 characters and a default quantity of '1'. Treat any unspecified monetary value as '0'. " +
-                "Format the extracted data as key-value pairs without currency symbols and separate address components:\n" +
-                "Invoice Text: " + text + "\n" +
-                "Ensure the JSON response is well-formed and valid. Here's the required format, noting that all textual fields should be concise and not exceed specified lengths:\n" +
-                "{\n" +
-                "  \"Customer Name\": \"value\" (max 100 characters),\n" +
-                "  \"Customer Address\": \"value\" (max 150 characters),\n" +
-                "  \"Customer Country\": \"value\" (max 50 characters),\n" +
-                "  \"Customer Email\": \"value\" (max 100 characters),\n" +
-                "  \"Issue Date\": \"value\",  // Format: dd/MM/yyyy HH:mm:ss\n" +
-                "  \"Currency\": \"value\" (max 3 characters),\n" +
-                "  \"Subtotal\": \"value\",  // Use '0' if not specified\n" +
-                "  \"Discount\": \"value\",  // As decimal, e.g., 20% should be formatted as 0.2; use '0' if no discount\n" +
-                "  \"Advance Payment\": \"value\",  // Use '0' if not specified\n" +
-                "  \"Total\": \"value\",\n" +
-                "  \"Shipping Cost\": \"value\",  // Use '0' if not specified\n" +
-                "  \"Shipping Cost Type\": \"value\" (max 50 characters),\n" +
-                "  \"VAT\": \"value\",  // Use '0' if VAT is not applicable or not specified\n" +
-                "  \"Lines\": [{\n" +
-                "    \"Product Name\": \"value\" (max 50 characters),  // Descriptive and context-appropriate for services\n" +
-                "    \"Quantity\": \"value\",  // Use '1' for services\n" +
-                "    \"Unit Price\": \"value\",\n" +
-                "    \"Total Price\": \"value\"\n" +
-                "  }]\n" +
-                "}";
+        return "Please extract the following information from the provided French invoice text and format it as a well-formed, complete, and valid JSON object. Ensure that all required fields are present with appropriate values, and handle any missing or unspecified data according to the guidelines provided.\n\n" +
+                "Required Fields:\n" +
+                "- Customer Name (string, max 100 characters)\n" +
+                "- Customer Address (string, max 150 characters)\n" +
+                "- Customer Country (string, max 50 characters)\n" +
+                "- Issue Date (string, format: dd/MM/yyyy HH:mm:ss)\n" +
+                "- Currency (string, max 3 characters)\n" +
+                "- Subtotal (decimal, use '0' if not specified)\n" +
+                "- Discount (decimal, e.g., 20% should be formatted as 0.2; use '0' if no discount)\n" +
+                "- Advance Payment (decimal, use '0' if not specified)\n" +
+                "- Total (decimal)\n" +
+                "- Shipping Cost (decimal, use '0' if not specified)\n" +
+                "- VAT (decimal, use '0' if VAT is not applicable or not specified)\n" +
+                "- Lines (array of objects, each object representing an invoice line item)\n" +
+                "  - Product Name (string, max 50 characters)\n" +
+                "    - If the line item is a product, extract the product name as is, truncating if it exceeds 50 characters\n" +
+                "    - If the line item is a service, generate a descriptive and contextually appropriate name that reflects the service being invoiced, with a maximum length of 50 characters\n" +
+                "  - Quantity (decimal, use '1' for services)\n" +
+                "  - Unit Price (decimal)\n" +
+                "  - Total Price (decimal)\n\n" +
+                "Optional Fields:\n" +
+                "- Customer Email (string, max 100 characters)\n" +
+                "- Shipping Cost Type (string, max 50 characters)\n\n" +
+                "Guidelines:\n" +
+                "- For services, generate a descriptive and contextually appropriate name that reflects the service being invoiced, with a maximum length of 50 characters and a default quantity of '1'.\n" +
+                "- For products, extract the product name as is, truncating if it exceeds 50 characters.\n" +
+                "- Treat any unspecified monetary value as '0'.\n" +
+                "- Format the extracted data as key-value pairs without currency symbols and separate address components.\n" +
+                "- Ensure the JSON response is well-formed, complete, and valid. All required fields must be present with appropriate values.\n\n" +
+                "Invoice Text:\n" +
+                text + "\n\n" +
+                "Please provide the extracted information as a JSON object adhering to the specified format and guidelines. Prioritize accuracy and completeness while handling product names and service descriptions appropriately.";
     }
 
-
+    private String createVerificationPrompt(String text, String extractedJson) {
+        return "Please verify the accuracy and completeness of the extracted JSON data by comparing it against the original French invoice text provided below. Check for any missing, incorrect, or inconsistent values.\n\n" +
+                "If the extracted JSON is valid and accurate, respond with the JSON object as is.\n\n" +
+                "If you find any issues, please provide only the corrected version of the JSON object, using the original invoice text to fill in any missing or incorrect information. Ensure that the corrected JSON adheres to the specified format and guidelines.\n\n" +
+                "Original Invoice Text:\n" +
+                text + "\n\n" +
+                "Extracted JSON:\n" +
+                extractedJson + "\n\n" +
+                "Please provide the verified or corrected JSON object.";
+    }
     public String getInvoiceDataResponse(String invoiceText) {
         if (!isInvoice(invoiceText)) {
             throw new IllegalArgumentException("The provided text is not an invoice.");
         }
 
-        String prompt = createExtractionPrompt(invoiceText);
-        return callOpenAiApi(prompt, 250); // Returning the raw response as a string
+        String extractionPrompt = createExtractionPrompt(invoiceText);
+        String extractedJson = callOpenAiApi(extractionPrompt, 1000);
+
+        //String verificationPrompt = createVerificationPrompt(invoiceText, extractedJson);
+        //String verifiedJson = callOpenAiApi(verificationPrompt, 800);
+
+        return extractedJson;
     }
 
 }

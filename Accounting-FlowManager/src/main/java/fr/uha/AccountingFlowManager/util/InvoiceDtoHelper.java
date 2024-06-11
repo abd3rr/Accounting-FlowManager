@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -177,13 +178,8 @@ public class InvoiceDtoHelper {
 
             String issueDateStr = getJsonNodeValue(invoiceNode, "Issue Date");
             if (!issueDateStr.isEmpty()) {
-                DateTimeFormatter formatter;
-                if (issueDateStr.length() > 10) { // Check if the string contains time information
-                    formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-                } else {
-                    formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                }
-                dto.setIssueDate(LocalDateTime.parse(issueDateStr, formatter));
+                LocalDateTime issueDate = parseDateTime(issueDateStr);
+                dto.setIssueDate(issueDate);
             } else {
                 dto.setIssueDate(LocalDateTime.now());
             }
@@ -220,7 +216,7 @@ public class InvoiceDtoHelper {
             return dto;
         } catch (Exception e) {
             e.printStackTrace();
-            throw new IllegalArgumentException("Failed to parse json: " + json);
+            throw new IllegalArgumentException("Failed to parse json: " + json, e);
         }
     }
 
@@ -249,9 +245,28 @@ public class InvoiceDtoHelper {
             System.out.println("Parsed double: " + value);
             return Double.parseDouble(value);
         } catch (NumberFormatException e) {
-            e.printStackTrace();
+            System.err.println("Invalid double value: " + value);
             return 0.0;
         }
     }
 
+    private static LocalDateTime parseDateTime(String dateTimeStr) {
+        List<DateTimeFormatter> formatters = List.of(
+                DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"),
+                DateTimeFormatter.ofPattern("dd/MM/yyyy"),
+                DateTimeFormatter.ISO_LOCAL_DATE_TIME,
+                DateTimeFormatter.ISO_LOCAL_DATE
+        );
+
+        for (DateTimeFormatter formatter : formatters) {
+            try {
+                return LocalDateTime.parse(dateTimeStr, formatter);
+            } catch (DateTimeParseException e) {
+                // Try the next formatter
+            }
+        }
+
+        // If none of the formatters worked, throw an exception
+        throw new IllegalArgumentException("Invalid date format: " + dateTimeStr);
+    }
 }

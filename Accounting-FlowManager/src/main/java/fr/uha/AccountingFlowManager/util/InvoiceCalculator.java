@@ -50,7 +50,8 @@ public class InvoiceCalculator {
         if (invoiceData.getAdditionalReduction().equals(ReductionType.FINANCIERE)) {
             int totalQuantity = invoiceData.getProducts().stream().mapToInt(InvoiceFormDataDTO.ProductInvoiceForm::getQuantity).sum();
             if (totalQuantity > FINANCIAL_REDUCTION_THRESHOLD) {
-                additionalReduction += FINANCIAL_REDUCTION_PERCENTAGE;
+                int additionalItems = totalQuantity - FINANCIAL_REDUCTION_THRESHOLD;
+                additionalReduction = additionalItems * FINANCIAL_REDUCTION_PERCENTAGE;
             }
         } else if (invoiceData.getAdditionalReduction().equals(ReductionType.COMMERCIALE)) {
             additionalReduction += COMMERCIAL_REDUCTION_PERCENTAGE;
