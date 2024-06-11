@@ -46,7 +46,6 @@ public class InvoiceCalculator {
     public static double calculateAdditionalReductionRate(InvoiceFormDataDTO invoiceData) {
         double additionalReduction = 0.0;
 
-        // Calculate additional reduction based on the type
         if (invoiceData.getAdditionalReduction().equals(ReductionType.FINANCIERE)) {
             int totalQuantity = invoiceData.getProducts().stream().mapToInt(InvoiceFormDataDTO.ProductInvoiceForm::getQuantity).sum();
             if (totalQuantity > FINANCIAL_REDUCTION_THRESHOLD) {

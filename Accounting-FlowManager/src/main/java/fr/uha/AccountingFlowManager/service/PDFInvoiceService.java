@@ -156,9 +156,9 @@ public class PDFInvoiceService {
     }
 
     private void drawSummary(PDPageContentStream contentStream, InvoiceDisplayDTO invoiceDTO, int startY) throws IOException {
-        int leftAlign = 50;  // Adjusted for better alignment
+        int leftAlign = 50;  // Alignment
 
-        // Labels for the summary section
+        // Labels
         String[] labels = {"Sous-total:", "Remise:", "Acompte:", "Frais de port:", "TVA:", "Total:"};
         String[] values = {
                 cleanText(CURRENCY_FORMAT.format(invoiceDTO.getSubtotal()) + " €"),
@@ -171,7 +171,7 @@ public class PDFInvoiceService {
 
         contentStream.setFont(regularFont, 12);
 
-        // Iterate through each label and value to display them
+        // Iterate Each label and value to display
         for (int i = 0; i < labels.length; i++) {
             contentStream.beginText();
             contentStream.newLineAtOffset(leftAlign, startY);
@@ -195,7 +195,6 @@ public class PDFInvoiceService {
         //input = input.replace("\n", "").replace("\r", "");
         //return input;
 
-        // Replace narrow no-break spaces and non-breaking spaces with regular spaces
         //input = input.replaceAll("[\\u202F\\u00A0]", " ");
         // Remove characters not supported by WinAnsiEncoding
         StringBuilder sanitized = new StringBuilder();

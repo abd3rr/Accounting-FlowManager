@@ -196,20 +196,16 @@ public class InvoiceService {
 
     @Transactional
     public void deleteInvoice(long invoiceId) {
-        // Find the invoice or throw if not found
         Invoice invoice = invoiceRepository.findById(invoiceId)
                 .orElseThrow(() -> new RuntimeException("Invoice not found with ID: " + invoiceId));
 
-        // Handle related transactions and possibly update accounts
         handleTransactionsAndAccountOnInvoiceDeletion(invoice);
 
-        // Handle and delete associated files if any
         if (invoice.getFile() != null) {
             fileStorageService.deleteFile(invoice.getFile().getFilePath());
             fileRepository.delete(invoice.getFile());
         }
 
-        // Deleting the invoice; related invoice lines will also be deleted due to CascadeType.ALL
         invoiceRepository.delete(invoice);
     }
 
@@ -217,14 +213,13 @@ public class InvoiceService {
         List<Transaction> transactions = transactionRepository.findByInvoice(invoice);
 
         for (Transaction transaction : transactions) {
-            // Adjust the account balance if necessary
+
             if (transaction.getAccount() != null && transaction.getAmount() != null) {
                 double newBalance = transaction.getAccount().getBalance() - transaction.getAmount();
                 transaction.getAccount().setBalance(newBalance);
                 accountRepository.save(transaction.getAccount());
             }
 
-            // Now delete the transaction
             transactionRepository.delete(transaction);
         }
     }

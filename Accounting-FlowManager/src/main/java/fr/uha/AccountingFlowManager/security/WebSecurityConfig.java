@@ -43,7 +43,7 @@ public class WebSecurityConfig {
             @Override
             public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException {
                 System.out.println("Access Denied: " + request.getRequestURI());
-                // Optionally log more details or handle the response differently
+                // Optionally log more details
                 response.sendRedirect("/403");
             }
         };

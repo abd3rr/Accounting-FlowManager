@@ -210,10 +210,10 @@ public class InvoiceController {
         try {
             invoiceService.deleteInvoice(invoiceId);
             redirectAttributes.addFlashAttribute("successMessage", "Invoice deleted successfully.");
-            return "redirect:/invoice/list"; // Return the redirect URL
+            return "redirect:/invoice/list";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "Error deleting invoice: " + e.getMessage());
-            return "redirect:/invoice/list"; // Return the redirect URL even in case of error
+            return "redirect:/invoice/list";
         }
     }
 

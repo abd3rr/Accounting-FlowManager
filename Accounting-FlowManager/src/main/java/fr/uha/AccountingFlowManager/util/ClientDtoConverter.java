@@ -46,7 +46,6 @@ public class ClientDtoConverter {
         if (user.getRole() != null) {
             clientDTO.setRoleName(user.getRole().getName());
         }
-        // Assuming that password hash should not be sent back in DTO for security
         return clientDTO;
     }
 }

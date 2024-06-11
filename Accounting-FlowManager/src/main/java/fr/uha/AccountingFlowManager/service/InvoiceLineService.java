@@ -33,7 +33,7 @@ public class InvoiceLineService {
         line.setProduct(product);
         line.setQuantity(quantity);
         line.setPrice(unitPrice);
-        line.calculateTotal();  // Ensure total is calculated based on quantity and price
+        line.calculateTotal();
         return invoiceLineRepository.save(line);
     }
 }

@@ -47,7 +47,6 @@ public class TransactionService {
             throw new IllegalArgumentException("Provider cannot be null");
         }
 
-        // Retrieve and return all transactions associated with the provider
         return transactionRepository.findByProvider(provider);
     }
 }

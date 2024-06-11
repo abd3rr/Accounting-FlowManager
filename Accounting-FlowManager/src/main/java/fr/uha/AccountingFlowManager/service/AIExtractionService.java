@@ -52,11 +52,9 @@ public class AIExtractionService {
             if (response.getStatusCode().is2xxSuccessful()) {
                 return response.getBody();
             } else {
-                // Log error and handle non-2xx responses appropriately
                 throw new IllegalStateException("Failed to call OpenAI API: " + response.getStatusCode());
             }
         } catch (RestClientException e) {
-            // Log and handle the RestClientException appropriately
             throw new RuntimeException("Error communicating with OpenAI API", e);
         }
     }
@@ -80,7 +78,7 @@ public class AIExtractionService {
             return "yes".equalsIgnoreCase(choiceNode.asText());
         } catch (Exception e) {
             e.printStackTrace();
-            return false; // or handle more appropriately
+            return false;
         }
     }
 

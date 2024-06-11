@@ -58,7 +58,7 @@ public class UserService {
         if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails userDetails) {
             return userDetails.getId();
         }
-        return null; // or throw an appropriate exception
+        return null;
     }
 
     public String getCurrentUserRole() {
@@ -67,7 +67,7 @@ public class UserService {
             return userDetails.getAuthorities().stream()
                     .findFirst()
                     .map(GrantedAuthority::getAuthority)
-                    .orElse(null); // or throw an appropriate exception
+                    .orElse(null);
         }
         return null;
     }
@@ -90,21 +90,17 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public List<ProviderItemDTO> getClientProviders(Long clientId) {
-        // Fetch the client from the database
         User client = userRepository.findById(clientId)
                 .orElseThrow(() -> new IllegalArgumentException("Client not found with ID: " + clientId));
 
-        // Ensure the client has the correct role if necessary
         if (!client.getRole().getName().equals(RoleName.ROLE_CLIENT)) {
             throw new IllegalArgumentException("The specified user is not a client");
         }
 
-        // Check if the client has providers and fetch them
         if (client.getProviders() == null || client.getProviders().isEmpty()) {
             return Collections.emptyList();  // Return an empty list if no providers are associated
         }
 
-        // Map the list of providers to ProviderItemDTO
         return client.getProviders().stream()
                 .map(provider -> {
                     ProviderItemDTO dto = new ProviderItemDTO();
@@ -138,34 +134,27 @@ public class UserService {
 
     @Transactional
     public void addProviderClients(Long providerId, List<Long> clientIds) {
-        // Fetch the provider from the database
         User provider = userRepository.findById(providerId)
                 .orElseThrow(() -> new IllegalArgumentException("Provider not found with ID: " + providerId));
 
-        // Ensure the provider has the correct role if necessary
         if (!provider.getRole().getName().equals(RoleName.ROLE_PROVIDER)) {
             throw new IllegalArgumentException("The specified user is not a provider");
         }
 
-        // Fetch all potential clients by their IDs
         List<User> potentialClients = userRepository.findAllById(clientIds);
 
-        // Validate all fetched users to ensure they are clients
         for (User client : potentialClients) {
             if (!client.getRole().getName().equals(RoleName.ROLE_CLIENT)) {
                 throw new IllegalArgumentException("User with ID: " + client.getId() + " is not a client");
             }
         }
 
-        // Create a set from the existing clients to avoid duplicates
         Set<User> updatedClients = new HashSet<>(provider.getClients());
         updatedClients.addAll(potentialClients); // Add new clients, duplicates will not be added
 
-        // Update the provider's client list
         provider.getClients().clear();
         provider.getClients().addAll(updatedClients);
 
-        // For each client, add this provider to their list of providers if not already present
         for (User client : updatedClients) {
             Set<User> providersSet = new HashSet<>(client.getProviders());
             providersSet.add(provider); // Add the provider to the client's providers list
@@ -173,9 +162,8 @@ public class UserService {
             client.getProviders().addAll(providersSet);
         }
 
-        // Save the updated provider and clients
         userRepository.save(provider);
-        userRepository.saveAll(updatedClients); // This assumes clients need to be explicitly saved
+        userRepository.saveAll(updatedClients);
     }
 
     @Transactional
@@ -256,23 +244,19 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public List<ProviderInfosDTO> getAllProvidersExcludingClients(Long clientId) {
-        // Fetch the client from the database and its providers
         User client = userRepository.findById(clientId)
                 .orElseThrow(() -> new IllegalArgumentException("Client not found with ID: " + clientId));
 
         Set<User> currentProviders = new HashSet<>(client.getProviders());
 
-        // Fetch the provider role
         Role providerRole = roleRepository.findByName(RoleName.ROLE_PROVIDER)
                 .orElseThrow(() -> new IllegalArgumentException("Role 'ROLE_PROVIDER' not found"));
 
-        // Fetch all providers excluding those who are already the client's providers
         List<User> providers = userRepository.findUsersByRole(providerRole)
                 .stream()
                 .filter(provider -> !currentProviders.contains(provider))
                 .toList();
 
-        // Convert to DTOs
         return providers.stream()
                 .map(this::userToProviderInfosDTO)
                 .collect(Collectors.toList());
@@ -316,7 +300,6 @@ public class UserService {
             User savedUser = userRepository.save(newUser);
             System.out.println("User saved successfully: " + savedUser.toString());
 
-            // After saving the user, add providers if any
             if (registrationDTO.getProviders() != null && !registrationDTO.getProviders().isEmpty()) {
                 addClientProviders(savedUser.getId(), registrationDTO.getProviders());
             }
@@ -333,31 +316,24 @@ public class UserService {
 
     @Transactional
     public void deleteProviderForClient(Long clientId, Long providerId) {
-        // Fetch the client from the database
         User client = userRepository.findById(clientId)
                 .orElseThrow(() -> new IllegalArgumentException("Client not found with ID: " + clientId));
 
-        // Ensure the client has the correct role
         if (!client.getRole().getName().equals(RoleName.ROLE_CLIENT)) {
             throw new IllegalArgumentException("The specified user is not a client");
         }
 
-        // Fetch the provider from the database
         User provider = userRepository.findById(providerId)
                 .orElseThrow(() -> new IllegalArgumentException("Provider not found with ID: " + providerId));
 
-        // Ensure the provider has the correct role
         if (!provider.getRole().getName().equals(RoleName.ROLE_PROVIDER)) {
             throw new IllegalArgumentException("The specified user is not a provider");
         }
 
-        // Remove the provider from the client's list of providers
         client.getProviders().remove(provider);
 
-        // Remove the client from the provider's list of clients
         provider.getClients().remove(client);
 
-        // Save the updated client and provider
         userRepository.save(client);
         userRepository.save(provider);
     }

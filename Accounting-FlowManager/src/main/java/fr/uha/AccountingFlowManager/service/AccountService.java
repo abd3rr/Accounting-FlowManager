@@ -42,11 +42,13 @@ public class AccountService {
         accountRepository.save(account);
     }
 
+    /*
     @Transactional(readOnly = true)
     public Account getAccountByProviderAndType(User provider, AccountType accountType) {
-        // Use the repository to try to find an account with the given provider and account type
         return accountRepository.findByProviderAndAccountType(provider, accountType)
                 .orElseThrow(() -> new IllegalArgumentException("No account found for the provided user with the specified account type."));
     }
+
+     */
 
 }

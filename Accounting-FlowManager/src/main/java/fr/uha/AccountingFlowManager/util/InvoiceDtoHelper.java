@@ -104,7 +104,6 @@ public class InvoiceDtoHelper {
 
         invoice.setVat(previewDTO.getTotalHT() * (previewDTO.getTva() / 100));
 
-        // Set total which now includes recalculated VAT
 
         invoice.setTotal(previewDTO.getTotalTTC());
 
@@ -266,7 +265,6 @@ public class InvoiceDtoHelper {
             }
         }
 
-        // If none of the formatters worked, throw an exception
         throw new IllegalArgumentException("Invalid date format: " + dateTimeStr);
     }
 }

@@ -51,7 +51,6 @@ public class DatabaseSeeding implements CommandLineRunner {
         client3.setPasswordHash(passwordHash);
         client3.setRoleName(RoleName.ROLE_CLIENT);
 
-        // Define test providers
         ProviderDTO provider1 = new ProviderDTO();
         provider1.setCompanyName("Provider One");
         provider1.setEmail("provider1@gmail.com");
@@ -73,14 +72,12 @@ public class DatabaseSeeding implements CommandLineRunner {
         provider2.setRoleName(RoleName.ROLE_PROVIDER);
 
 
-        // Add clients and providers to the database
         Long clientId1 = userService.addClient(client1);
         Long clientId2 = userService.addClient(client2);
         Long clientId3 = userService.addClient(client3);
         Long providerId1 = userService.addProvider(provider1);
         Long providerId2 = userService.addProvider(provider2);
 
-        // Assuming you have methods to retrieve IDs once users are saved
         List<Long> clientIdsForProvider1 = List.of(
                 clientId1,
                 clientId2,
@@ -91,7 +88,6 @@ public class DatabaseSeeding implements CommandLineRunner {
                 clientId3
         );
 
-        // Add relationships
         userService.addProviderClients(providerId1, clientIdsForProvider1);
         userService.addProviderClients(providerId2, clientIdsForProvider2);
     }
