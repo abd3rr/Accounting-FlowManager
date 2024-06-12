@@ -61,7 +61,7 @@ public class WebSecurityConfig {
                         .defaultSuccessUrl("/home", true)
                         .permitAll())
                 .logout(logout -> logout
-                        .logoutSuccessHandler(customLogoutSuccessHandler())
+                            .logoutSuccessHandler(customLogoutSuccessHandler())
                         .permitAll()
                         .logoutUrl("/logout")
                         .deleteCookies("JSESSIONID")

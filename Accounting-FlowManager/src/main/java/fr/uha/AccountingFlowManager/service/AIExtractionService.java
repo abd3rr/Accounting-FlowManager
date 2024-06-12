@@ -16,6 +16,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 
 @Service
@@ -32,10 +33,10 @@ public class AIExtractionService {
         this.objectMapper = objectMapper;
     }
 
-    private String callOpenAiApi(String prompt, int maxTokens) {
+    private String callOpenAiApi(String prompt, int maxTokens, String sessionToken) {
         String apiURL = UriComponentsBuilder.fromHttpUrl("https://api.openai.com/v1/chat/completions")
+                .queryParam("session_token", sessionToken)
                 .toUriString();
-
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setBearerAuth(openAiApiKey);
@@ -60,6 +61,7 @@ public class AIExtractionService {
     }
 
 
+
     private String createIsInvoicePrompt(String text) {
         return "Please determine if the following French text is an invoice. An invoice typically includes at least one line item description with a corresponding price and a total amount due. It may also include an invoice number, date of issue, and the names and addresses of the supplier and customer. Respond with 'yes' if these elements are present and 'no' if they are not.\n\n" +
                 "Text:\n" +
@@ -71,7 +73,7 @@ public class AIExtractionService {
 
     public boolean isInvoice(String text) {
         String prompt = createIsInvoicePrompt(text);
-        String jsonResponse = callOpenAiApi(prompt, 10);
+        String jsonResponse = callOpenAiApi(prompt, 10, UUID.randomUUID().toString());
         try {
             JsonNode rootNode = objectMapper.readTree(jsonResponse);
             JsonNode choiceNode = rootNode.path("choices").get(0).path("message").path("content");
@@ -134,11 +136,11 @@ public class AIExtractionService {
         }
 
         String extractionPrompt = createExtractionPrompt(invoiceText);
-        String extractedJson = callOpenAiApi(extractionPrompt, 1000);
+        String extractedJson = callOpenAiApi(extractionPrompt, 3000,UUID.randomUUID().toString());
 
         //String verificationPrompt = createVerificationPrompt(invoiceText, extractedJson);
         //String verifiedJson = callOpenAiApi(verificationPrompt, 800);
-
+        System.out.println(extractedJson);
         return extractedJson;
     }
 

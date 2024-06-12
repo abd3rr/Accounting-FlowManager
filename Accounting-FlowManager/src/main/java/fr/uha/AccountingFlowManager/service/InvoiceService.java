@@ -147,7 +147,11 @@ public class InvoiceService {
     public Invoice saveInvoice(InvoiceDisplayDTO invoiceDisplayDTO, File file) {
         User provider = userService.getUserById(userService.getCurrentUserId())
                 .orElseThrow(() -> new IllegalArgumentException("Provider not found"));
-        User client = userService.getUserByEmail(invoiceDisplayDTO.getCustomerEmail());
+
+        User client = null;
+        if (invoiceDisplayDTO.getCustomerEmail() != null && !invoiceDisplayDTO.getCustomerEmail().trim().isEmpty()) {
+            client = userService.getUserByEmail(invoiceDisplayDTO.getCustomerEmail());
+        }
         if (client == null) {
             client = userService.getUserByFullName(invoiceDisplayDTO.getCustomerName());
         }
@@ -157,7 +161,9 @@ public class InvoiceService {
             client.setRole(roleService.getOrCreateRole(RoleName.ROLE_CLIENT));
             client.setAddress(invoiceDisplayDTO.getCustomerAddress());
             client.setCountry(Country.fromString(invoiceDisplayDTO.getCustomerCountry()));
-            if (invoiceDisplayDTO.getCustomerEmail() != null) client.setEmail(invoiceDisplayDTO.getCustomerEmail());
+            if (invoiceDisplayDTO.getCustomerEmail() != null && !invoiceDisplayDTO.getCustomerEmail().isEmpty()) {
+                client.setEmail(invoiceDisplayDTO.getCustomerEmail());
+            }
             client = userRepository.save(client);
         }
 
@@ -193,7 +199,6 @@ public class InvoiceService {
         fileRepository.save(file);
         return invoice;
     }
-
     @Transactional
     public void deleteInvoice(long invoiceId) {
         Invoice invoice = invoiceRepository.findById(invoiceId)
